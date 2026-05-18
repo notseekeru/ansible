@@ -33,8 +33,6 @@ ls -l /etc/ssh/sshd_config.d/
 
 ## Future Enhancements and Best Practices
 
-How this would look in your flowchart:
-
 Add “Molecule/Testinfra” after every role change.
 Add “Deploy to Staging” before “Deploy to Prod.”
 Add “Drift Detection/Monitoring” as a feedback loop after prod.
