@@ -1,7 +1,6 @@
 ---
 - name: Debian Bootstrap for Local Pi Nodes
   hosts: local_pi_nodes
-  become: true
   gather_facts: true
 
   vars_files:

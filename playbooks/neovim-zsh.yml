@@ -1,7 +1,6 @@
 ---
 - name: Deploy Neovim for debian based systems
   hosts: tailscale_pi_nodes
-  become: true
   gather_facts: true
 
   vars_files:

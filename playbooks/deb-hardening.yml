@@ -1,7 +1,6 @@
 ---
 - name: Debian Hardening for Tailscale Pi Nodes
   hosts: tailscale_pi_nodes
-  become: true
   gather_facts: true
 
   # Needs to be ssh'd using tailscale with any port then turn to port 401 after this playbook finished.
