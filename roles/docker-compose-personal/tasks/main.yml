@@ -1,0 +1,20 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for ./roles/docker-compose-personal
+- name: "Clone my docker repository"
+  ansible.builtin.git:
+    repo: "https://github.com/notseekeru/docker.git"
+    dest: "~/docker"
+    version: "main"
+
+- name: "Create .env file for portfolio website"
+  ansible.builtin.copy:
+    dest: "~/docker/portfolio_website/.env"
+    content: |
+      CLOUDFLARE_TOKEN={{ CLOUDFLARE_TOKEN }}
+
+- name: Deploy portfolio website
+  community.docker.docker_compose_v2:
+    project_src: "~/docker/portfolio_website"
+    state: present
+    pull: always

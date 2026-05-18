@@ -1,0 +1,63 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for ./roles/tailscale
+- name: Ensure OS family is supported by this role
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == 'Debian'
+    fail_msg: "tailscale role currently supports Debian-family systems only."
+
+- name: Determine Tailscale repository family and codename from facts
+  ansible.builtin.set_fact:
+    tailscale_repo_family: "{{ 'ubuntu' if (ansible_facts['distribution'] | lower == 'ubuntu') else 'debian' }}"
+    tailscale_repo_codename: "{{ ansible_facts['distribution_release'] | lower }}"
+
+- name: Download Tailscale GPG key
+  ansible.builtin.get_url:
+    url: "https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }}/{{ tailscale_repo_codename }}.noarmor.gpg"
+    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    mode: "0644"
+
+- name: Add Tailscale repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }} {{ tailscale_repo_codename }} main"
+    state: present
+    filename: tailscale
+
+- name: Install Tailscale
+  ansible.builtin.apt:
+    name: tailscale
+    state: present
+    update_cache: true
+
+- name: Enable and start Tailscale
+  ansible.builtin.service:
+    name: tailscaled
+    enabled: true
+    state: started
+
+- name: Ensure Tailscale auth key is available when needed
+  ansible.builtin.assert:
+    that:
+      - tailscale_auth_key is defined
+      - tailscale_auth_key | length > 0
+    fail_msg: >-
+      tailscale_auth_key is missing. Define it in group_vars/vault.yml
+      and run with vault decryption (for example --ask-vault-pass).
+
+- name: Set up Tailscale auth
+  ansible.builtin.command:
+    argv:
+      - tailscale
+      - up
+      - --authkey={{ tailscale_auth_key }}
+  register: tailscale_up
+
+- name: Wait for Tailscale IP after up
+  ansible.builtin.command: tailscale ip -4
+  register: tailscale_ip_after
+  changed_when: false
+  failed_when: false
+  retries: 6
+  delay: 2
+  until: tailscale_ip_after.stdout != ''

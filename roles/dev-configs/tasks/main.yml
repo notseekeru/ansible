@@ -1,0 +1,87 @@
+# tasks file for ./roles/dev-configs
+
+- name: Install zsh
+  ansible.builtin.package:
+    name: zsh
+    state: present
+  become: true
+
+- name: Change default shell to zsh
+  ansible.builtin.user:
+    name: "{{ ansible_facts['user_id'] }}"
+    shell: /bin/zsh
+  become: true
+
+  # TODO: MAKE NODE VERSION MANAGER
+
+- name: "Install gh" # TODO: MAKE THIS NON MANUAL CURRENT MANUAL "gh auth login"
+  ansible.builtin.pack:
+    name: gh
+    state: present
+  become: true
+
+- name: Set inputrc to ignore case for tab completion
+  ansible.builtin.lineinfile:
+    dest: "~/.inputrc"
+    regexp: "^set completion-ignore-case"
+    line: "set completion-ignore-case on"
+    state: present
+    create: true
+    mode: "0644"
+  become: false
+
+- name: Set Vim configuration
+  ansible.builtin.copy:
+    dest: "~/.vimrc"
+    content: |
+      set number
+      set relativenumber
+      syntax on
+      nnoremap ; :
+      nnoremap : ;
+    mode: "0644"
+  become: false
+
+- name: Configure Bash and Zsh aliases
+  ansible.builtin.copy:
+    dest: "{{ item }}"
+    content: |
+      alias ll='ls -alF'
+      alias la='ls -A'
+      alias l='ls -CF'
+      alias compose='docker compose'
+
+      gema() {
+        cd ~/agents/arciero-agent
+        gemini
+      }
+      aga() {
+        cd ~/agents/arciero-agent
+      }
+    mode: "0644"
+  become: false
+  loop:
+    - "~/.bash_aliases"
+    - "~/.zsh_aliases"
+
+- name: Ensure Zsh sources aliases
+  ansible.builtin.blockinfile:
+    dest: "~/.zshrc"
+    create: true
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: zsh_aliases"
+    block: |
+      if [ -f ~/.zsh_aliases ]; then
+          source ~/.zsh_aliases
+      fi
+    mode: "0644"
+  become: false
+
+- name: Git config
+  ansible.builtin.copy:
+    dest: "~/.gitconfig"
+    content: |
+      [user]
+        name = Stephen Macabulos
+        email = myteseeker18@gmail.com
+    mode: "0644"
+  become: false

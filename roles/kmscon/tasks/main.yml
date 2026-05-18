@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+---
+sudo nano /etc/apt/sources.list.d/backports.sources
+
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie-backports
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+sudo apt update
+sudo apt install -t trixie-backports kmscon
+
+sudo systemctl disable getty@tty1.service
+sudo systemctl enable kmsconvt@tty1.service
+
+tmux kill-server
+tmux -u
+

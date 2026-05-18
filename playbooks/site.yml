@@ -1,0 +1,59 @@
+---
+
+- name: Master Provisioning for Pi Nodes
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars_files:
+    - ../group_vars/vault.yml
+
+  tasks:
+    - name: Run pubkey role to set SSH authorized keys
+      ansible.builtin.import_role:
+        name: pubkey
+
+    - name: Run base Debian/Ubuntu package management role
+      ansible.builtin.import_role:
+        name: auto-dbpkg
+      tags: ["bootstrap"]
+
+    - name: Run development configuration role
+      ansible.builtin.import_role:
+        name: dev-configs
+
+    - name: Run Golang layer role
+      ansible.builtin.import_role:
+        name: golang
+
+    - name: Run Tailscale layer role to install and configure Tailscale
+      ansible.builtin.import_role:
+        name: tailscale
+
+    - name: Refresh network facts after Tailscale installation
+      ansible.builtin.setup:
+        gather_subset:
+          - network
+
+    - name: STRICT ARCHITECTURAL GATE - Verify Tailscale is active and has an IP
+      ansible.builtin.assert:
+        that:
+          - "'tailscale0' in ansible_interfaces"
+          - "ansible_tailscale0.ipv4 is defined"
+          - "ansible_tailscale0.ipv4.address is defined"
+        fail_msg: >-
+          FATAL: Tailscale interface 'tailscale0' is not present or has no IPv4 address.
+          Halting playbook to prevent UFW from locking you out of the node.
+        success_msg: "Tailscale validated. Node is safely connected to the mesh network."
+
+    # ---------------------------------------------------------
+    # LAYER 3: HARDENING
+    # ---------------------------------------------------------
+    - name: Run SSHD configuration role for Tailscale-only access
+      ansible.builtin.import_role:
+        name: tailscale-sshd-conf
+
+    - name: Run UFW configuration to restrict SSH to Tailscale
+      ansible.builtin.import_role:
+        name: tailscale-ufw
+      tags: ["hardening"]

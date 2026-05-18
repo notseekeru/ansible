@@ -1,0 +1,27 @@
+# Managed by Ansible - Hardened SSH Config
+AllowUsers piserver
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Security Settings
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+PermitEmptyPasswords no
+MaxAuthTries 3
+
+# DO NOT CHANGE FROM 0.0.0.0 TO TAILSCALE IP. IT BREAKS
+ListenAddress 0.0.0.0
+AllowUsers piserver
+
+# Logging
+SyslogFacility AUTHPRIV
+LogLevel INFO
+
+# Restrictions
+AllowTcpForwarding no
+X11Forwarding no
+PrintMotd no
+
+Subsystem sftp /usr/lib/openssh/sftp-server

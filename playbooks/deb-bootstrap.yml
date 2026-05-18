@@ -1,0 +1,31 @@
+---
+- name: Debian Bootstrap for Local Pi Nodes
+  hosts: local_pi_nodes
+  become: true
+  gather_facts: true
+
+  vars_files:
+    - ../group_vars/vault.yml
+
+  # Only ssh at local IP adress of machines at any port
+
+  tasks:
+    # Base Layer
+    - name: Run base Debian/Ubuntu package management role
+      ansible.builtin.import_role:
+        name: auto-dbpkg
+
+    # Golang Layer
+    - name: Run Golang layer role to install Golang
+      ansible.builtin.import_role:
+        name: golang
+
+    # Docker Layer
+    - name: Run Docker layer role to install and configure Docker
+      ansible.builtin.import_role:
+        name: docker
+
+    # Tailscale Layer
+    - name: Run Tailscale layer role to install and configure Tailscale
+      ansible.builtin.import_role:
+        name: tailscale

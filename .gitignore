@@ -1,0 +1,39 @@
+# .gitignore for Ansible projects
+# Ignore roles downloaded from Galaxy
+!roles/README.md
+
+# Ignore inventory files with sensitive data
+inventory.ini
+
+# Ignore secrets and vault files
+secrets.yml
+vault.yml
+vault_password.yml
+.vault
+.vault_pass
+
+# Ignore Ansible logs
+*.retry
+*.log
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.swp
+
+# Ignore Python cache (if using Python modules)
+__pycache__/
+*.pyc
+.venv
+.lock
+
+# Ignore SSH keys and vault files
+*.pem
+*.key
+*.vault
+
+# Ignore environment files
+.env
+
+# Ignore backup files
+*~
