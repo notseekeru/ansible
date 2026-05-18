@@ -2,6 +2,7 @@
 
 - Libraries are in Python Venv and are up to date.
 - Refactor the roles to improve readability and maintainability.
+- Rename the roles to follow a consistent naming convention.
 - Confirm Ansible Linting and YAML syntax validation for the refactored roles to ensure code quality and consistency. Ensure all changes meet the required Ansible Linting standards.
 - Organize folder/rename structure to follow best practices and conventions.
 - Ensure that the roles follow best practices and coding standards.
@@ -11,6 +12,7 @@
 - Ensure that the refactored roles are compatible with the existing infrastructure and do not introduce any breaking changes.
 - Document the changes made to the roles, including any new features or improvements implemented during the refactoring process at the /docs folder.
 - Suggest future notes for use to ensure that the refactored roles are maintainable and scalable in the long term.
+- Refactor Ci pipeline to ensure that it is compatible with the refactored roles and molecule tests, and that it continues to function correctly after the changes are made.
 
 ## Dont's
 
@@ -19,7 +21,7 @@
 
 ## Mandate
 
-- Always ask question
+- Always ask question before proceeding with the refactoring process to ensure that the requirements are clear and that the changes being made are necessary and beneficial.
 - Use Up to date Ansible Configs
 - Always utilize Search Engine to find the best practices and solutions for the refactoring process.
 - Ask Reference Date for the Ansible version being used to ensure compatibility and adherence to modern best practices.
@@ -37,6 +39,9 @@
 
 ## Versions
 
-- Ansible Version: 2.20.1
+- Ansible Version: 2.21.0
 - Python Version: 3.14.4
-- Jinx Version: 3.1.6
+- Jinja2 Version: 3.1.6
+- Docker Version: 29.5.1
+- pip Version: 25.1.1
+- molecule Version: 26.4.0
