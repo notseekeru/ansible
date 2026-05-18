@@ -31,10 +31,15 @@ sudo cat /etc/ssh/sshd_config
 ls -l /etc/ssh/sshd_config.d/
 ```
 
-## Future Enhancements and Best Practices
+## Notes
 
-Add “Molecule/Testinfra” after every role change.
-Add “Deploy to Staging” before “Deploy to Prod.”
-Add “Drift Detection/Monitoring” as a feedback loop after prod.
-Add “Backup/Restore” as a parallel flow.
-Add “Secrets Management” as a prerequisite for all sensitive tasks.
+- Venv:
+
+python -m venv .venv
+source .venv/bin/activate
+
+- Download:
+
+pip install ansible-core molecule "molecule-plugins[docker]" ansible-lint yamllint
+sudo apt install -y python3-pip python3-venv git-core
+ansible-galaxy collection install community.docker
