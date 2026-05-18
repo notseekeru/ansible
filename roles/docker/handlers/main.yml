@@ -1,6 +1,0 @@
-#SPDX-License-Identifier: MIT-0
----
-# handlers file for ./roles/docker
-- name: Apt update
-  ansible.builtin.apt:
-    update_cache: true
