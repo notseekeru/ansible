@@ -1,7 +1,25 @@
-#SPDX-License-Identifier: MIT-0
----
-# tasks file for ./roles/neovim-bob
-# role dependencies added: neovim-base & zsh as dependencies in meta/main.yml
+# tasks file for ./roles/neovim-base
+
+- name: "Install base dependencies for neovim"
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - git
+    - unzip
+    - build-essential
+    - fd-find
+    - ripgrep
+    - lazygit
+    - fzf # needs 0.60+
+    - tree-sitter-cli # needs 0.26.1+ neovim comes with it.
+    - zsh
+
+- name: "Install Tmux"
+  ansible.builtin.package:
+    name: tmux
+    state: present
 
 - name: "Remove apt neovim if present to avoid conflicts with bob"
   ansible.builtin.apt:
@@ -34,7 +52,7 @@
     create: true
   become: false
 
-- name: "Pull lazygit dotfiles"
+- name: "Pull neovim dotfiles"
   ansible.builtin.git:
     repo: "https://github.com/notseekeru/nvim.git"
     dest: "~/.config/nvim"

@@ -3,10 +3,7 @@
   hosts: tailscale_pi_nodes
   gather_facts: true
 
-  vars_files:
-    - ../group_vars/vault.yml
-
   tasks:
-    - name: "Neovim bob"
+    - name: "Neovim setup"
       ansible.builtin.import_role:
-        name: neovim-bob
+        name: neovim
