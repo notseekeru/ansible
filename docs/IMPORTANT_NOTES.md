@@ -42,4 +42,4 @@ source .venv/bin/activate
 
 sudo apt install -y python3-pip python3-venv git-core
 pip install ansible-core molecule "molecule-plugins[docker]" ansible-lint yamllint
-ansible-galaxy collection install community.docker
+ansible-galaxy collection install community.general ansible.posix community.crypto community.docker
