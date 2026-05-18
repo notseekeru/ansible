@@ -31,14 +31,14 @@ sudo cat /etc/ssh/sshd_config
 ls -l /etc/ssh/sshd_config.d/
 ```
 
-## Notes
+## System Requirements
 
 - Venv:
 
 python3 -m venv .venv
 source .venv/bin/activate
 
-- Download:
+- Dependencies:
 
 sudo apt install -y python3-pip python3-venv git-core
 pip install ansible-core molecule "molecule-plugins[docker]" ansible-lint yamllint
