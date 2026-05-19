@@ -31,6 +31,18 @@ sudo cat /etc/ssh/sshd_config
 ls -l /etc/ssh/sshd_config.d/
 ```
 
+## Role Map (Post-Refactor)
+
+- security_hardening: merged auto-dbpkg, pubkey, tailscale-sshd-conf, tailscale-ufw
+- linux_neovim: includes dev-configs
+- docker-compose-personal: unchanged
+- tailscale: unchanged
+
+## Molecule (Local)
+
+- cd roles/<role_name>
+- molecule test -s default
+
 ## System Requirements
 
 - Venv:

@@ -9,14 +9,13 @@ role:
 	ansible-galaxy init ./roles/$(ROLE_NAME)
 
 wsl:
-	ansible-playbook -i localhost, -c local playbooks/neovim-zsh.yml --ask-become-pass
+	ansible-playbook -i localhost, -c local playbooks/linux_neovim.yml --ask-become-pass
 
 neovim:
-	ansible-playbook playbooks/neovim-zsh.yml -i inventories/hosts.ini -K
+	ansible-playbook playbooks/linux_neovim.yml -i inventories/hosts.ini -K
 
 lint:
-	ansible-lint playbooks/deb-bootstrap.yml
-	ansible-lint playbooks/deb-hardening.yml
+	ansible-lint playbooks/*.yml
 
 simplel:
 	ansible-playbook playbooks/deb-bootstrap.yml -i inventories/hosts.ini --check --diff
