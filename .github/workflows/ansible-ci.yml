@@ -1,4 +1,4 @@
-name: Ansible Lint & Syntax Check
+name: Ansible Lint, Syntax, Molecule
 
 on:
   push:
@@ -20,10 +20,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create Vault Password File
+      - name: Create vault password file
         run: echo -n "${{ secrets.ANSIBLE_VAULT_PASS }}" > /home/runner/.vault_pass
 
       - name: Set up Python
@@ -31,16 +31,54 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install Ansible and ansible-lint
+      - name: Install dependencies
         run: |
-          pip install ansible ansible-lint
+          python -m pip install --upgrade pip
+          pip install ansible-core ansible-lint yamllint molecule "molecule-plugins[docker]"
+
+      - name: Install Ansible collections
+        run: |
+          ansible-galaxy collection install community.general ansible.posix community.crypto community.docker
+
+      - name: Run yamllint
+        run: yamllint .
 
       - name: Run ansible-lint
-        run: |
-          ansible-lint playbooks/*.yml roles/*/tasks/*.yml || true
+        run: ansible-lint
 
-      - name: Run Ansible Syntax Check
+      - name: Run Ansible syntax checks
         run: |
-          for f in playbooks/*.yml; do 
+          for f in playbooks/*.yml; do
             ansible-playbook -i inventories/hosts.ini "$f" --syntax-check
           done
+
+  molecule:
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        role:
+          - linux_neovim
+          - docker-compose-personal
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core molecule "molecule-plugins[docker]"
+
+      - name: Install Ansible collections
+        run: |
+          ansible-galaxy collection install community.general ansible.posix community.crypto community.docker
+
+      - name: Run Molecule
+        working-directory: roles/${{ matrix.role }}
+        run: molecule test -s default
