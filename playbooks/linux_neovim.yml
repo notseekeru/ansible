@@ -6,4 +6,4 @@
   tasks:
     - name: "Neovim setup"
       ansible.builtin.import_role:
-        name: neovim
+        name: linux_neovim
