@@ -3,24 +3,10 @@
   hosts: tailscale_pi_nodes
   gather_facts: true
 
-  # Needs to be ssh'd using tailscale with any port then turn to port 401 after this playbook finished.
+  vars_files:
+    - ../group_vars/vault.yml
+
   # This playbook is responsible for hardening the security of the Raspberry Pi nodes.
 
   tasks:
-    # Pubkey Layer
-
-    - name: Run pubkey role to set SSH authorized keys
-      ansible.builtin.import_role:
-        name: pubkey
-
-    # SSHD Config Layer for Tailscale-only access
-
-    - name: Run SSHD configuration role to harden SSH access for Tailscale-only access
-      ansible.builtin.import_role:
-        name: tailscale-sshd-conf
-
-    # Firewall Layer for Tailscale-only access
-
-    - name: Run UFW configuration role to set up firewall rules for tailscale not let SSH be exposed to the public internet
-      ansible.builtin.import_role:
-        name: tailscale-ufw
+    # TODO ADD LAYERS
