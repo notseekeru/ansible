@@ -1,6 +1,5 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# tasks file for ./roles/tailscale
 - name: Ensure OS family is supported by this role
   ansible.builtin.assert:
     that:
@@ -17,24 +16,34 @@
     url: "https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }}/{{ tailscale_repo_codename }}.noarmor.gpg"
     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
     mode: "0644"
+  become: true
 
 - name: Add Tailscale repository
   ansible.builtin.apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }} {{ tailscale_repo_codename }} main"
     state: present
     filename: tailscale
+  become: true
 
 - name: Install Tailscale
   ansible.builtin.apt:
     name: tailscale
     state: present
     update_cache: true
+  become: true
 
 - name: Enable and start Tailscale
   ansible.builtin.service:
     name: tailscaled
     enabled: true
     state: started
+  become: true
+
+- name: Check for existing Tailscale state
+  ansible.builtin.stat:
+    path: "{{ tailscale_state_file }}"
+  register: tailscale_state_stat
+  become: true
 
 - name: Ensure Tailscale auth key is available when needed
   ansible.builtin.assert:
@@ -44,14 +53,22 @@
     fail_msg: >-
       tailscale_auth_key is missing. Define it in group_vars/vault.yml
       and run with vault decryption (for example --ask-vault-pass).
+  when:
+    - tailscale_run_up | bool
+    - not tailscale_state_stat.stat.exists or tailscale_force_reauth | bool
 
 - name: Set up Tailscale auth
   ansible.builtin.command:
-    argv:
-      - tailscale
-      - up
-      - --authkey={{ tailscale_auth_key }}
+    argv: "{{ ['tailscale', 'up', '--authkey=' + tailscale_auth_key] + tailscale_up_args }}"
   register: tailscale_up
+  changed_when: true
+  no_log: true
+  become: true
+  when:
+    - tailscale_run_up | bool
+    - tailscale_auth_key is defined
+    - tailscale_auth_key | length > 0
+    - not tailscale_state_stat.stat.exists or tailscale_force_reauth | bool
 
 - name: Wait for Tailscale IP after up
   ansible.builtin.command: tailscale ip -4
@@ -61,3 +78,4 @@
   retries: 6
   delay: 2
   until: tailscale_ip_after.stdout != ''
+  when: tailscale_run_up | bool

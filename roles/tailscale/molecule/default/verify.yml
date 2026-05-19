@@ -1,0 +1,9 @@
+---
+- name: Verify tailscale role
+  hosts: all
+  tasks:
+    - name: Verify tailscale binary is available
+      ansible.builtin.command: tailscale version
+      register: tailscale_version
+      changed_when: false
+      failed_when: tailscale_version.rc != 0

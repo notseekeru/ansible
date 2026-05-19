@@ -1,62 +1,11 @@
-# tasks file for ./roles/neovim-base
+#SPDX-License-Identifier: MIT-0
+---
+- name: Include package setup tasks
+  ansible.builtin.import_tasks: packages.yml
 
-- name: "Install base dependencies for neovim"
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - curl
-    - git
-    - unzip
-    - build-essential
-    - fd-find
-    - ripgrep
-    - lazygit
-    - fzf # needs 0.60+
-    - tree-sitter-cli # needs 0.26.1+ neovim comes with it.
-    - zsh
+- name: Include Neovim install tasks
+  ansible.builtin.import_tasks: bob.yml
+  when: neovim_install_bob | bool
 
-- name: "Install Tmux"
-  ansible.builtin.package:
-    name: tmux
-    state: present
-
-- name: "Remove apt neovim if present to avoid conflicts with bob"
-  ansible.builtin.apt:
-    name: neovim
-    state: absent
-
-- name: "Install bob-nvim"
-  ansible.builtin.shell: |
-    curl -fsSL https://raw.githubusercontent.com/MordechaiHadad/bob/master/scripts/install.sh | bash
-  args:
-    creates: "{{ ansible_facts['user_dir'] }}/.local/bin/bob"
-  become: false
-
-- name: "Pin Neovim version 0.11.2"
-  ansible.builtin.shell: |
-    export PATH="$HOME/.local/bin:$PATH"
-    bob install 0.11.2
-    bob use 0.11.2
-  args:
-    # Use the proxy binary path for idempotency
-    creates: "{{ ansible_facts['user_dir'] }}/.local/share/bob/nvim-bin/nvim"
-  become: false
-
-- name: "Ensure bob pathing is correct in .zshrc"
-  ansible.builtin.blockinfile:
-    path: "~/.zshrc"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: bob_nvim"
-    block: |
-      export PATH="$HOME/.local/share/bob/nvim-bin:$HOME/.local/bin:$PATH"
-    create: true
-  become: false
-
-- name: "Pull neovim dotfiles"
-  ansible.builtin.git:
-    repo: "https://github.com/notseekeru/nvim.git"
-    dest: "~/.config/nvim"
-    version: main
-    update: true
-    force: true
-  become: false
+- name: Include user configuration tasks
+  ansible.builtin.import_tasks: configs.yml

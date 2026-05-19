@@ -1,0 +1,27 @@
+# Managed by Ansible - Hardened SSH Config
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Security Settings
+PermitRootLogin {{ security_sshd_permit_root_login }}
+PasswordAuthentication {{ security_sshd_password_authentication }}
+PubkeyAuthentication {{ security_sshd_pubkey_authentication }}
+PermitEmptyPasswords no
+MaxAuthTries {{ security_sshd_max_auth_tries }}
+
+ListenAddress {{ security_sshd_listen_address }}
+{% if security_sshd_allow_users | length > 0 %}
+AllowUsers {{ security_sshd_allow_users | join(' ') }}
+{% endif %}
+
+# Logging
+SyslogFacility AUTHPRIV
+LogLevel INFO
+
+# Restrictions
+AllowTcpForwarding {{ security_sshd_allow_tcp_forwarding }}
+X11Forwarding {{ security_sshd_x11_forwarding }}
+PrintMotd no
+
+Subsystem sftp {{ security_sshd_sftp_subsystem }}

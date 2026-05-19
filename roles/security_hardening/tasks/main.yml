@@ -1,0 +1,17 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Include baseline package tasks
+  ansible.builtin.import_tasks: baseline.yml
+  when: security_enable_baseline | bool
+
+- name: Include authorized keys tasks
+  ansible.builtin.import_tasks: authorized_keys.yml
+  when: security_enable_authorized_keys | bool
+
+- name: Include SSH hardening tasks
+  ansible.builtin.import_tasks: sshd.yml
+  when: security_enable_sshd_hardening | bool
+
+- name: Include UFW tasks
+  ansible.builtin.import_tasks: ufw.yml
+  when: security_enable_ufw | bool

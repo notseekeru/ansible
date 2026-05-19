@@ -1,0 +1,19 @@
+---
+- name: Verify security_hardening role
+  hosts: all
+  tasks:
+    - name: Verify unattended-upgrades is installed
+      ansible.builtin.command: unattended-upgrades --help
+      register: unattended_help
+      changed_when: false
+      failed_when: unattended_help.rc != 0
+
+    - name: Verify authorized_keys file exists
+      ansible.builtin.stat:
+        path: "{{ ansible_env.HOME }}/.ssh/authorized_keys"
+      register: authorized_keys_stat
+
+    - name: Ensure authorized_keys file is present
+      ansible.builtin.assert:
+        that:
+          - authorized_keys_stat.stat.exists

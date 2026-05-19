@@ -3,7 +3,5 @@
   hosts: tailscale_pi_nodes
   gather_facts: true
 
-  tasks:
-    - name: "Neovim setup"
-      ansible.builtin.import_role:
-        name: linux_neovim
+  roles:
+    - role: linux_neovim

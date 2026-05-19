@@ -1,8 +1,7 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# handlers file for ./roles/sshd-configs
-
 - name: Restart SSH
   ansible.builtin.service:
-    name: ssh
+    name: "{{ security_sshd_service_name }}"
     state: restarted
+  become: true

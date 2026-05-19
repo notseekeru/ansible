@@ -1,21 +1,20 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# tasks file for ./roles/sshd-configs
-
-- name: Deploy hardened SSH configuration from template
-  become: true
+- name: Deploy hardened SSH configuration
   ansible.builtin.template:
     src: sshd_config.j2
-    dest: /etc/ssh/sshd_config
+    dest: "{{ security_sshd_config_path }}"
     owner: root
     group: root
     mode: "0600"
-    validate: /usr/sbin/sshd -t -f %s
+    validate: "{{ security_sshd_validate_cmd }}"
   notify: Restart SSH
-
-- name: Nullify cloud-init SSH overrides
   become: true
+
+- name: Remove cloud-init SSH overrides
   ansible.builtin.file:
     path: /etc/ssh/sshd_config.d/50-cloud-init.conf
     state: absent
   notify: Restart SSH
+  become: true
+  when: security_disable_cloud_init_ssh_override | bool

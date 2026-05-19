@@ -1,0 +1,60 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Ensure bob install directory exists
+  ansible.builtin.file:
+    path: "{{ dev_user_home }}/.cache"
+    state: directory
+    mode: "0755"
+  become: false
+
+- name: Download bob install script
+  ansible.builtin.get_url:
+    url: "{{ neovim_bob_install_url }}"
+    dest: "{{ dev_user_home }}/.cache/bob-install.sh"
+    mode: "0755"
+  become: false
+
+- name: Install bob
+  ansible.builtin.command:
+    cmd: "{{ dev_user_home }}/.cache/bob-install.sh"
+  args:
+    creates: "{{ dev_user_home }}/.local/bin/bob"
+  become: false
+
+- name: Install Neovim version {{ neovim_version }}
+  ansible.builtin.command:
+    cmd: "{{ dev_user_home }}/.local/bin/bob install {{ neovim_version }}"
+  environment:
+    PATH: "{{ dev_user_home }}/.local/bin:{{ ansible_env.PATH }}"
+  args:
+    creates: "{{ dev_user_home }}/.local/share/bob/nvim-bin/nvim"
+  become: false
+
+- name: Select Neovim version {{ neovim_version }}
+  ansible.builtin.command:
+    cmd: "{{ dev_user_home }}/.local/bin/bob use {{ neovim_version }}"
+  environment:
+    PATH: "{{ dev_user_home }}/.local/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+  become: false
+
+- name: Ensure bob pathing is configured in zsh
+  ansible.builtin.blockinfile:
+    path: "{{ dev_user_home }}/.zshrc"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: bob_nvim"
+    block: |
+      export PATH="$HOME/.local/share/bob/nvim-bin:$HOME/.local/bin:$PATH"
+    create: true
+    mode: "0644"
+  become: false
+  when: neovim_configure_path | bool
+
+- name: Pull Neovim dotfiles
+  ansible.builtin.git:
+    repo: "{{ neovim_dotfiles_repo }}"
+    dest: "{{ neovim_dotfiles_dest }}"
+    version: "{{ neovim_dotfiles_version }}"
+    update: "{{ neovim_dotfiles_update }}"
+    force: true
+  become: false
+  when: neovim_install_dotfiles | bool

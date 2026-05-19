@@ -1,43 +1,42 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# Base Layer: Debian/Ubuntu package management and auto-updates
-
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: 3600
+    cache_valid_time: "{{ security_apt_cache_valid_time }}"
+  become: true
 
-- name: Install unattended upgrades
+- name: Install baseline packages
   ansible.builtin.apt:
-    name:
-      - unattended-upgrades
-      - apt-listchanges
-      - ufw
-      - curl
-      - gnupg2
+    name: "{{ security_auto_updates_packages }}"
     state: present
+  become: true
 
 - name: Enable automatic apt updates
   ansible.builtin.copy:
-    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    dest: "{{ security_auto_updates_config_path }}"
     owner: root
     group: root
     mode: "0644"
     content: |
       APT::Periodic::Update-Package-Lists "1";
       APT::Periodic::Unattended-Upgrade "1";
+  become: true
 
-- name: Force systemd to reread configs
+- name: Reload systemd daemon
   ansible.builtin.systemd:
     daemon_reload: true
+  become: true
 
 - name: Unmask unattended-upgrades
   ansible.builtin.systemd:
     name: unattended-upgrades
     masked: false
+  become: true
 
-- name: Ensure unattended service is running
+- name: Ensure unattended-upgrades is enabled and running
   ansible.builtin.service:
     name: unattended-upgrades
     enabled: true
     state: started
+  become: true

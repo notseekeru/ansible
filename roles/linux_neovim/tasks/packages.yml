@@ -1,0 +1,16 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Install base packages for Neovim and shell tooling
+  ansible.builtin.package:
+    name: "{{ neovim_packages }}"
+    state: present
+  become: true
+
+- name: Remove distro Neovim to avoid conflicts with bob
+  ansible.builtin.apt:
+    name: neovim
+    state: absent
+  become: true
+  when:
+    - neovim_remove_apt | bool
+    - ansible_facts.os_family == 'Debian'

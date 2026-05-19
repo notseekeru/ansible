@@ -8,5 +8,5 @@
 
   # This playbook is responsible for hardening the security of the Raspberry Pi nodes.
 
-  tasks:
-    # TODO ADD LAYERS
+  roles:
+    - role: security_hardening

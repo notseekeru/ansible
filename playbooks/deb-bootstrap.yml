@@ -8,10 +8,5 @@
 
   # Only ssh at local IP adress of machines at any port
 
-  tasks:
-    # TODO: ADD LAYERS
-
-    # Tailscale Layer
-    - name: Run Tailscale layer role to install and configure Tailscale
-      ansible.builtin.import_role:
-        name: tailscale
+  roles:
+    - role: tailscale

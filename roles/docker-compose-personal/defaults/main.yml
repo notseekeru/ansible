@@ -1,3 +1,16 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# defaults file for ./roles/docker-compose-personal
+docker_compose_personal_user: "{{ ansible_user_id | default(ansible_user) }}"
+docker_compose_personal_user_home: "{{ ansible_facts['user_dir'] }}"
+
+docker_compose_personal_repo: "https://github.com/notseekeru/docker.git"
+docker_compose_personal_version: "main"
+docker_compose_personal_dest: "{{ docker_compose_personal_user_home }}/docker"
+docker_compose_personal_project: "portfolio_website"
+
+docker_compose_personal_manage_env: true
+docker_compose_personal_cloudflare_token: "{{ CLOUDFLARE_TOKEN | default('') }}"
+docker_compose_personal_env_path: "{{ docker_compose_personal_dest }}/{{ docker_compose_personal_project }}/.env"
+
+docker_compose_personal_run_compose: true
+docker_compose_personal_pull: always

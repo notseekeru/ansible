@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    neovim_install_bob: false
+    neovim_install_dotfiles: false
+    dev_install_gh: false
+    neovim_packages:
+      - curl
+      - git
+      - unzip
+      - build-essential
+      - zsh
+  roles:
+    - role: linux_neovim
