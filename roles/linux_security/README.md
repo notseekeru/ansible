@@ -1,4 +1,4 @@
-# Security Hardening
+# Linux Security
 
 Baseline security hardening for Debian/Ubuntu nodes. Includes:
 
@@ -48,5 +48,5 @@ security_ufw_deny_interfaces:
   hosts: tailscale_pi_nodes
   gather_facts: true
   roles:
-    - role: security_hardening
+    - role: linux_security
 ```

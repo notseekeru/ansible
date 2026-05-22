@@ -9,4 +9,4 @@
   # This playbook is responsible for hardening the security of the Raspberry Pi nodes.
 
   roles:
-    - role: security_hardening
+    - role: linux_security
