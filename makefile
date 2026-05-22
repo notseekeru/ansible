@@ -17,6 +17,9 @@ neovim:
 lint:
 	ansible-lint --fix all .
 
+molecule:
+	molecule test -s default
+
 checkwsl:
 	ansible-playbook -i localhost, -c local playbooks/linux_neovim.yml --ask-become-pass --check --diff
 
