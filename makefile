@@ -15,7 +15,7 @@ neovim:
 	ansible-playbook playbooks/linux_neovim.yml -i inventories/hosts.ini -K
 
 lint:
-	ansible-lint playbooks/*.yml
+	ansible-lint --fix all .
 
 simplel:
 	ansible-playbook playbooks/deb-bootstrap.yml -i inventories/hosts.ini --check --diff

@@ -3,11 +3,11 @@
 - name: Deploy hardened SSH configuration
   ansible.builtin.template:
     src: sshd_config.j2
-    dest: "{{ security_sshd_config_path }}"
+    dest: "{{ linux_security_sshd_config_path }}"
     owner: root
     group: root
     mode: "0600"
-    validate: "{{ security_sshd_validate_cmd }}"
+    validate: "{{ linux_security_sshd_validate_cmd }}"
   notify: Restart SSH
   become: true
 
@@ -17,4 +17,4 @@
     state: absent
   notify: Restart SSH
   become: true
-  when: security_disable_cloud_init_ssh_override | bool
+  when: linux_security_disable_cloud_init_ssh_override | bool

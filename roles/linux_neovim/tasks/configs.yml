@@ -2,53 +2,53 @@
 ---
 - name: Change default shell to zsh
   ansible.builtin.user:
-    name: "{{ dev_user }}"
-    shell: "{{ dev_shell_path }}"
+    name: "{{ linux_neovim_dev_user }}"
+    shell: "{{ linux_neovim_dev_shell_path }}"
   become: true
-  when: dev_set_shell | bool
+  when: linux_neovim_dev_set_shell | bool
 
 - name: Install GitHub CLI
   ansible.builtin.package:
     name: gh
     state: present
   become: true
-  when: dev_install_gh | bool
+  when: linux_neovim_dev_install_gh | bool
 
 - name: Set inputrc to ignore case for tab completion
   ansible.builtin.lineinfile:
-    path: "{{ dev_user_home }}/.inputrc"
+    path: "{{ linux_neovim_dev_user_home }}/.inputrc"
     regexp: "^set completion-ignore-case"
     line: "set completion-ignore-case on"
     state: present
     create: true
     mode: "0644"
   become: false
-  when: dev_inputrc_ignore_case | bool
+  when: linux_neovim_dev_inputrc_ignore_case | bool
 
 - name: Set Vim configuration
   ansible.builtin.copy:
-    dest: "{{ dev_user_home }}/.vimrc"
-    content: "{{ dev_vimrc_content }}"
+    dest: "{{ linux_neovim_dev_user_home }}/.vimrc"
+    content: "{{ linux_neovim_dev_vimrc_content }}"
     mode: "0644"
   become: false
-  when: dev_vimrc_enable | bool
+  when: linux_neovim_dev_vimrc_enable | bool
 
 - name: Configure shell aliases
   ansible.builtin.copy:
-    dest: "{{ dev_user_home }}/{{ item }}"
+    dest: "{{ linux_neovim_dev_user_home }}/{{ item }}"
     content: |
-      {{ dev_shell_aliases | join('\n') }}
-      {% if dev_shell_functions | length > 0 %}
+      {{ linux_neovim_dev_shell_aliases | join('\n') }}
+      {% if linux_neovim_dev_shell_functions | length > 0 %}
 
-      {{ dev_shell_functions | join('\n') }}
+      {{ linux_neovim_dev_shell_functions | join('\n') }}
       {% endif %}
     mode: "0644"
-  loop: "{{ dev_shell_alias_files }}"
+  loop: "{{ linux_neovim_dev_shell_alias_files }}"
   become: false
 
 - name: Ensure zsh sources aliases
   ansible.builtin.blockinfile:
-    path: "{{ dev_user_home }}/.zshrc"
+    path: "{{ linux_neovim_dev_user_home }}/.zshrc"
     create: true
     marker: "# {mark} ANSIBLE MANAGED BLOCK: zsh_aliases"
     block: |
@@ -60,14 +60,14 @@
 
 - name: Configure git identity
   ansible.builtin.copy:
-    dest: "{{ dev_user_home }}/.gitconfig"
+    dest: "{{ linux_neovim_dev_user_home }}/.gitconfig"
     content: |
       [user]
-        name = {{ dev_git_user_name }}
-        email = {{ dev_git_user_email }}
+        name = {{ linux_neovim_dev_git_user_name }}
+        email = {{ linux_neovim_dev_git_user_email }}
     mode: "0644"
   become: false
   when:
-    - dev_git_configure | bool
-    - dev_git_user_name | length > 0
-    - dev_git_user_email | length > 0
+    - linux_neovim_dev_git_configure | bool
+    - linux_neovim_dev_git_user_name | length > 0
+    - linux_neovim_dev_git_user_email | length > 0

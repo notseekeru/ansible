@@ -1,42 +1,42 @@
 #SPDX-License-Identifier: MIT-0
 ---
-security_enable_baseline: true
-security_enable_authorized_keys: true
-security_enable_sshd_hardening: true
-security_enable_ufw: true
-security_disable_cloud_init_ssh_override: true
-security_disable_avahi: true
+linux_security_enable_baseline: true
+linux_security_enable_authorized_keys: true
+linux_security_enable_sshd_hardening: true
+linux_security_enable_ufw: true
+linux_security_disable_cloud_init_ssh_override: true
+linux_security_disable_avahi: true
 
-security_apt_cache_valid_time: 3600
-security_auto_updates_packages:
+linux_security_apt_cache_valid_time: 3600
+linux_security_auto_updates_packages:
   - unattended-upgrades
   - apt-listchanges
   - ufw
   - curl
   - gnupg2
-security_auto_updates_config_path: /etc/apt/apt.conf.d/20auto-upgrades
+linux_security_auto_updates_config_path: /etc/apt/apt.conf.d/20auto-upgrades
 
-security_authorized_key_user: "{{ ansible_user_id | default(ansible_user) }}"
-security_authorized_key_file: "authorized_keys.pub"
+linux_security_authorized_key_user: "{{ ansible_user_id | default(ansible_user) }}"
+linux_security_authorized_key_file: "authorized_keys.pub"
 
-security_sshd_config_path: /etc/ssh/sshd_config
-security_sshd_validate_cmd: "/usr/sbin/sshd -t -f %s"
-security_sshd_service_name: ssh
-security_sshd_listen_address: "0.0.0.0"
-security_sshd_allow_users:
+linux_security_sshd_config_path: /etc/ssh/sshd_config
+linux_security_sshd_validate_cmd: "/usr/sbin/sshd -t -f %s"
+linux_security_sshd_service_name: ssh
+linux_security_sshd_listen_address: "0.0.0.0"
+linux_security_sshd_allow_users:
   - "{{ ansible_user_id | default(ansible_user) }}"
-security_sshd_permit_root_login: "no"
-security_sshd_password_authentication: "no"
-security_sshd_pubkey_authentication: "yes"
-security_sshd_max_auth_tries: 3
-security_sshd_allow_tcp_forwarding: "no"
-security_sshd_x11_forwarding: "no"
-security_sshd_sftp_subsystem: "/usr/lib/openssh/sftp-server"
+linux_security_sshd_permit_root_login: "no"
+linux_security_sshd_password_authentication: "no"
+linux_security_sshd_pubkey_authentication: "yes"
+linux_security_sshd_max_auth_tries: 3
+linux_security_sshd_allow_tcp_forwarding: "no"
+linux_security_sshd_x11_forwarding: "no"
+linux_security_sshd_sftp_subsystem: "/usr/lib/openssh/sftp-server"
 
-security_ufw_ssh_port: "{{ ansible_port | default(22) }}"
-security_ufw_allow_interfaces:
+linux_security_ufw_ssh_port: "{{ ansible_port | default(22) }}"
+linux_security_ufw_allow_interfaces:
   - tailscale0
-security_ufw_deny_interfaces:
+linux_security_ufw_deny_interfaces:
   - eth0
   - wlan0
-security_ufw_default_incoming_policy: deny
+linux_security_ufw_default_incoming_policy: deny

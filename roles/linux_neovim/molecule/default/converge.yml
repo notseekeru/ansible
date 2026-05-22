@@ -3,10 +3,10 @@
   hosts: all
   become: true
   vars:
-    neovim_install_bob: false
-    neovim_install_dotfiles: false
-    dev_install_gh: false
-    neovim_packages:
+    linux_neovim_install_bob: false
+    linux_neovim_install_dotfiles: false
+    linux_neovim_dev_install_gh: false
+    linux_neovim_packages:
       - curl
       - git
       - unzip

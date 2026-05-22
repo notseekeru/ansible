@@ -1,5 +1,5 @@
 ---
-- name: Verify security_hardening role
+- name: Verify linux_security role
   hosts: all
   tasks:
     - name: Verify unattended-upgrades is installed

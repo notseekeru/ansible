@@ -1,29 +1,30 @@
 #SPDX-License-Identifier: MIT-0
 ---
-- name: Allow SSH on port {{ security_ufw_ssh_port }} over allowed interfaces
+- name: Allow SSH on port over allowed interfaces {{ linux_security_ufw_ssh_port }}
   community.general.ufw:
     rule: allow
-    port: "{{ security_ufw_ssh_port }}"
+    port: "{{ linux_security_ufw_ssh_port }}"
     proto: tcp
     interface_in: "{{ item }}"
-  loop: "{{ security_ufw_allow_interfaces }}"
+  loop: "{{ linux_security_ufw_allow_interfaces }}"
   become: true
 
-- name: Deny SSH on port {{ security_ufw_ssh_port }} over disallowed interfaces
+- name: Deny SSH on port over disallowed interfaces {{ linux_security_ufw_ssh_port }}
   community.general.ufw:
     rule: deny
-    port: "{{ security_ufw_ssh_port }}"
+    port: "{{ linux_security_ufw_ssh_port }}"
     proto: tcp
     interface_in: "{{ item }}"
-  loop: "{{ security_ufw_deny_interfaces }}"
+  loop: "{{ linux_security_ufw_deny_interfaces }}"
   become: true
 
 - name: Enable UFW with default deny
   community.general.ufw:
     state: enabled
-    policy: "{{ security_ufw_default_incoming_policy }}"
+    policy: "{{ linux_security_ufw_default_incoming_policy }}"
     direction: incoming
   become: true
+  # noqa: args[module]
 
 - name: Permanently mask avahi services
   ansible.builtin.systemd:
@@ -33,7 +34,7 @@
   loop:
     - avahi-daemon.service
     - avahi-daemon.socket
-  when: security_disable_avahi | bool
+  when: linux_security_disable_avahi | bool
   become: true
 
 - name: Ensure UFW is enabled and running

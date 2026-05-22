@@ -5,7 +5,7 @@
 
 - name: Include Neovim install tasks
   ansible.builtin.import_tasks: bob.yml
-  when: neovim_install_bob | bool
+  when: linux_neovim_install_bob | bool
 
 - name: Include user configuration tasks
   ansible.builtin.import_tasks: configs.yml

@@ -1,52 +1,52 @@
 #SPDX-License-Identifier: MIT-0
 ---
-neovim_packages:
-	- curl
-	- git
-	- unzip
-	- build-essential
-	- fd-find
-	- ripgrep
-	- lazygit
-	- fzf
-	- tree-sitter-cli
-	- zsh
-	- tmux
-neovim_remove_apt: true
+linux_neovim_packages:
+  - curl
+  - git
+  - unzip
+  - build-essential
+  - fd-find
+  - ripgrep
+  - lazygit
+  - fzf
+  - tree-sitter-cli
+  - zsh
+  - tmux
+linux_neovim_remove_apt: true
 
-neovim_install_bob: true
-neovim_bob_install_url: "https://raw.githubusercontent.com/MordechaiHadad/bob/master/scripts/install.sh"
-neovim_version: "0.11.2"
-neovim_configure_path: true
+linux_neovim_install_bob: true
+linux_neovim_bob_install_url: "https://raw.githubusercontent.com/MordechaiHadad/bob/master/scripts/install.sh"
+linux_neovim_version: "0.11.2"
+linux_neovim_configure_path: true
 
-neovim_install_dotfiles: true
-neovim_dotfiles_repo: "https://github.com/notseekeru/nvim.git"
-neovim_dotfiles_version: "main"
-neovim_dotfiles_update: true
-neovim_dotfiles_dest: "{{ dev_user_home }}/.config/nvim"
+linux_neovim_install_dotfiles: true
+linux_neovim_dotfiles_repo: "https://github.com/notseekeru/nvim.git"
+linux_neovim_dotfiles_version: "main"
+linux_neovim_dotfiles_update: true
+linux_neovim_dotfiles_dest: "{{ linux_neovim_dev_user_home }}/.config/nvim"
 
-dev_user: "{{ ansible_user_id | default(ansible_user) }}"
-dev_user_home: "{{ ansible_facts['user_dir'] }}"
-dev_set_shell: true
-dev_shell_path: /bin/zsh
-dev_install_gh: true
-dev_inputrc_ignore_case: true
-dev_vimrc_enable: true
-dev_vimrc_content: |
-	set number
-	set relativenumber
-	syntax on
-	nnoremap ; :
-	nnoremap : ;
-dev_shell_aliases:
-	- "alias ll='ls -alF'"
-	- "alias la='ls -A'"
-	- "alias l='ls -CF'"
-	- "alias compose='docker compose'"
-dev_shell_functions: []
-dev_shell_alias_files:
-	- .bash_aliases
-	- .zsh_aliases
-dev_git_configure: true
-dev_git_user_name: ""
-dev_git_user_email: ""
+linux_neovim_dev_user: "{{ ansible_user_id | default(ansible_user) }}"
+linux_neovim_dev_user_home: "{{ ansible_facts['user_dir'] }}"
+linux_neovim_dev_set_shell: true
+linux_neovim_dev_shell_path: /bin/zsh
+linux_neovim_dev_install_gh: true
+linux_neovim_dev_inputrc_ignore_case: true
+linux_neovim_dev_vimrc_enable: true
+linux_neovim_dev_vimrc_content: |
+  set number
+  set relativenumber
+  syntax on
+  nnoremap ; :
+  nnoremap : ;
+linux_neovim_dev_shell_aliases:
+  - "alias ll='ls -alF'"
+  - "alias la='ls -A'"
+  - "alias l='ls -CF'"
+  - "alias compose='docker compose'"
+linux_neovim_dev_shell_functions: []
+linux_neovim_dev_shell_alias_files:
+  - .bash_aliases
+  - .zsh_aliases
+linux_neovim_dev_git_configure: true
+linux_neovim_dev_git_user_name: ""
+linux_neovim_dev_git_user_email: ""

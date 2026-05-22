@@ -1,5 +1,4 @@
 ---
 
 exclude_paths:
-
-- roles/geerlingguy.docker/
+  - roles/geerlingguy.docker/

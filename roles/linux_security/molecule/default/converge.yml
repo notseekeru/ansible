@@ -3,7 +3,7 @@
   hosts: all
   become: true
   vars:
-    security_enable_ufw: false
-    security_enable_sshd_hardening: false
+    linux_security_enable_ufw: false
+    linux_security_enable_sshd_hardening: false
   roles:
-    - role: security_hardening
+    - role: linux_security

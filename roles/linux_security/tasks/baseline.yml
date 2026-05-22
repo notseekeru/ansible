@@ -3,18 +3,18 @@
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: "{{ security_apt_cache_valid_time }}"
+    cache_valid_time: "{{ linux_security_apt_cache_valid_time }}"
   become: true
 
 - name: Install baseline packages
   ansible.builtin.apt:
-    name: "{{ security_auto_updates_packages }}"
+    name: "{{ linux_security_auto_updates_packages }}"
     state: present
   become: true
 
 - name: Enable automatic apt updates
   ansible.builtin.copy:
-    dest: "{{ security_auto_updates_config_path }}"
+    dest: "{{ linux_security_auto_updates_config_path }}"
     owner: root
     group: root
     mode: "0644"
