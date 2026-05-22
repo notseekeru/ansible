@@ -35,7 +35,7 @@ ls -l /etc/ssh/sshd_config.d/
 
 - linux_security: merged auto-dbpkg, pubkey, tailscale-sshd-conf, tailscale-ufw
 - linux_neovim: includes dev-configs
-- docker-compose-personal: unchanged
+- docker-compose_personal: unchanged
 - tailscale: unchanged
 
 ## Molecule (Local)

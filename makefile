@@ -4,7 +4,7 @@ ROLE_NAME := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 # Prevents make from confusing role name arguments with file targets
 $(eval $(ROLE_NAME):;@:)
 
-.PHONY: role bootstrap-node harden-node
+.PHONY: role wsl neovim lint checkwsl checkboot checkharden
 role:
 	ansible-galaxy init ./roles/$(ROLE_NAME)
 
@@ -17,9 +17,12 @@ neovim:
 lint:
 	ansible-lint --fix all .
 
-simplel:
+checkwsl:
+	ansible-playbook -i localhost, -c local playbooks/linux_neovim.yml --ask-become-pass --check --diff
+
+checkboot:
 	ansible-playbook playbooks/deb-bootstrap.yml -i inventories/hosts.ini --check --diff
 
-simplet:
+checkharden:
 	ansible-playbook playbooks/deb-hardening.yml -i inventories/hosts.ini --check --diff
 

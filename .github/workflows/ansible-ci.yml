@@ -61,7 +61,7 @@ jobs:
       matrix:
         role:
           - linux_neovim
-          - docker-compose-personal
+          - docker-compose_personal
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -21,10 +21,10 @@
 │   ├── deb-hardening.yml
 │   └── linux_neovim.yml
 └── roles
-    ├── docker-compose-personal
+    ├── docker-compose_personal
     ├── geerlingguy.docker
     ├── linux_neovim
-    ├── security_hardening
+    ├── linux_security
     └── tailscale
 ```
 
@@ -32,7 +32,14 @@
 
 ### Task
 
-You are an expert DevOps Engineer specializing in Ansible. Refactor the provided Ansible codebase according to the strict requirements below. Implement Molecule tests for each role and ensure all code adheres to Ansible best practices. CIS Level 1 compliance is a must.
+May 2026
+
+You are an expert DevOps Engineer specializing in Ansible. Refactor the provided Ansible codebase according to the strict requirements below. Implement Molecule tests for each role and ensure all code adheres to Ansible best practices. CIS Level 1 compliance is a must. Update the CI pipeline to run these tests and ensure 100% Ansible Lint compliance. Document all changes in detail.
+
+Additional tasks:
+
+- Add zsh installation and configuration to the linux_neovim role for an improved shell experience.
+- Fail2Ban: Insert to linux_security role and configure Fail2Ban for enhanced security.
 
 ### Environment Versions
 
@@ -50,7 +57,7 @@ You are an expert DevOps Engineer specializing in Ansible. Refactor the provided
 ### Phase 1: Assessment & Clarification (Mandate)
 
 1. Stop and analyze the existing codebase provided by the user.
-2. Ask clarifying questions regarding current infrastructure dependencies before writing code.
+2. Ask clarifying questions using vscode popup question regarding current infrastructure dependencies before writing code.
 3. Confirm the target "Reference Date" or specific corporate standards required.
 4. Do not output refactored code until the user confirms your initial analysis and answers your questions.
 

@@ -22,5 +22,5 @@ docker_compose_personal_cloudflare_token: "{{ CLOUDFLARE_TOKEN | default('') }}"
   hosts: tailscale_pi_nodes
   gather_facts: true
   roles:
-    - role: docker-compose-personal
+    - role: docker-compose_personal
 ```

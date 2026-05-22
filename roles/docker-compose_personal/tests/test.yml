@@ -3,4 +3,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - ./roles/docker-compose-personal
+    - ./roles/docker-compose_personal

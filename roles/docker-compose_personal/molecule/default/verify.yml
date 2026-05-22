@@ -1,5 +1,5 @@
 ---
-- name: Verify docker-compose-personal role
+- name: Verify docker-compose_personal role
   hosts: all
   tasks:
     - name: Verify repository directory exists
