@@ -4,6 +4,7 @@
   ansible.builtin.package:
     name: "{{ linux_neovim_packages }}"
     state: present
+    update_cache: true
   become: true
 
 - name: Remove distro Neovim to avoid conflicts with bob
