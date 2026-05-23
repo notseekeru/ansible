@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 linux_security_enable_baseline: true
 linux_security_enable_authorized_keys: true

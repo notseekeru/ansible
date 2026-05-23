@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 - name: Set authorized keys from role file
   ansible.posix.authorized_key:

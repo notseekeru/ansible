@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 - name: Ensure OS family is supported by this role
   ansible.builtin.assert:

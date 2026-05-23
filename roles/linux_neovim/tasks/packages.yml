@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 - name: Install base packages for Neovim and shell tooling
   ansible.builtin.package:

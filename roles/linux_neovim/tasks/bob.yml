@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 - name: Ensure bob install directory exists
   ansible.builtin.file:

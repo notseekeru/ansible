@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 - name: Include package setup tasks
   ansible.builtin.import_tasks: packages.yml

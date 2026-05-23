@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 - name: Allow SSH on port over allowed interfaces {{ linux_security_ufw_ssh_port }}
   community.general.ufw:
