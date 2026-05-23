@@ -21,7 +21,7 @@
 │   ├── deb-hardening.yml
 │   └── linux_neovim.yml
 └── roles
-    ├── docker-compose_personal
+    ├── docker_compose_personal
     ├── geerlingguy.docker
     ├── linux_neovim
     ├── linux_security

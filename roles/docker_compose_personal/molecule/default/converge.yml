@@ -5,4 +5,4 @@
     docker_compose_personal_run_compose: false
     docker_compose_personal_manage_env: false
   roles:
-    - role: docker-compose_personal
+    - role: docker_compose_personal
