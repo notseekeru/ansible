@@ -17,11 +17,17 @@ AllowUsers {{ linux_security_sshd_allow_users | join(' ') }}
 
 # Logging
 SyslogFacility AUTHPRIV
-LogLevel INFO
+LogLevel VERBOSE
 
 # Restrictions
 AllowTcpForwarding {{ linux_security_sshd_allow_tcp_forwarding }}
 X11Forwarding {{ linux_security_sshd_x11_forwarding }}
 PrintMotd no
+
+# Additional Security Settings
+ClientAliveCountMax 2
+MaxSessions 2
+TCPKeepAlive no
+AllowAgentForwarding no
 
 Subsystem sftp {{ linux_security_sshd_sftp_subsystem }}
