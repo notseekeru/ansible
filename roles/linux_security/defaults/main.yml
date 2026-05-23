@@ -16,7 +16,7 @@ linux_security_auto_updates_packages:
   - gnupg2
 linux_security_auto_updates_config_path: /etc/apt/apt.conf.d/20auto-upgrades
 
-linux_security_authorized_key_user: "{{ ansible_user_id | default(ansible_user) }}"
+linux_security_authorized_key_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
 linux_security_authorized_key_file: "authorized_keys.pub"
 
 linux_security_sshd_config_path: /etc/ssh/sshd_config
@@ -24,7 +24,7 @@ linux_security_sshd_validate_cmd: "/usr/sbin/sshd -t -f %s"
 linux_security_sshd_service_name: ssh
 linux_security_sshd_listen_address: "0.0.0.0"
 linux_security_sshd_allow_users:
-  - "{{ ansible_user_id | default(ansible_user) }}"
+  - "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
 linux_security_sshd_permit_root_login: "no"
 linux_security_sshd_password_authentication: "no"
 linux_security_sshd_pubkey_authentication: "yes"

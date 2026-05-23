@@ -6,4 +6,4 @@
     linux_security_enable_ufw: false
     linux_security_enable_sshd_hardening: false
   roles:
-    - role: linux_security
+    - linux_security
