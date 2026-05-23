@@ -16,7 +16,7 @@ neovim:
 	ansible-playbook playbooks/linux_neovim.yml -i inventories/hosts.ini -K
 
 lint:
-	ansible-lint --fix all .
+	ansible-lint --fix all
 
 molecule:
 	@echo "Found roles to test: $(ROLES)"

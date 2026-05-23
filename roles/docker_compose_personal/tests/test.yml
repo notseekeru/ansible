@@ -1,6 +1,7 @@
 #SPDX-License-Identifier: MIT-0
 ---
-- hosts: localhost
+- name: Test docker_compose_personal role
+  hosts: localhost
   remote_user: root
   roles:
-    - ./roles/docker_compose_personal
+    - docker_compose_personal

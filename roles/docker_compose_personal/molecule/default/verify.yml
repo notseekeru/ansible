@@ -5,10 +5,10 @@
     - name: Verify repository directory exists
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/docker"
-      register: repo_dir
+      register: docker_compose_personal_repo_dir
 
     - name: Ensure repository directory is present
       ansible.builtin.assert:
         that:
-          - repo_dir.stat.exists
-          - repo_dir.stat.isdir
+          - docker_compose_personal_repo_dir.stat.exists
+          - docker_compose_personal_repo_dir.stat.isdir

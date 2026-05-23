@@ -4,16 +4,16 @@
   tasks:
     - name: Verify zsh is installed
       ansible.builtin.command: zsh --version
-      register: zsh_version
+      register: linux_neovim_zsh_version
       changed_when: false
-      failed_when: zsh_version.rc != 0
+      failed_when: linux_neovim_zsh_version.rc != 0
 
     - name: Verify zshrc exists
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.zshrc"
-      register: zshrc_stat
+      register: linux_neovim_zshrc_stat
 
     - name: Ensure zshrc file is present
       ansible.builtin.assert:
         that:
-          - zshrc_stat.stat.exists
+          - linux_neovim_zshrc_stat.stat.exists
