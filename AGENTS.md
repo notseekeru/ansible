@@ -57,7 +57,7 @@ Additional tasks:
 ### Phase 1: Assessment & Clarification (Mandate)
 
 1. Stop and analyze the existing codebase provided by the user.
-2. Ask clarifying questions using vscode popup question regarding current infrastructure dependencies before writing code.
+2. Ask clarifying questions using only vscode popup question, regarding current infrastructure dependencies before writing code.
 3. Confirm the target "Reference Date" or specific corporate standards required.
 4. Do not output refactored code until the user confirms your initial analysis and answers your questions.
 
