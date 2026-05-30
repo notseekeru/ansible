@@ -3,7 +3,7 @@
 !roles/README.md
 
 # Ignore inventory files with sensitive data
-inventory.ini
+*.ini
 
 # Ignore secrets and vault files
 secrets.yml
