@@ -1,0 +1,4 @@
+[local_pi_nodes]
+pi5_local ansible_host=100.x.x.x ansible_user=your_user ansible_port=port_number
+[tailscale_pi_nodes]
+pi5_tailscale ansible_host=100.x.x.x ansible_user=your_user ansible_port=port_number
