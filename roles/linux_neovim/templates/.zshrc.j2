@@ -1,0 +1,100 @@
+# ==============================================================================
+# 1. ENVIRONMENT & LOCALE VARIABLES
+# ==============================================================================
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+
+# ==============================================================================
+# 2. SYSTEM PATHS
+# ==============================================================================
+
+# BEGIN ANSIBLE MANAGED BLOCK: bob_nvim
+export PATH="$HOME/.local/share/bob/nvim-bin:$HOME/.local/bin:$PATH"
+# END ANSIBLE MANAGED BLOCK: bob_nvim
+
+# ==============================================================================
+# 3. HISTORY CONFIGURATION
+# ==============================================================================
+HISTFILE=~/.zsh_history
+HISTSIZE=1000
+SAVEHIST=1000
+
+setopt histignorealldups 
+setopt sharehistory
+
+# ==============================================================================
+# 4. KEY BINDINGS & LINE EDITING
+# ==============================================================================
+bindkey -e  # Use Emacs keybindings
+
+# ==============================================================================
+# 5. COMPLETION SYSTEM (complist & zstyle)
+# ==============================================================================
+autoload -Uz compinit
+compinit
+
+# General completion behavior
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+
+# Menu and display formatting
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+
+# Color management for completions
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+
+# Process killing completions
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+
+# ==============================================================================
+# 6. EXTERNAL TOOLS & VERSION MANAGERS (NVM / Aliases)
+# ==============================================================================
+# Node Version Manager (NVM)
+export NVM_DIR="$HOME/.nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    . "$NVM_DIR/nvm.sh"
+elif [ -x "$(command -v brew)" ]; then
+    export NVM_DIR=$(brew --prefix nvm)
+    . "$NVM_DIR/nvm.sh"
+fi
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+
+# BEGIN ANSIBLE MANAGED BLOCK: zsh_aliases
+if [ -f ~/.zsh_aliases ]; then
+    source ~/.zsh_aliases
+fi
+# END ANSIBLE MANAGED BLOCK: zsh_aliases
+
+# ==============================================================================
+# 7. PROMPT & GIT INTEGRATION
+# ==============================================================================
+unset -f inject_git_prompt 2>/dev/null
+autoload -Uz add-zsh-hook
+
+# Git branch parser for prompt
+parse_git_branch() {
+    local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    [[ -n "$branch" ]] && echo " %F{green}(${branch})%f"
+}
+
+# Custom prompt generator
+build_clean_prompt() {
+    setopt PROMPT_SUBST
+    PROMPT='%K{blue}%n@%m%k %B%F{cyan}%(4~|...|)%3~%F{white}$(parse_git_branch) %# %b%f%k'
+    PS1="$PROMPT"
+}
+
+# Hook prompt generator to run before every prompt display
+add-zsh-hook precmd build_clean_prompt
