@@ -6,10 +6,10 @@ Theres 2 Playbooks, Because of Tailscale Constraint
 
 Run these after provisioning a new node:
 
-1. ansible-playbook -i inventories/hosts.ini playbooks/deb-bootstrap.yml --check --diff --limit <host>
-2. ansible-playbook -i inventories/hosts.ini playbooks/deb-bootstrap.yml --limit <host>
-3. ansible-playbook -i inventories/hosts.ini playbooks/deb-hardening.yml --check --diff --limit <host>
-4. ansible-playbook -i inventories/hosts.ini playbooks/deb-hardening.yml --limit <host>
+1. ansible-playbook -i inventories/hosts.ini playbooks/deb_bootstrap.yml --check --diff --limit <host>
+2. ansible-playbook -i inventories/hosts.ini playbooks/deb_bootstrap.yml --limit <host>
+3. ansible-playbook -i inventories/hosts.ini playbooks/deb_hardening.yml --check --diff --limit <host>
+4. ansible-playbook -i inventories/hosts.ini playbooks/deb_hardening.yml --limit <host>
 
 - Confirm SSH exposure:
   - local_ip:22 blocked

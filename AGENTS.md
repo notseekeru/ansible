@@ -6,26 +6,123 @@
 ## Project Structure
 
 ```
+.
 ├── AGENTS.md
 ├── ansible.cfg
 ├── docs
-│   ├── IMPORTANT_NOTES.md
+│   └── IMPORTANT_NOTES.md
 ├── group_vars
 │   ├── vault.yml
 │   └── vault.yml.example
 ├── inventories
-│   └── hosts.ini
+│   ├── home.ini.example
+│   ├── home_static.ini
+│   └── home_tailscale.ini
 ├── makefile
 ├── playbooks
 │   ├── deb-bootstrap.yml
 │   ├── deb-hardening.yml
 │   └── linux_neovim.yml
-└── roles
-    ├── docker_compose_personal
-    ├── geerlingguy.docker
-    ├── linux_neovim
-    ├── linux_security
-    └── tailscale
+├── roles
+│   ├── geerlingguy.docker
+│   │   ├── LICENSE
+│   │   ├── README.md
+│   │   ├── defaults
+│   │   │   └── main.yml
+│   │   ├── handlers
+│   │   │   └── main.yml
+│   │   ├── meta
+│   │   │   └── main.yml
+│   │   ├── molecule
+│   │   │   └── default
+│   │   │       ├── converge.yml
+│   │   │       ├── molecule.yml
+│   │   │       └── verify.yml
+│   │   ├── tasks
+│   │   │   ├── docker-compose.yml
+│   │   │   ├── docker-users.yml
+│   │   │   ├── main.yml
+│   │   │   ├── setup-Debian.yml
+│   │   │   ├── setup-RedHat.yml
+│   │   │   └── setup-Suse.yml
+│   │   └── vars
+│   │       ├── Alpine.yml
+│   │       ├── Archlinux.yml
+│   │       ├── Debian.yml
+│   │       ├── RedHat.yml
+│   │       ├── Suse.yml
+│   │       └── main.yml
+│   ├── linux_neovim
+│   │   ├── README.md
+│   │   ├── defaults
+│   │   │   └── main.yml
+│   │   ├── handlers
+│   │   │   └── main.yml
+│   │   ├── meta
+│   │   │   └── main.yml
+│   │   ├── molecule
+│   │   │   └── default
+│   │   │       ├── converge.yml
+│   │   │       ├── molecule.yml
+│   │   │       └── verify.yml
+│   │   ├── tasks
+│   │   │   ├── bob.yml
+│   │   │   ├── configs.yml
+│   │   │   ├── main.yml
+│   │   │   └── packages.yml
+│   │   ├── tests
+│   │   │   ├── inventory
+│   │   │   └── test.yml
+│   │   └── vars
+│   │       └── main.yml
+│   ├── linux_security
+│   │   ├── README.md
+│   │   ├── defaults
+│   │   │   └── main.yml
+│   │   ├── files
+│   │   │   └── authorized_keys.pub
+│   │   ├── handlers
+│   │   │   └── main.yml
+│   │   ├── meta
+│   │   │   └── main.yml
+│   │   ├── molecule
+│   │   │   └── default
+│   │   │       ├── converge.yml
+│   │   │       ├── molecule.yml
+│   │   │       └── verify.yml
+│   │   ├── tasks
+│   │   │   ├── authorized_keys.yml
+│   │   │   ├── baseline.yml
+│   │   │   ├── main.yml
+│   │   │   ├── sshd.yml
+│   │   │   └── ufw.yml
+│   │   ├── templates
+│   │   │   └── sshd_config.j2
+│   │   └── vars
+│   │       └── main.yml
+│   └── tailscale
+│       ├── README.md
+│       ├── defaults
+│       │   └── main.yml
+│       ├── handlers
+│       │   └── main.yml
+│       ├── meta
+│       │   └── main.yml
+│       ├── molecule
+│       │   └── default
+│       │       ├── converge.yml
+│       │       ├── molecule.yml
+│       │       └── verify.yml
+│       ├── tasks
+│       │   └── main.yml
+│       ├── tests
+│       │   ├── inventory
+│       │   └── test.yml
+│       └── vars
+│           └── main.yml
+└── venv.sh
+
+42 directories, 73 files
 ```
 
 ## Project Prompt
