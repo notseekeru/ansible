@@ -26,17 +26,21 @@
   become: true
   # noqa: args[module]
 
+- name: Gather the processor service facts
+  ansible.builtin.service_facts:
+
 - name: Permanently mask avahi services
-  ansible.builtin.systemd:
+  ansible.builtin.systemd_service:
     name: "{{ item }}"
     masked: true
     state: stopped
   loop:
     - avahi-daemon.service
     - avahi-daemon.socket
-  when: linux_security_disable_avahi | bool
+  when: 
+    - linux_security_disable_avahi | bool
+    - item in services
   become: true
-  ignore_errors: true # noqa ignore-errors
 
 - name: Ensure UFW is enabled and running
   ansible.builtin.service:
