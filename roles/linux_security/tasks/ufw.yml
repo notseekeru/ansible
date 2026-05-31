@@ -36,6 +36,7 @@
     - avahi-daemon.socket
   when: linux_security_disable_avahi | bool
   become: true
+  ignore_errors: true # noqa ignore-errors
 
 - name: Ensure UFW is enabled and running
   ansible.builtin.service:

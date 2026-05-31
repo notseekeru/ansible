@@ -14,6 +14,7 @@ linux_security_auto_updates_packages:
   - ufw
   - curl
   - gnupg2
+  - openssh-server
 linux_security_auto_updates_config_path: /etc/apt/apt.conf.d/20auto-upgrades
 
 linux_security_authorized_key_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
@@ -31,7 +32,6 @@ linux_security_sshd_pubkey_authentication: "yes"
 linux_security_sshd_max_auth_tries: 3
 linux_security_sshd_allow_tcp_forwarding: "no"
 linux_security_sshd_x11_forwarding: "no"
-linux_security_sshd_sftp_subsystem: "/usr/lib/openssh/sftp-server"
 
 linux_security_ufw_ssh_port: "{{ ansible_port | default(22) }}"
 linux_security_ufw_allow_interfaces:

@@ -10,7 +10,7 @@
 
     - name: Verify authorized_keys file exists
       ansible.builtin.stat:
-        path: "{{ ansible_env.HOME }}/.ssh/authorized_keys"
+        path: "{{ ansible_facts['env']['HOME'] }}/.ssh/authorized_keys"
       register: linux_security_authorized_keys_stat
 
     - name: Ensure authorized_keys file is present
