@@ -18,14 +18,22 @@
     mode: "0644"
   become: true
 
-- name: Add Tailscale repository
-  ansible.builtin.apt_repository:
-    repo: >
-      deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg]
-      https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }}
-      {{ tailscale_repo_codename }} main
+- name: Ensure python3-debian is installed for deb822 support
+  ansible.builtin.apt:
+    name: python3-debian
     state: present
-    filename: tailscale
+    update_cache: true
+  become: true
+
+- name: Add Tailscale repository
+  ansible.builtin.deb822_repository:
+    name: tailscale
+    types: [deb]
+    uris: "https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }}"
+    suites: "{{ tailscale_repo_codename }}"
+    components: [main]
+    signed_by: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    state: present
   become: true
 
 - name: Install Tailscale
@@ -60,7 +68,7 @@
     - tailscale_run_up | bool
     - not tailscale_state_stat.stat.exists or tailscale_force_reauth | bool
 
-- name: Set up Tailscale auth
+- name: Set up Tailscale auth # noqa no-changed-when
   ansible.builtin.command:
     argv: "{{ ['tailscale', 'up', '--authkey=' + tailscale_auth_key] + tailscale_up_args }}"
   register: tailscale_up
