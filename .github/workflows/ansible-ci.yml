@@ -1,5 +1,4 @@
----
-name: Ansible Lint, Syntax, Molecule
+name: Ansible Lint, Syntax, and Molecule Tests
 
 on:
   push:
@@ -18,24 +17,30 @@ on:
       - "ansible.cfg"
 
 jobs:
-  lint:
+  lint-and-syntax:
+    name: Lint and Structural Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create vault password file
-        run: echo -n "${{ secrets.ANSIBLE_VAULT_PASS }}" > /home/runner/.vault_pass
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Cache Python packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ansible-core ansible-lint molecule "molecule-plugins[docker]"
+          pip install ansible-core ansible-lint
 
       - name: Install Ansible collections
         run: |
@@ -44,8 +49,41 @@ jobs:
       - name: Run ansible-lint
         run: ansible-lint
 
-      - name: Run Ansible syntax checks
+      - name: Run Ansible syntax check
         run: |
-          for f in playbooks/*.yml; do
-            ansible-playbook -i inventories/hosts.ini "$f" --syntax-check
-          done
+          export ANSIBLE_VAULT_PASSWORD_FILE=.vault_pass
+          echo "${{ secrets.ANSIBLE_VAULT_PASS }}" > .vault_pass
+
+          # Find all top-level or playbook yaml files safely without loop crashing
+          find . -maxdepth 2 -name "*.yml" ! -path "*/molecule/*" -exec ansible-playbook {} --syntax-check \;
+
+          rm -f .vault_pass
+
+  molecule-tests:
+    name: Molecule Integration Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-syntax
+    strategy:
+      matrix:
+        role: [tailscale, linux_security, linux_neovim]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Molecule and Test Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core molecule "molecule-plugins[docker]" docker
+
+      - name: Run Molecule Test Sequence
+        run: |
+          cd roles/${{ matrix.role }}
+          molecule test -s default
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
+          PY_COLORS: "1"
