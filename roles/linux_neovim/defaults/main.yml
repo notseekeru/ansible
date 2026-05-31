@@ -36,8 +36,6 @@ linux_neovim_dev_vimrc_content: |
   set number
   set relativenumber
   syntax on
-  nnoremap ; :
-  nnoremap : ;
 linux_neovim_dev_shell_aliases:
   - "alias ll='ls -alF'"
   - "alias la='ls -A'"
@@ -48,5 +46,5 @@ linux_neovim_dev_shell_alias_files:
   - .bash_aliases
   - .zsh_aliases
 linux_neovim_dev_git_configure: true
-linux_neovim_dev_git_user_name: ""
-linux_neovim_dev_git_user_email: ""
+linux_neovim_dev_git_user_name: "notseekeru_example"
+linux_neovim_dev_git_user_email: "notseekeru@example.com"
