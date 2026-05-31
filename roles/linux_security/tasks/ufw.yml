@@ -37,7 +37,7 @@
   loop:
     - avahi-daemon.service
     - avahi-daemon.socket
-  when: 
+  when:
     - linux_security_disable_avahi | bool
     - item in services
   become: true
