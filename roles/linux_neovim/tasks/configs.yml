@@ -15,59 +15,48 @@
   when: linux_neovim_dev_install_gh | bool
 
 - name: Set inputrc to ignore case for tab completion
-  ansible.builtin.lineinfile:
-    path: "{{ linux_neovim_dev_user_home }}/.inputrc"
-    regexp: "^set completion-ignore-case"
-    line: "set completion-ignore-case on"
-    state: present
-    create: true
+  ansible.builtin.template:
+    src: inputrc.j2
+    dest: "{{ linux_neovim_dev_user_home }}/.inputrc"
     mode: "0644"
   become: false
   when: linux_neovim_dev_inputrc_ignore_case | bool
 
 - name: Set Vim configuration
-  ansible.builtin.copy:
+  ansible.builtin.template:
+    src: vimrc.j2
     dest: "{{ linux_neovim_dev_user_home }}/.vimrc"
-    content: "{{ linux_neovim_dev_vimrc_content }}"
     mode: "0644"
   become: false
   when: linux_neovim_dev_vimrc_enable | bool
 
 - name: Configure shell aliases
-  ansible.builtin.copy:
+  ansible.builtin.template:
+    src: aliases.j2
     dest: "{{ linux_neovim_dev_user_home }}/{{ item }}"
-    content: |
-      {{ linux_neovim_dev_shell_aliases | join('\n') }}
-      {% if linux_neovim_dev_shell_functions | length > 0 %}
-
-      {{ linux_neovim_dev_shell_functions | join('\n') }}
-      {% endif %}
     mode: "0644"
   loop: "{{ linux_neovim_dev_shell_alias_files }}"
   become: false
+  when: linux_neovim_dev_shell_alias_files | length > 0
 
-- name: Ensure zsh sources aliases
-  ansible.builtin.blockinfile:
-    path: "{{ linux_neovim_dev_user_home }}/.zshrc"
-    create: true
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: zsh_aliases"
-    block: |
-      if [ -f ~/.zsh_aliases ]; then
-          source ~/.zsh_aliases
-      fi
+- name: Deploy managed .zshrc
+  ansible.builtin.template:
+    src: zshrc.j2
+    dest: "{{ linux_neovim_dev_user_home }}/.zshrc"
     mode: "0644"
   become: false
 
-- name: Configure git identity
-  ansible.builtin.copy:
+- name: Deploy managed .tmux.conf
+  ansible.builtin.template:
+    src: tmux.conf.j2
+    dest: "{{ linux_neovim_dev_user_home }}/.tmux.conf"
+    mode: "0644"
+  become: false
+
+- name: Deploy managed .gitconfig
+  ansible.builtin.template:
+    src: gitconfig.j2
     dest: "{{ linux_neovim_dev_user_home }}/.gitconfig"
-    content: |
-      [user]
-        name = {{ linux_neovim_dev_git_user_name }}
-        email = {{ linux_neovim_dev_git_user_email }}
     mode: "0644"
   become: false
-  when:
-    - linux_neovim_dev_git_configure | bool
-    - linux_neovim_dev_git_user_name | length > 0
-    - linux_neovim_dev_git_user_email | length > 0
+  when: linux_neovim_dev_git_configure | bool

@@ -10,7 +10,7 @@
 
     - name: Verify zshrc exists
       ansible.builtin.stat:
-        path: "{{ ansible_env.HOME }}/.zshrc"
+        path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
       register: linux_neovim_zshrc_stat
 
     - name: Ensure zshrc file is present

@@ -27,7 +27,18 @@
   environment:
     PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_env.PATH }}"
   args:
-    creates: "{{ linux_neovim_dev_user_home }}/.local/share/bob/nvim-bin/nvim"
+    creates: "{{ linux_neovim_dev_user_home }}/.local/share/bob/{{ linux_neovim_version }}"
+  become: false
+
+- name: Check currently selected Neovim version
+  ansible.builtin.shell: |
+    set -o pipefail
+    {{ linux_neovim_dev_user_home }}/.local/bin/bob list | grep -E '^(\*|=>)\s+' | awk '{print $2}'
+  args:
+    executable: /bin/bash
+  register: bob_current_version
+  failed_when: false
+  changed_when: false
   become: false
 
 - name: Select Neovim version {{ linux_neovim_version }}
@@ -35,19 +46,8 @@
     cmd: "{{ linux_neovim_dev_user_home }}/.local/bin/bob use {{ linux_neovim_version }}"
   environment:
     PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_env.PATH }}"
-  changed_when: false
+  when: bob_current_version.stdout != linux_neovim_version
   become: false
-
-- name: Ensure bob pathing is configured in zsh
-  ansible.builtin.blockinfile:
-    path: "{{ linux_neovim_dev_user_home }}/.zshrc"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: bob_nvim"
-    block: |
-      export PATH="$HOME/.local/share/bob/nvim-bin:$HOME/.local/bin:$PATH"
-    create: true
-    mode: "0644"
-  become: false
-  when: linux_neovim_configure_path | bool
 
 - name: Pull Neovim dotfiles
   ansible.builtin.git:

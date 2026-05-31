@@ -3,6 +3,7 @@
 linux_neovim_packages:
   - curl
   - git
+  - gh
   - unzip
   - build-essential
   - fd-find
@@ -25,26 +26,16 @@ linux_neovim_dotfiles_version: "main"
 linux_neovim_dotfiles_update: true
 linux_neovim_dotfiles_dest: "{{ linux_neovim_dev_user_home }}/.config/nvim"
 
-linux_neovim_dev_user: "{{ ansible_user_id | default(ansible_user) }}"
+linux_neovim_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
 linux_neovim_dev_user_home: "{{ ansible_facts['user_dir'] }}"
 linux_neovim_dev_set_shell: true
 linux_neovim_dev_shell_path: /bin/zsh
 linux_neovim_dev_install_gh: true
 linux_neovim_dev_inputrc_ignore_case: true
 linux_neovim_dev_vimrc_enable: true
-linux_neovim_dev_vimrc_content: |
-  set number
-  set relativenumber
-  syntax on
-linux_neovim_dev_shell_aliases:
-  - "alias ll='ls -alF'"
-  - "alias la='ls -A'"
-  - "alias l='ls -CF'"
-  - "alias compose='docker compose'"
-linux_neovim_dev_shell_functions: []
+
 linux_neovim_dev_shell_alias_files:
   - .bash_aliases
   - .zsh_aliases
+
 linux_neovim_dev_git_configure: true
-linux_neovim_dev_git_user_name: "notseekeru_example"
-linux_neovim_dev_git_user_email: "notseekeru@example.com"
