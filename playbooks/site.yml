@@ -1,0 +1,43 @@
+---
+- name: Bootstrap and Harden Fresh Server
+  hosts: all
+  become: true
+  gather_facts: false
+
+  vars_files:
+    - ../group_vars/vault.yml
+
+  tasks:
+    - name: Gather facts on local network
+      ansible.builtin.setup:
+
+    # Step 1: Run Tailscale while connected via local IP
+    - name: Initialize Tailscale network
+      ansible.builtin.include_role:
+        name: tailscale
+      vars:
+        tailscale_run_up: true
+
+    # Step 2: Grab the newly generated Tailscale IP address from the server
+    - name: Get Tailscale IP
+      ansible.builtin.command: tailscale ip -4
+      register: ts_ip_output
+      changed_when: false
+
+    # Step 3: Tell Ansible to dynamically switch its target connection route
+    - name: Route future tasks through Tailscale interface
+      ansible.builtin.set_fact:
+        ansible_host: "{{ ts_ip_output.stdout | trim }}"
+
+    # Fix: Prevents Step 4 from freezing on the old connection socket
+    - name: Reset connection cache for IP migration
+      ansible.builtin.meta: clear_host_errors
+
+    # Step 4: Refresh system facts over the new secure network path
+    - name: Regather facts over Tailscale tunnel
+      ansible.builtin.setup:
+
+    # Step 5: Secure the machine safely now that we are inside the tunnel
+    - name: Apply security baseline and firewall rules
+      ansible.builtin.include_role:
+        name: linux_security
