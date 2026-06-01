@@ -12,6 +12,7 @@
     src: inputrc.j2
     dest: "{{ linux_neovim_dev_user_home }}/.inputrc"
     mode: "0644"
+    newline_sequence: "\n"
   become: false
   when: linux_neovim_dev_inputrc_ignore_case | bool
 
@@ -20,6 +21,7 @@
     src: vimrc.j2
     dest: "{{ linux_neovim_dev_user_home }}/.vimrc"
     mode: "0644"
+    newline_sequence: "\n"
   become: false
   when: linux_neovim_dev_vimrc_enable | bool
 
@@ -28,6 +30,7 @@
     src: aliases.j2
     dest: "{{ linux_neovim_dev_user_home }}/{{ item }}"
     mode: "0644"
+    newline_sequence: "\n"
   loop: "{{ linux_neovim_dev_shell_alias_files }}"
   become: false
   when: linux_neovim_dev_shell_alias_files | length > 0
@@ -37,6 +40,7 @@
     src: zshrc.j2
     dest: "{{ linux_neovim_dev_user_home }}/.zshrc"
     mode: "0644"
+    newline_sequence: "\n"
   become: false
 
 - name: Deploy managed .tmux.conf
@@ -44,6 +48,7 @@
     src: tmux.conf.j2
     dest: "{{ linux_neovim_dev_user_home }}/.tmux.conf"
     mode: "0644"
+    newline_sequence: "\n"
   become: false
 
 - name: Deploy managed .gitconfig
@@ -51,6 +56,7 @@
     src: gitconfig.j2
     dest: "{{ linux_neovim_dev_user_home }}/.gitconfig"
     mode: "0644"
+    newline_sequence: "\n"
   become: false
   when: linux_neovim_dev_git_configure | bool
 
@@ -58,15 +64,7 @@
   ansible.builtin.template:
     src: github_env.j2
     dest: "{{ linux_neovim_dev_user_home }}/.github_env"
-    mode: "0600" # Strict read/write permissions for your user only
-  become: false
-  when: linux_neovim_github_token | length > 0
-
-- name: Ensure GitHub environment is sourced in .zshrc
-  ansible.builtin.lineinfile:
-    path: "{{ linux_neovim_dev_user_home }}/.zshrc"
-    line: "source {{ linux_neovim_dev_user_home }}/.github_env"
-    state: present
-    insertafter: EOF
+    mode: "0600"
+    newline_sequence: "\n"
   become: false
   when: linux_neovim_github_token | length > 0

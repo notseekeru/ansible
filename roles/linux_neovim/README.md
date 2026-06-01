@@ -41,3 +41,7 @@ dev_shell_aliases:
   roles:
     - role: linux_neovim
 ```
+
+## Templates
+
+Make sure to update the `.j2` templates in the `templates/` directory to and modify the parsing from CRLF to LF if you are editing on Windows. Otherwise, the files will be rendered with CRLF line endings and may cause issues on Linux systems.
