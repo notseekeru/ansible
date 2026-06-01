@@ -25,29 +25,29 @@
   ansible.builtin.command:
     cmd: "{{ linux_neovim_dev_user_home }}/.local/bin/bob install {{ linux_neovim_version }}"
   environment:
-    PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
   args:
-    creates: "{{ linux_neovim_dev_user_home }}/.local/share/bob/{{ linux_neovim_version }}"
+    creates: "{{ linux_neovim_dev_user_home }}/.local/share/bob/v{{ linux_neovim_version }}"
   become: false
 
-- name: Check currently selected Neovim version
-  ansible.builtin.shell: |
-    set -o pipefail
-    {{ linux_neovim_dev_user_home }}/.local/bin/bob list | grep -E '^(\*|=>)\s+' | awk '{print $2}'
-  args:
-    executable: /bin/bash
-  register: linux_neovim_bob_current_version
-  failed_when: false
-  changed_when: false
+- name: Stat the currently active bob Neovim symlink
+  ansible.builtin.stat:
+    path: "{{ linux_neovim_dev_user_home }}/.local/share/bob/current"
+  register: bob_current_symlink
   become: false
 
 - name: Select Neovim version {{ linux_neovim_version }}
   ansible.builtin.command:
     cmd: "{{ linux_neovim_dev_user_home }}/.local/bin/bob use {{ linux_neovim_version }}"
   environment:
-    PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_env.PATH }}"
-  when: linux_neovim_bob_current_version.stdout != linux_neovim_version
-  changed_when: true
+    PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
+  register: bob_use_output
+  when: >
+    not bob_current_symlink.stat.exists or 
+    not (bob_current_symlink.stat.lnk_target | default('') is search(linux_neovim_version))
+  changed_when: >
+    "already" not in bob_use_output.stdout and
+    "current" not in bob_use_output.stdout
   become: false
 
 - name: Pull Neovim dotfiles
@@ -58,4 +58,6 @@
     update: "{{ linux_neovim_dotfiles_update }}"
     force: true
   become: false
+  environment:
+    GITHUB_TOKEN: "{{ linux_neovim_github_token }}"
   when: linux_neovim_install_dotfiles | bool

@@ -7,13 +7,6 @@
   become: true
   when: linux_neovim_dev_set_shell | bool
 
-- name: Install GitHub CLI
-  ansible.builtin.package:
-    name: gh
-    state: present
-  become: true
-  when: linux_neovim_dev_install_gh | bool
-
 - name: Set inputrc to ignore case for tab completion
   ansible.builtin.template:
     src: inputrc.j2
@@ -60,3 +53,20 @@
     mode: "0644"
   become: false
   when: linux_neovim_dev_git_configure | bool
+
+- name: Securely deploy GitHub PAT to local environment file
+  ansible.builtin.template:
+    src: github_env.j2
+    dest: "{{ linux_neovim_dev_user_home }}/.github_env"
+    mode: "0600" # Strict read/write permissions for your user only
+  become: false
+  when: linux_neovim_github_token | length > 0
+
+- name: Ensure GitHub environment is sourced in .zshrc
+  ansible.builtin.lineinfile:
+    path: "{{ linux_neovim_dev_user_home }}/.zshrc"
+    line: "source {{ linux_neovim_dev_user_home }}/.github_env"
+    state: present
+    insertafter: EOF
+  become: false
+  when: linux_neovim_github_token | length > 0
