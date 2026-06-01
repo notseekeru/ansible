@@ -12,6 +12,8 @@ linux_neovim_packages:
   - tree-sitter-cli
   - zsh
   - tmux
+  - nodejs
+  - npm
 
 linux_neovim_remove_apt: true
 

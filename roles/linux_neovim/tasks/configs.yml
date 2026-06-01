@@ -7,6 +7,13 @@
   become: true
   when: linux_neovim_dev_set_shell | bool
 
+- name: Install Gemini CLI globally via command line
+  ansible.builtin.command:
+    cmd: npm install -g @google/gemini-cli
+  args:
+    creates: /usr/local/bin/gemini # Skips entirely if this file already exists!
+  become: true
+
 - name: Set inputrc to ignore case for tab completion
   ansible.builtin.template:
     src: inputrc.j2
