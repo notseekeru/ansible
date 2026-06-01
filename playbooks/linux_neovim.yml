@@ -3,5 +3,8 @@
   hosts: all
   gather_facts: true
 
+  vars_files:
+    - ../group_vars/vault.yml
+
   roles:
     - role: linux_neovim
