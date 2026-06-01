@@ -33,7 +33,7 @@
 - name: Stat the currently active bob Neovim symlink
   ansible.builtin.stat:
     path: "{{ linux_neovim_dev_user_home }}/.local/share/bob/current"
-  register: bob_current_symlink
+  register: linux_neovim_bob_current_symlink
   become: false
 
 - name: Select Neovim version {{ linux_neovim_version }}
@@ -41,12 +41,12 @@
     cmd: "{{ linux_neovim_dev_user_home }}/.local/bin/bob use {{ linux_neovim_version }}"
   environment:
     PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
-  register: bob_use_output
+  register: linux_neovim_bob_use_output
   when: >
-    not bob_current_symlink.stat.exists or  not (bob_current_symlink.stat.lnk_target | default('') is search(linux_neovim_version))
+    not linux_neovim_bob_current_symlink.stat.exists or  not (linux_neovim_bob_current_symlink.stat.lnk_target | default('') is search(linux_neovim_version))
   changed_when: >
-    "already" not in bob_use_output.stdout and
-    "current" not in bob_use_output.stdout
+    "already" not in linux_neovim_bob_use_output.stdout and
+    "current" not in linux_neovim_bob_use_output.stdout
   become: false
 
 - name: Pull Neovim dotfiles
