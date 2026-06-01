@@ -35,3 +35,25 @@ molecule:
 		echo "=========================================="; \
 		(cd "$$role" && $(CURDIR)/.venv/bin/molecule test -s default) || exit 1; \
 	done
+
+strap-pi:
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+	-i inventories/home_static.ini \
+	playbooks/site.yml \
+	--private-key=~/.ssh/id_ed25519 \
+	--diff \
+	-K \
+	--ask-vault-pass \
+	-e "tailscale_force_reauth=true"
+
+tailscale-pi:
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+	-i inventories/home_tailscale.ini \
+	playbooks/site.yml \
+	--private-key=~/.ssh/id_ed25519 \
+	--diff \
+	-K \
+	--ask-vault-pass \
+
+find:
+	find . -type f -exec cat {} +
