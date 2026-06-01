@@ -1,6 +1,9 @@
 ---
 - name: Verify linux_security role
   hosts: all
+  vars_files:
+    - ../../../defaults/main.yml
+
   tasks:
     - name: Verify unattended-upgrades is installed
       ansible.builtin.command: unattended-upgrades --help
@@ -10,7 +13,7 @@
 
     - name: Verify authorized_keys file exists
       ansible.builtin.stat:
-        path: "{{ ansible_facts['env']['HOME'] }}/.ssh/authorized_keys"
+        path: "/home/{{ linux_security_authorized_key_user | default('seeker') }}/.ssh/authorized_keys"
       register: linux_security_authorized_keys_stat
 
     - name: Ensure authorized_keys file is present

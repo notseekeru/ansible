@@ -1,8 +1,17 @@
 # SPDX-License-Identifier: MIT-0
 ---
+- name: Ensure the target system user exists
+  ansible.builtin.user:
+    name: "{{ linux_security_authorized_key_user }}"
+    shell: /bin/bash
+    groups: sudo
+    append: true
+    state: present
+  become: true
+
 - name: Set authorized keys from role file
-  ansible.posix.authorized_key:
+  ansible.builtin.authorized_key:
     user: "{{ linux_security_authorized_key_user }}"
     state: present
-    key: "{{ lookup('ansible.builtin.file', role_path + '/files/' + linux_security_authorized_key_file) }}"
+    key: "{{ lookup('file', linux_security_authorized_key_file) }}"
   become: true
