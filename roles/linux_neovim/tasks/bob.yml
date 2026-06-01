@@ -60,3 +60,12 @@
   environment:
     GITHUB_TOKEN: "{{ linux_neovim_github_token }}"
   when: linux_neovim_install_dotfiles | bool
+
+- name: Pull Tmux Plugin Manager (TPM)
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "{{ linux_neovim_dev_user_home }}/.tmux/plugins/tpm"
+    version: master
+    depth: 1
+    update: false
+  become: false
