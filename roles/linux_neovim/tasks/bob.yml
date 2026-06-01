@@ -43,8 +43,7 @@
     PATH: "{{ linux_neovim_dev_user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
   register: bob_use_output
   when: >
-    not bob_current_symlink.stat.exists or 
-    not (bob_current_symlink.stat.lnk_target | default('') is search(linux_neovim_version))
+    not bob_current_symlink.stat.exists or  not (bob_current_symlink.stat.lnk_target | default('') is search(linux_neovim_version))
   changed_when: >
     "already" not in bob_use_output.stdout and
     "current" not in bob_use_output.stdout

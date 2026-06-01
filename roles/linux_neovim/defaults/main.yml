@@ -3,7 +3,6 @@
 linux_neovim_packages:
   - curl
   - git
-  - gh
   - unzip
   - build-essential
   - fd-find
@@ -13,6 +12,7 @@ linux_neovim_packages:
   - tree-sitter-cli
   - zsh
   - tmux
+
 linux_neovim_remove_apt: true
 
 linux_neovim_install_bob: true
@@ -39,3 +39,4 @@ linux_neovim_dev_shell_alias_files:
   - .zsh_aliases
 
 linux_neovim_dev_git_configure: true
+linux_neovim_github_token: "{{ github_token | default('') }}"

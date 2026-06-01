@@ -3,9 +3,10 @@
   hosts: all
   become: true
   vars:
-    linux_neovim_install_bob: false
-    linux_neovim_install_dotfiles: false
-    linux_neovim_dev_install_gh: false
+    linux_neovim_install_bob: true
+    linux_neovim_install_dotfiles: true
+    linux_neovim_dev_install_gh: true
+    linux_neovim_github_token: "{{ github_token | default('') }}"
     linux_neovim_packages:
       - curl
       - git

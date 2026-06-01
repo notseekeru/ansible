@@ -1,6 +1,6 @@
 ---
 - name: Deploy Neovim for debian based systems
-  hosts: tailscale_pi_nodes
+  hosts: all
   gather_facts: true
 
   roles:
