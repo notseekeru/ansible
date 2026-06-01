@@ -55,5 +55,14 @@ tailscale-pi:
 	-K \
 	--ask-vault-pass \
 
+tailscale-pi-neovim:
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+	-i inventories/home_tailscale.ini \
+	playbooks/linux_neovim.yml \
+	--private-key=~/.ssh/id_ed25519 \
+	--diff \
+	-K \
+	--ask-vault-pass \
+
 find:
 	find . -type f -exec cat {} +
