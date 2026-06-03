@@ -1,0 +1,10 @@
+---
+- name: Deploy Docker for debian based systems
+  hosts: all
+  gather_facts: true
+
+  vars_files:
+    - ../group_vars/vault.yml
+
+  roles:
+    - role: geerlingguy.docker

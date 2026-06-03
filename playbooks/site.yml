@@ -1,5 +1,5 @@
 ---
-- name: Bootstrap and Harden Fresh Server
+- name: Bootstrap and Harden Fresh Server for Debian based Systems
   hosts: all
   become: true
   gather_facts: false
