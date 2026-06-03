@@ -3,7 +3,7 @@ ROLES     := $(shell find roles -maxdepth 3 -name molecule -exec dirname {} \;)
 
 $(eval $(ROLE_NAME):;@:)
 
-.PHONY: ping-droplet role neovim lint molecule checkboot checkharden
+.PHONY: role ping-droplet checkboot checkharden lint molecule strap-pi tailscale-pi tailscale-pi-neovim tailscale-pi-docker find
 
 role:
 	@if [ -z "$(ROLE_NAME)" ]; then echo "❌ Error: Specify a role name (e.g., make role my_role)"; exit 1; fi
