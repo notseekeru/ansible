@@ -1,5 +1,6 @@
 ---
 - name: Deploy Docker for debian based systems
+  become: true
   hosts: all
   gather_facts: true
 
