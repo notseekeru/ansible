@@ -19,3 +19,7 @@
 - name: Include Fail2Ban tasks
   ansible.builtin.import_tasks: fail2ban.yml
   when: linux_security_enable_fail2ban | bool
+
+- name: Include Goss tasks
+  ansible.builtin.import_tasks: goss.yml
+  when: linux_security_enable_goss | bool

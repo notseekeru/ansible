@@ -42,3 +42,20 @@
       failed_when: linux_security_fail2ban_sshd_status.rc != 0
       # Bypasses socket connectivity verification inside Docker containers
       when: ansible_virtualization_type != 'docker'
+
+    - name: Verify Goss is installed
+      ansible.builtin.command: goss --version
+      register: linux_security_goss_version_check
+      changed_when: false
+      failed_when: linux_security_goss_version_check.rc != 0
+
+    - name: Verify dgoss is installed
+      ansible.builtin.stat:
+        path: /usr/local/bin/dgoss
+      register: linux_security_dgoss_stat
+
+    - name: Ensure dgoss binary is present
+      ansible.builtin.assert:
+        that:
+          - linux_security_dgoss_stat.stat.exists
+          - linux_security_dgoss_stat.stat.mode == "0755"
