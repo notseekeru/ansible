@@ -55,13 +55,14 @@ After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable thro
 
 CIS Level 1 hardening. All components toggleable via role defaults.
 
-| Component          | What it does                                                      |
-| ------------------ | ----------------------------------------------------------------- |
-| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding         |
-| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi |
-| Automatic updates  | unattended-upgrades installed and enabled                         |
-| Authorized keys    | Deploys from `files/authorized_keys.pub`                          |
-| Cloud-init cleanup | Removes SSH override configs                                      |
+| Component          | What it does                                                          |
+| ------------------ | --------------------------------------------------------------------- |
+| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding             |
+| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi     |
+| Automatic updates  | unattended-upgrades installed and enabled                             |
+| Authorized keys    | Deploys from `files/authorized_keys.pub`                              |
+| Cloud-init cleanup | Removes SSH override configs                                          |
+| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry |
 
 ```yaml
 # example overrides
@@ -110,6 +111,7 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 - SSH PubkeyAuthentication: yes, PasswordAuthentication: no
 - UFW default incoming policy: deny
 - Automatic updates: enabled
+- Fail2Ban sshd jail: enabled (UFW ban action)
 
 ### Secrets template
 
@@ -150,28 +152,6 @@ make molecule              # All role tests
 
 **Connection migration.** `set_fact: ansible_host` + `meta: clear_host_errors` mid-playbook is unusual, but it's the cleanest way to join a mesh and route through it in a single idempotent run.
 
-## Development
-
-```bash
-make role my_role                                   # Scaffold
-cd roles/my_role && molecule init scenario          # Add tests
-molecule test -s default                            # Run tests
-```
-
-Add a node:
-
-```ini
-# home_static.ini
-new_pi ansible_host=192.168.1.50 ansible_user=seeker ansible_port=22
-# home_tailscale.ini (after bootstrap)
-new_pi ansible_host=100.x.x.x ansible_user=seeker ansible_port=22
-```
-
-```bash
-make strap-pi        # Bootstrap
-make tailscale-pi    # Full stack
-```
-
 ## Verification
 
 ```bash
@@ -187,7 +167,6 @@ Full runbook in `docs/IMPORTANT_NOTES.md`.
 
 ## Roadmap
 
-- Fail2Ban integration in linux_security
 - GitHub Actions CI for automated Molecule runs
 
 ---

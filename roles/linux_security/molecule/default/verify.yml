@@ -20,3 +20,25 @@
       ansible.builtin.assert:
         that:
           - linux_security_authorized_keys_stat.stat.exists
+
+    - name: Verify Fail2Ban is installed
+      ansible.builtin.command: fail2ban-client --version
+      register: linux_security_fail2ban_version
+      changed_when: false
+      failed_when: linux_security_fail2ban_version.rc != 0
+
+    - name: Verify Fail2Ban service is running
+      ansible.builtin.service:
+        name: fail2ban
+        state: started
+      register: linux_security_fail2ban_service
+      # Bypasses checking the running state inside Docker containers
+      when: ansible_virtualization_type != 'docker'
+
+    - name: Ensure Fail2Ban sshd jail is active
+      ansible.builtin.command: fail2ban-client status sshd
+      register: linux_security_fail2ban_sshd_status
+      changed_when: false
+      failed_when: linux_security_fail2ban_sshd_status.rc != 0
+      # Bypasses socket connectivity verification inside Docker containers
+      when: ansible_virtualization_type != 'docker'

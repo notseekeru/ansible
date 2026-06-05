@@ -1,0 +1,6 @@
+# Managed by Ansible — do not edit manually
+[sshd]
+enabled = true
+port = {{ linux_security_ufw_ssh_port }}
+logpath = %(sshd_log)s
+backend = %(sshd_backend)s

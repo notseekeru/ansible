@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Install Fail2Ban
+  ansible.builtin.apt:
+    name: fail2ban
+    state: present
+  become: true
+
+- name: Configure Fail2Ban sshd jail
+  ansible.builtin.template:
+    src: fail2ban_jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Fail2Ban
+  become: true
+
+- name: Configure Fail2Ban sshd jail override
+  ansible.builtin.template:
+    src: fail2ban_sshd.local.j2
+    dest: /etc/fail2ban/jail.d/sshd.local
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Fail2Ban
+  become: true
+
+- name: Enable Fail2Ban service
+  ansible.builtin.systemd:
+    name: fail2ban
+    enabled: true
+    state: started
+  become: true
+  # Prevents false positives in Docker Molecule tests
+  changed_when: ansible_virtualization_type != 'docker' and ansible_virtualization_type != 'container'

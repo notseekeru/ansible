@@ -39,4 +39,12 @@ linux_security_ufw_allow_interfaces:
 linux_security_ufw_deny_interfaces:
   - eth0
   - wlan0
+linux_security_enable_fail2ban: true
+
+linux_security_fail2ban_ignore_ip:
+  - 127.0.0.1/8
+linux_security_fail2ban_bantime: 1h
+linux_security_fail2ban_findtime: 10m
+linux_security_fail2ban_maxretry: 5
+
 linux_security_ufw_default_incoming_policy: deny

@@ -1,0 +1,16 @@
+---
+- name: Prepare instance
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure log directory exists
+      ansible.builtin.file:
+        path: /var/log
+        state: directory
+        mode: "0755"
+
+    - name: Touch auth.log so Fail2Ban has an environment target
+      ansible.builtin.file:
+        path: /var/log/auth.log
+        state: touch
+        mode: "0640"

@@ -5,5 +5,6 @@
   vars:
     linux_security_enable_ufw: true
     linux_security_enable_sshd_hardening: true
+    linux_security_enable_fail2ban: true
   roles:
     - linux_security

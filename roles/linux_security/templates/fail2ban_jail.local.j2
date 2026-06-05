@@ -1,0 +1,7 @@
+# Managed by Ansible — do not edit manually
+[DEFAULT]
+ignoreip = {{ linux_security_fail2ban_ignore_ip | join(' ') }}
+bantime = {{ linux_security_fail2ban_bantime }}
+findtime = {{ linux_security_fail2ban_findtime }}
+maxretry = {{ linux_security_fail2ban_maxretry }}
+banaction = ufw
