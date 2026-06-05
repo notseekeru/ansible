@@ -1,5 +1,5 @@
 ---
-name: Ansible Lint, Syntax, Molecule
+name: Ansible Lint, Syntax
 
 on:
   push:
