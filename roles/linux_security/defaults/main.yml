@@ -39,11 +39,14 @@ linux_security_ufw_allow_interfaces:
 linux_security_ufw_deny_interfaces:
   - eth0
   - wlan0
+
 linux_security_enable_goss: true
 linux_security_goss_version: "v0.4.9"
-linux_security_goss_arch: "amd64"
+
+linux_security_goss_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'arm' if ansible_architecture == 'armv7l' else 'amd64' }}"
+
 linux_security_goss_dl_url: "https://github.com/goss-org/goss/releases/download/{{ linux_security_goss_version }}/goss-linux-{{ linux_security_goss_arch }}"
-linux_security_goss_dgoss_dl_url: "https://github.com/goss-org/goss/releases/download/{{ linux_security_goss_version }}/dgoss"
+linux_security_goss_dgoss_dl_url: "https://raw.githubusercontent.com/goss-org/goss/{{ linux_security_goss_version }}/extras/dgoss/dgoss"
 
 linux_security_enable_fail2ban: true
 
