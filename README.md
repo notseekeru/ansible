@@ -8,6 +8,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 [![Python](https://img.shields.io/badge/python-3.14-blue?logo=python)](https://python.org)
 [![CIS](https://img.shields.io/badge/CIS-Level%201-orange)](https://www.cisecurity.org/benchmark/operating_systems)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+[![CI Status](https://github.com/notseekeru/ansible/actions/workflows/ansible-ci.yml/badge.svg)](https://github.com/notseekeru/ansible/actions)
 
 ## Project Structure
 
@@ -134,19 +135,23 @@ ansible-galaxy collection install community.general ansible.posix community.cryp
 cp group_vars/vault.yml.example group_vars/vault.yml && ansible-vault edit group_vars/vault.yml
 echo "your-vault-pass" > ~/.vault_pass && chmod 600 ~/.vault_pass
 
-make strap-pi              # Bootstrap: local IP -> Tailscale -> hardened
-make tailscale-pi          # Full post-bootstrap (neovim + docker)
-make tailscale-pi-neovim   # Dev environment only
-make tailscale-pi-docker   # Docker only
-make lint                  # ansible-lint
-make molecule              # All role tests
+# Straight setup of a `tailscale` and `linux_security` dynamic switching. (Recommended for first run)
+ansible-playbook -i inventories/home_static.ini playbooks/site.yml --ask-vault-pass
+
+make strap-pi # Bootstrap: local IP -> `tailscale` role (used for idempotency)
+make tailscale-pi # Full post-bootstrap `linux_security` role (used for idempotency)
+make tailscale-pi-neovim # Dev environment only
+make tailscale-pi-docker # Docker only
+make lint # ansible-lint
+make molecule # All role tests
+
 ```
 
 ## Engineering Decisions
 
 **Tailscale vs VPN.** Zero-config NAT traversal with built-in ACLs beats manual WireGuard key management for a homelab. Trade-off: Tailscale control plane dependency.
 
-**CIS Level 1 not Level 2.** Level 2 kernel/filesystem hardening breaks Docker. Level 1 is the pragmatic baseline for mixed-use servers.
+**CIS Level 1 not Level 2.** Level 2 kernel/filesystem hardening breaks Docker and ruins the convenience for a small-scale small production homelab. Level 1 is the pragmatic baseline for mixed-use servers.
 
 **Dual inventory.** Static inventory is first-contact only. Everything else routes through the mesh. Prevents targeting an un-bootstrapped node.
 
@@ -167,7 +172,7 @@ Full runbook in `docs/IMPORTANT_NOTES.md`.
 
 ## Roadmap
 
-- GitHub Actions CI for automated Molecule runs
+- GitHub Actions CI for automated Molecule runs (halted due to Docker-in-Docker complexity)
 
 ---
 
