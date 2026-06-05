@@ -54,14 +54,15 @@ After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable thro
 
 CIS Level 1 hardening. All components toggleable via role defaults.
 
-| Component          | What it does                                                          |
-| ------------------ | --------------------------------------------------------------------- |
-| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding             |
-| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi     |
-| Automatic updates  | unattended-upgrades installed and enabled                             |
-| Authorized keys    | Deploys from `files/authorized_keys.pub`                              |
-| Cloud-init cleanup | Removes SSH override configs                                          |
-| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry |
+| Component          | What it does                                                            |
+| ------------------ | ----------------------------------------------------------------------- |
+| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding               |
+| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi       |
+| Automatic updates  | unattended-upgrades installed and enabled                               |
+| Authorized keys    | Deploys from `files/authorized_keys.pub`                                |
+| Cloud-init cleanup | Removes SSH override configs                                            |
+| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry   |
+| Goss               | System validation binary (goss + dgoss) for ad-hoc and CI health checks |
 
 ```yaml
 # example overrides

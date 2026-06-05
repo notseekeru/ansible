@@ -92,7 +92,7 @@ parse_git_branch() {
 # Custom prompt generator
 build_clean_prompt() {
     setopt PROMPT_SUBST
-    PROMPT='%K{blue}%n@%m%k %B%F{cyan}%(4~|...|)%3~%F{white}$(parse_git_branch) %# %b%f%k'
+    PROMPT='%K{cyan}%n@%m%k %B%F{cyan}%(4~|...|)%3~%F{white}$(parse_git_branch) %# %b%f%k'
     PS1="$PROMPT"
 }
 
