@@ -20,13 +20,13 @@ HISTFILE=~/.zsh_history
 HISTSIZE=1000
 SAVEHIST=1000
 
-setopt histignorealldups 
+setopt histignorealldups
 setopt sharehistory
 
 # ==============================================================================
 # 4. KEY BINDINGS & LINE EDITING
 # ==============================================================================
-bindkey -e  # Use Emacs keybindings
+bindkey -e
 
 # ==============================================================================
 # 5. COMPLETION SYSTEM (complist & zstyle)
@@ -92,14 +92,14 @@ parse_git_branch() {
 # Custom prompt generator
 build_clean_prompt() {
     setopt PROMPT_SUBST
-    PROMPT='%K{cyan}%n@%m%k %B%F{cyan}%(4~|...|)%3~%F{white}$(parse_git_branch) %# %b%f%k'
+    PROMPT='%K{cyan}%n@%m%k %B%F{cyan}%(4~|...|)%3~%F{white} %# %b%f%k'
     PS1="$PROMPT"
 }
 
 # Hook prompt generator to run before every prompt display
 add-zsh-hook precmd build_clean_prompt
 
-{% if linux_neovim_github_token | length > 0 %}
+{% if linux_neovim_github_token is defined and linux_neovim_github_token | length > 0 %}
 # BEGIN ANSIBLE MANAGED BLOCK: github_env
 if [ -f "{{ linux_neovim_dev_user_home }}/.github_env" ]; then
     source "{{ linux_neovim_dev_user_home }}/.github_env"
