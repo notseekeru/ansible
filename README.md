@@ -48,8 +48,6 @@ The bootstrap playbook (`site.yml`) solves the chicken-and-egg problem of securi
 
 After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable through `tailscale0`.
 
-**Why two inventories?** First contact uses the static LAN IP. Everything else goes through the Tailscale IP. The separation prevents accidentally targeting a node that hasn't been bootstrapped.
-
 ## Roles
 
 ### linux_security
@@ -173,6 +171,7 @@ Full runbook in `docs/IMPORTANT_NOTES.md`.
 ## Roadmap
 
 - GitHub Actions CI for automated Molecule runs (halted due to Docker-in-Docker complexity)
+- Github CD for one-click deploys from main branch (pending CI)
 
 ---
 
