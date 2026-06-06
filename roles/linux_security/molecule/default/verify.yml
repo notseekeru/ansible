@@ -34,17 +34,16 @@
       failed_when: linux_security_falco_version.rc != 0
 
     - name: Verify Falco service is enabled
-      ansible.builtin.command: systemctl is-enabled falco
-      register: linux_security_falco_enabled
-      changed_when: false
-      failed_when: linux_security_falco_enabled.stdout.strip() not in ['enabled', 'alias']
+      ansible.builtin.systemd:
+        name: falco
+      register: linux_security_falco_status
+      failed_when: linux_security_falco_status.status.UnitFileState not in ['enabled', 'enabled-runtime']
 
     - name: Verify Falco service is active
-      ansible.builtin.command: systemctl is-active falco
-      register: linux_security_falco_active
-      changed_when: false
-      failed_when: linux_security_falco_active.stdout.strip() != 'active'
-      when: ansible_facts['virtualization_type'] not in ['docker', 'container']
+      ansible.builtin.systemd:
+        name: falco
+      register: linux_security_falco_status
+      failed_when: linux_security_falco_status.status.ActiveState != 'active'
 
     - name: Verify Fail2Ban service is running
       ansible.builtin.service:
