@@ -64,8 +64,9 @@ linux_security_falco_repo_uris: ["https://download.falco.org/packages/deb"]
 linux_security_falco_repo_suites: ["stable"]
 linux_security_falco_repo_components: ["main"]
 linux_security_falco_install_env:
+  DEBIAN_FRONTEND: noninteractive
   FALCO_FRONTEND: noninteractive
-  FALCOCTL_ENABLED: "no"
+  FALCOCTL_ENABLED: "yes"
 
 linux_security_fail2ban_ignore_ip:
   - 127.0.0.1/8
