@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: MIT-0
 ---
 - name: Get installed goss version
-  ansible.builtin.command: goss --version
+  ansible.builtin.command: /usr/local/bin/goss --version
   register: linux_security_goss_installed_version
   changed_when: false
   failed_when: false
-  become: false
+  become: true
 
 - name: Download goss binary
   ansible.builtin.get_url:
