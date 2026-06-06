@@ -5,6 +5,7 @@
   vars:
     linux_security_enable_ufw: true
     linux_security_enable_sshd_hardening: true
+    linux_security_enable_falco: true
     linux_security_enable_fail2ban: true
     linux_security_enable_goss: true
   roles:

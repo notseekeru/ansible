@@ -20,6 +20,16 @@ sudo cat /etc/ssh/sshd_config
 ls -l /etc/ssh/sshd_config.d/
 ```
 
+## Falco Validation
+
+```bash
+falco --version
+systemctl is-enabled falco
+systemctl is-active falco
+```
+
+In Docker-based Molecule runs, use this as a smoke-test target. Falco startup may be skipped when the kernel driver path is not suitable.
+
 ## Molecule (Local)
 
 - cd roles/<role_name>

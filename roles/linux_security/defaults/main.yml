@@ -4,6 +4,7 @@ linux_security_enable_baseline: true
 linux_security_enable_authorized_keys: true
 linux_security_enable_sshd_hardening: true
 linux_security_enable_ufw: true
+linux_security_enable_falco: true
 linux_security_disable_cloud_init_ssh_override: true
 linux_security_disable_avahi: true
 
@@ -42,13 +43,29 @@ linux_security_ufw_deny_interfaces:
 
 linux_security_enable_goss: true
 linux_security_goss_version: "v0.4.9"
-
-linux_security_goss_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'arm' if ansible_architecture == 'armv7l' else 'amd64' }}"
-
+linux_security_goss_arch_map:
+  x86_64: "amd64"
+  aarch64: "arm64"
+  armv7l: "arm"
+linux_security_goss_arch: "{{ linux_security_goss_arch_map[ansible_facts['architecture']] | default('amd64') }}"
 linux_security_goss_dl_url: "https://github.com/goss-org/goss/releases/download/{{ linux_security_goss_version }}/goss-linux-{{ linux_security_goss_arch }}"
 linux_security_goss_dgoss_dl_url: "https://raw.githubusercontent.com/goss-org/goss/{{ linux_security_goss_version }}/extras/dgoss/dgoss"
 
 linux_security_enable_fail2ban: true
+
+linux_security_falco_key_url: https://falco.org/repo/falcosecurity-packages.asc
+linux_security_falco_keyring_ascii: /usr/share/keyrings/falco-archive-keyring.asc
+linux_security_falco_keyring_path: /usr/share/keyrings/falco-archive-keyring.gpg
+linux_security_falco_repo_filename: falcosecurity
+linux_security_falco_repo: "deb [signed-by={{ linux_security_falco_keyring_path }}] https://download.falco.org/packages/deb stable main"
+linux_security_falco_package_name: falco
+linux_security_falco_service_name: falco
+linux_security_falco_repo_uris: ["https://download.falco.org/packages/deb"]
+linux_security_falco_repo_suites: ["stable"]
+linux_security_falco_repo_components: ["main"]
+linux_security_falco_install_env:
+  FALCO_FRONTEND: noninteractive
+  FALCOCTL_ENABLED: "no"
 
 linux_security_fail2ban_ignore_ip:
   - 127.0.0.1/8

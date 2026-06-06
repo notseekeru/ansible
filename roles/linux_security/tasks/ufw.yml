@@ -39,7 +39,8 @@
     - avahi-daemon.socket
   when:
     - linux_security_disable_avahi | bool
-    - item in services
+    - item in ansible_facts['services']
+
   become: true
 
 - name: Ensure UFW is enabled and running

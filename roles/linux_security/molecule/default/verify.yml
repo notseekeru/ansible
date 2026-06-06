@@ -27,13 +27,32 @@
       changed_when: false
       failed_when: linux_security_fail2ban_version.rc != 0
 
+    - name: Verify Falco is installed
+      ansible.builtin.command: falco --version
+      register: linux_security_falco_version
+      changed_when: false
+      failed_when: linux_security_falco_version.rc != 0
+
+    - name: Verify Falco service is enabled
+      ansible.builtin.command: systemctl is-enabled falco
+      register: linux_security_falco_enabled
+      changed_when: false
+      failed_when: linux_security_falco_enabled.stdout.strip() not in ['enabled', 'alias']
+
+    - name: Verify Falco service is active
+      ansible.builtin.command: systemctl is-active falco
+      register: linux_security_falco_active
+      changed_when: false
+      failed_when: linux_security_falco_active.stdout.strip() != 'active'
+      when: ansible_facts['virtualization_type'] not in ['docker', 'container']
+
     - name: Verify Fail2Ban service is running
       ansible.builtin.service:
         name: fail2ban
         state: started
       register: linux_security_fail2ban_service
       # Bypasses checking the running state inside Docker containers
-      when: ansible_virtualization_type != 'docker'
+      when: ansible_facts['virtualization_type'] != 'docker'
 
     - name: Ensure Fail2Ban sshd jail is active
       ansible.builtin.command: fail2ban-client status sshd
@@ -41,7 +60,7 @@
       changed_when: false
       failed_when: linux_security_fail2ban_sshd_status.rc != 0
       # Bypasses socket connectivity verification inside Docker containers
-      when: ansible_virtualization_type != 'docker'
+      when: ansible_facts['virtualization_type'] != 'docker'
 
     - name: Verify Goss is installed
       ansible.builtin.command: goss --version

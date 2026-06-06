@@ -6,6 +6,7 @@ Baseline security hardening for Debian/Ubuntu nodes. Includes:
 - Authorized keys management
 - SSH hardening
 - UFW rules (Tailscale-first SSH)
+- Falco host intrusion detection
 
 ## Requirements
 
@@ -19,6 +20,7 @@ security_enable_baseline: true
 security_enable_authorized_keys: true
 security_enable_sshd_hardening: true
 security_enable_ufw: true
+security_enable_falco: true
 security_disable_cloud_init_ssh_override: true
 security_disable_avahi: true
 
@@ -39,6 +41,10 @@ security_ufw_allow_interfaces:
 security_ufw_deny_interfaces:
   - eth0
   - wlan0
+
+security_falco_key_url: https://falco.org/repo/falcosecurity-packages.asc
+security_falco_package_name: falco
+security_falco_service_name: falco
 ```
 
 ## Example Playbook

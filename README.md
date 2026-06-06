@@ -54,15 +54,16 @@ After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable thro
 
 CIS Level 1 hardening. All components toggleable via role defaults.
 
-| Component          | What it does                                                            |
-| ------------------ | ----------------------------------------------------------------------- |
-| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding               |
-| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi       |
-| Automatic updates  | unattended-upgrades installed and enabled                               |
-| Authorized keys    | Deploys from `files/authorized_keys.pub`                                |
-| Cloud-init cleanup | Removes SSH override configs                                            |
-| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry   |
-| Goss               | System validation binary (goss + dgoss) for ad-hoc and CI health checks |
+| Component          | What it does                                                             |
+| ------------------ | ------------------------------------------------------------------------ |
+| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding                |
+| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi        |
+| Automatic updates  | unattended-upgrades installed and enabled                                |
+| Authorized keys    | Deploys from `files/authorized_keys.pub`                                 |
+| Cloud-init cleanup | Removes SSH override configs                                             |
+| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry    |
+| Falco              | Host intrusion detection from the upstream signed Debian/Ubuntu apt repo |
+| Goss               | System validation binary (goss + dgoss) for ad-hoc and CI health checks  |
 
 ```yaml
 # example overrides
@@ -102,6 +103,7 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 
 - No password auth, no root login, no X11 forwarding
 - Default-deny firewall on public interfaces
+- Falco enabled on supported Debian/Ubuntu hosts through the official signed repo
 - All secrets in Ansible Vault, never committed
 
 ### CIS Level 1 controls
@@ -112,6 +114,7 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 - UFW default incoming policy: deny
 - Automatic updates: enabled
 - Fail2Ban sshd jail: enabled (UFW ban action)
+- Falco service: enabled on host, smoke-tested in Molecule/CI
 
 ### Secrets template
 

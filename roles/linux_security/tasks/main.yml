@@ -16,6 +16,10 @@
   ansible.builtin.import_tasks: ufw.yml
   when: linux_security_enable_ufw | bool
 
+- name: Include Falco tasks
+  ansible.builtin.import_tasks: falco.yml
+  when: linux_security_enable_falco | bool
+
 - name: Include Fail2Ban tasks
   ansible.builtin.import_tasks: fail2ban.yml
   when: linux_security_enable_fail2ban | bool

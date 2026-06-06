@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Download Falco apt signing key
+  ansible.builtin.get_url:
+    url: "{{ linux_security_falco_key_url }}"
+    dest: "{{ linux_security_falco_keyring_ascii }}"
+    owner: root
+    group: root
+    mode: "0644"
+  register: linux_security_falco_key_download
+  become: true
+
+- name: Check whether Falco keyring exists
+  ansible.builtin.stat:
+    path: "{{ linux_security_falco_keyring_path }}"
+  register: linux_security_falco_keyring_stat
+  become: true
+
+- name: Build Falco keyring
+  ansible.builtin.command:
+    cmd: >-
+      gpg --dearmor --yes --output {{ linux_security_falco_keyring_path }}
+      {{ linux_security_falco_keyring_ascii }}
+    creates: "{{ linux_security_falco_keyring_path }}"
+  when:
+    - linux_security_falco_key_download.changed or not linux_security_falco_keyring_stat.stat.exists
+  become: true
+
+- name: Configure Falco apt repository
+  ansible.builtin.deb822_repository:
+    name: "{{ linux_security_falco_repo_filename }}"
+    types: ["deb"]
+    uris: "{{ linux_security_falco_repo_uris }}"
+    suites: "{{ linux_security_falco_repo_suites }}"
+    components: "{{ linux_security_falco_repo_components }}"
+    signed_by: "{{ linux_security_falco_keyring_path }}"
+    install_python_debian: true
+    state: present
+  become: true
+
+- name: Install Falco package
+  ansible.builtin.apt:
+    name: "{{ linux_security_falco_package_name }}"
+    state: present
+    update_cache: true
+  environment: "{{ linux_security_falco_install_env }}"
+  become: true
+
+- name: Ensure Falco service is enabled
+  ansible.builtin.systemd_service:
+    name: "{{ linux_security_falco_service_name }}"
+    enabled: true
+  become: true
+
+- name: Ensure Falco service is started
+  ansible.builtin.systemd_service:
+    name: "{{ linux_security_falco_service_name }}"
+    state: started
+  when: ansible_facts['virtualization_type'] not in ['docker', 'container']
+  become: true
