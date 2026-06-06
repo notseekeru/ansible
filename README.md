@@ -114,7 +114,7 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 - UFW default incoming policy: deny
 - Automatic updates: enabled
 - Fail2Ban sshd jail: enabled (UFW ban action)
-- Falco service: enabled on host, smoke-tested in Molecule/CI
+- Falco service: enabled on host
 
 ### Secrets template
 

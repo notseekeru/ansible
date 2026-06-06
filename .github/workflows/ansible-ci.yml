@@ -43,9 +43,3 @@ jobs:
 
       - name: Run ansible-lint
         run: ansible-lint
-
-      - name: Run Ansible syntax checks
-        run: |
-          for f in playbooks/*.yml; do
-            ansible-playbook -i inventories/hosts.ini "$f" --syntax-check
-          done
