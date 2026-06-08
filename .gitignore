@@ -24,7 +24,7 @@ vault_password.yml
 # Ignore Python cache (if using Python modules)
 __pycache__/
 *.pyc
-.venv
+.venv*
 .lock
 
 # Ignore SSH keys and vault files
