@@ -98,11 +98,3 @@ build_clean_prompt() {
 
 # Hook prompt generator to run before every prompt display
 add-zsh-hook precmd build_clean_prompt
-
-{% if linux_neovim_github_token is defined and linux_neovim_github_token | length > 0 %}
-# BEGIN ANSIBLE MANAGED BLOCK: github_env
-if [ -f "{{ linux_neovim_dev_user_home }}/.github_env" ]; then
-    source "{{ linux_neovim_dev_user_home }}/.github_env"
-fi
-# END ANSIBLE MANAGED BLOCK: github_env
-{% endif %}
