@@ -32,5 +32,6 @@
     enabled: true
     state: started
   become: true
-  # Prevents false positives in Docker Molecule tests
-  changed_when: ansible_facts['virtualization_type'] != 'docker' and ansible_facts['virtualization_type'] != 'container'
+  when:
+    - ansible_facts['virtualization_type'] != 'docker'
+    - ansible_facts['virtualization_type'] != 'container'
