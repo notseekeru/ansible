@@ -33,7 +33,6 @@ linux_neovim_dev_set_shell: true
 linux_neovim_dev_shell_path: /bin/zsh
 
 linux_neovim_dev_git_configure: true
-linux_neovim_github_token: "{{ github_token | default('') }}"
 
 linux_neovim_dev_inputrc_ignore_case: true
 linux_neovim_dev_vimrc_enable: true

@@ -59,3 +59,12 @@
     newline_sequence: "\n"
   become: false
   when: linux_neovim_dev_git_configure | bool
+
+- name: Deploy managed .git-credentials
+  ansible.builtin.template:
+    src: git-credentials.j2
+    dest: "{{ linux_neovim_dev_user_home }}/.git-credentials"
+    mode: "0600"
+    newline_sequence: "\n"
+  become: false
+  when: linux_neovim_dev_git_configure | bool and github_token is defined and github_token | length > 0
