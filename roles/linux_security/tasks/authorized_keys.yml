@@ -3,7 +3,7 @@
 - name: Ensure the target system user exists
   ansible.builtin.user:
     name: "{{ linux_security_authorized_key_user }}"
-    shell: "{{ linux_security_user_shell | default('/bin/bash') }}"
+    shell: "{{ ansible_facts.env.SHELL | default(linux_security_user_shell) | default('/bin/bash', true) }}"
     groups: sudo
     append: true
     state: present
