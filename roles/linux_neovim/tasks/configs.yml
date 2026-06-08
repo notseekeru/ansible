@@ -59,12 +59,3 @@
     newline_sequence: "\n"
   become: false
   when: linux_neovim_dev_git_configure | bool
-
-- name: Securely deploy GitHub PAT to local environment file
-  ansible.builtin.template:
-    src: github_env.j2
-    dest: "{{ linux_neovim_dev_user_home }}/.github_env"
-    mode: "0600"
-    newline_sequence: "\n"
-  become: false
-  when: linux_neovim_github_token | length > 0

@@ -15,12 +15,14 @@ linux_neovim_packages:
 
 linux_neovim_remove_apt: true
 
-linux_neovim_install_bob: true
+linux_neovim_install_bob: false
+linux_neovim_install_dotfiles: false
+linux_neovim_dev_install_gcm: true
+
 linux_neovim_bob_install_url: "https://raw.githubusercontent.com/MordechaiHadad/bob/master/scripts/install.sh"
 linux_neovim_version: "0.11.2"
 linux_neovim_configure_path: true
 
-linux_neovim_install_dotfiles: true
 linux_neovim_dotfiles_repo: "https://github.com/notseekeru/nvim.git"
 linux_neovim_dotfiles_version: "main"
 linux_neovim_dotfiles_update: true
@@ -31,18 +33,9 @@ linux_neovim_dev_user_home: "{{ ansible_facts['user_dir'] }}"
 linux_neovim_dev_set_shell: true
 linux_neovim_dev_shell_path: /bin/zsh
 
-linux_neovim_dev_install_gh: true
-linux_neovim_dev_gh_auth_hostname: github.com
-linux_neovim_dev_gh_apt_repository: "https://cli.github.com/packages"
-linux_neovim_dev_gh_apt_keyring_url: "https://cli.github.com/packages/githubcli-archive-keyring.gpg"
-linux_neovim_dev_gh_apt_keyring_path: /etc/apt/keyrings/githubcli-archive-keyring.gpg
-linux_neovim_dev_gh_apt_architecture: >-
-  {{
-    'amd64' if ansible_facts['architecture'] == 'x86_64' else
-    'arm64' if ansible_facts['architecture'] == 'aarch64' else
-    'armhf' if ansible_facts['architecture'] == 'armv7l' else
-    ansible_facts['architecture']
-  }}
+linux_neovim_dev_git_configure: true
+linux_neovim_github_token: "{{ github_token | default('') }}"
+linux_neovim_gcm_store: secretservice
 
 linux_neovim_dev_inputrc_ignore_case: true
 linux_neovim_dev_vimrc_enable: true
@@ -50,6 +43,3 @@ linux_neovim_dev_vimrc_enable: true
 linux_neovim_dev_shell_alias_files:
   - .bash_aliases
   - .zsh_aliases
-
-linux_neovim_dev_git_configure: true
-linux_neovim_github_token: "{{ github_token | default('') }}"
