@@ -5,7 +5,6 @@
   vars:
     linux_neovim_install_bob: true
     linux_neovim_install_dotfiles: true
-    linux_neovim_dev_install_gh: true
     linux_neovim_github_token: "{{ github_token | default('') }}"
     linux_neovim_packages:
       - curl

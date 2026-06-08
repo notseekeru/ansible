@@ -8,12 +8,6 @@
       changed_when: false
       failed_when: linux_neovim_zsh_version.rc != 0
 
-    - name: Verify Git Credential Manager is installed
-      ansible.builtin.command: git-credential-manager --version
-      register: linux_neovim_gcm_version
-      changed_when: false
-      failed_when: linux_neovim_gcm_version.rc != 0
-
     - name: Verify zshrc exists
       ansible.builtin.stat:
         path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"

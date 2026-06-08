@@ -17,7 +17,6 @@ linux_neovim_remove_apt: true
 
 linux_neovim_install_bob: false
 linux_neovim_install_dotfiles: false
-linux_neovim_dev_install_gcm: true
 
 linux_neovim_bob_install_url: "https://raw.githubusercontent.com/MordechaiHadad/bob/master/scripts/install.sh"
 linux_neovim_version: "0.11.2"
@@ -35,7 +34,6 @@ linux_neovim_dev_shell_path: /bin/zsh
 
 linux_neovim_dev_git_configure: true
 linux_neovim_github_token: "{{ github_token | default('') }}"
-linux_neovim_gcm_store: secretservice
 
 linux_neovim_dev_inputrc_ignore_case: true
 linux_neovim_dev_vimrc_enable: true

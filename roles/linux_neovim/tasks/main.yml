@@ -7,9 +7,5 @@
   ansible.builtin.import_tasks: bob.yml
   when: linux_neovim_install_bob | bool
 
-- name: Include GCM tasks
-  ansible.builtin.import_tasks: gcm.yml
-  when: linux_neovim_dev_install_gcm | bool
-
 - name: Include user configuration tasks
   ansible.builtin.import_tasks: configs.yml
