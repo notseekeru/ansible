@@ -1,6 +1,6 @@
 # Linux Neovim
 
-Installs Neovim via bob and applies developer shell configuration.
+Installs Neovim via bob, applies developer shell configuration, and provisions GitHub CLI with optional PAT-based non-interactive auth.
 
 ## Requirements
 
@@ -28,6 +28,7 @@ neovim_install_dotfiles: true
 dev_user: "{{ ansible_user_id | default(ansible_user) }}"
 dev_set_shell: true
 dev_install_gh: true
+dev_gh_auth_hostname: github.com
 dev_shell_aliases:
   - "alias ll='ls -alF'"
 ```

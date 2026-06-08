@@ -30,7 +30,20 @@ linux_neovim_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['use
 linux_neovim_dev_user_home: "{{ ansible_facts['user_dir'] }}"
 linux_neovim_dev_set_shell: true
 linux_neovim_dev_shell_path: /bin/zsh
+
 linux_neovim_dev_install_gh: true
+linux_neovim_dev_gh_auth_hostname: github.com
+linux_neovim_dev_gh_apt_repository: "https://cli.github.com/packages"
+linux_neovim_dev_gh_apt_keyring_url: "https://cli.github.com/packages/githubcli-archive-keyring.gpg"
+linux_neovim_dev_gh_apt_keyring_path: /etc/apt/keyrings/githubcli-archive-keyring.gpg
+linux_neovim_dev_gh_apt_architecture: >-
+  {{
+    'amd64' if ansible_facts['architecture'] == 'x86_64' else
+    'arm64' if ansible_facts['architecture'] == 'aarch64' else
+    'armhf' if ansible_facts['architecture'] == 'armv7l' else
+    ansible_facts['architecture']
+  }}
+
 linux_neovim_dev_inputrc_ignore_case: true
 linux_neovim_dev_vimrc_enable: true
 

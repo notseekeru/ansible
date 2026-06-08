@@ -8,6 +8,12 @@
       changed_when: false
       failed_when: linux_neovim_zsh_version.rc != 0
 
+    - name: Verify GitHub CLI is installed
+      ansible.builtin.command: gh --version
+      register: linux_neovim_gh_version
+      changed_when: false
+      failed_when: linux_neovim_gh_version.rc != 0
+
     - name: Verify zshrc exists
       ansible.builtin.stat:
         path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"

@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Ensure GitHub CLI keyring directory exists
+  ansible.builtin.file:
+    path: "{{ linux_neovim_dev_gh_apt_keyring_path | dirname }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Download GitHub CLI apt keyring
+  ansible.builtin.get_url:
+    url: "{{ linux_neovim_dev_gh_apt_keyring_url }}"
+    dest: "{{ linux_neovim_dev_gh_apt_keyring_path }}"
+    mode: "0644"
+  become: true
+
+- name: Ensure python3-debian is installed.
+  ansible.builtin.apt:
+    name:
+      - python3-debian
+    state: present
+
+- name: Add GitHub CLI apt repository
+  ansible.builtin.deb822_repository:
+    name: github-cli
+    types: [deb]
+    uris: "{{ linux_neovim_dev_gh_apt_repository }}"
+    suites: [stable]
+    components: [main]
+    architectures: "{{ linux_neovim_dev_gh_apt_architecture }}"
+    signed_by: "{{ linux_neovim_dev_gh_apt_keyring_path }}"
+    state: present
+  become: true
+
+- name: Install GitHub CLI
+  ansible.builtin.package:
+    name: gh
+    state: present
+  become: true
+
+- name: Check GitHub CLI auth state
+  ansible.builtin.command:
+    cmd: gh auth status --hostname {{ linux_neovim_dev_gh_auth_hostname }}
+  register: linux_neovim_gh_auth_status
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: Authenticate GitHub CLI with token
+  ansible.builtin.command:
+    cmd: gh auth login --with-token --hostname {{ linux_neovim_dev_gh_auth_hostname }}
+    stdin: "{{ linux_neovim_github_token }}"
+  when:
+    - linux_neovim_github_token | length > 0
+    - linux_neovim_gh_auth_status.rc != 0
+  become: false
