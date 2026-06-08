@@ -43,6 +43,7 @@ strap-pi:
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \
+	-v \
 	--ask-vault-pass \
 	-e "tailscale_force_reauth=true"
 
@@ -53,6 +54,7 @@ tailscale-pi:
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \
+	-v \
 	--ask-vault-pass \
 
 tailscale-pi-neovim:
@@ -62,6 +64,7 @@ tailscale-pi-neovim:
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \
+	-v \
 	--ask-vault-pass \
 
 tailscale-pi-docker:
@@ -71,6 +74,7 @@ tailscale-pi-docker:
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \
+	-v \
 	--ask-vault-pass \
 
 find:
