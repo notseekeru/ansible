@@ -50,6 +50,7 @@
   ansible.builtin.command:
     cmd: gh auth login --with-token --hostname {{ linux_neovim_dev_gh_auth_hostname }}
     stdin: "{{ linux_neovim_github_token }}"
+  changed_when: true
   when:
     - linux_neovim_github_token | length > 0
     - linux_neovim_gh_auth_status.rc != 0
