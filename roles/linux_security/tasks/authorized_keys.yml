@@ -1,9 +1,16 @@
 # SPDX-License-Identifier: MIT-0
 ---
+- name: Explicitly run 'echo $SHELL'
+  run_once: true
+  ansible.builtin.command: echo $SHELL
+  register: local_shell_cmd
+  changed_when: false
+  become: false
+
 - name: Ensure the target system user exists
   ansible.builtin.user:
     name: "{{ linux_security_authorized_key_user }}"
-    shell: "{{ ansible_facts.env.SHELL | default(linux_security_user_shell) | default('/bin/bash', true) }}"
+    shell: "{{ local_shell_cmd.stdout | trim }}"
     groups: sudo
     append: true
     state: present
