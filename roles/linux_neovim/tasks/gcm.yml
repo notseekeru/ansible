@@ -14,6 +14,15 @@
       }}
   when: gcm_check.rc != 0
 
+- name: Ensure .NET/GCM core dependencies are present (Docker fix)
+  ansible.builtin.apt:
+    name:
+      - libicu-dev
+      - git
+    state: present
+  become: true
+  when: gcm_check.rc != 0
+
 - name: Fetch latest Git Credential Manager release metadata from GitHub API
   ansible.builtin.uri:
     url: "https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest"
