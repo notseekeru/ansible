@@ -50,7 +50,9 @@
     name: "{{ linux_security_falco_package_name }}"
     state: present
     update_cache: true
-  environment: "{{ linux_security_falco_install_env }}"
+  environment:
+    FALCO_FRONTEND: "noninteractive"
+    FALCO_DRIVER_CHOICE: "modern_ebpf"
   become: true
 
 - name: Ensure Falco service is enabled
