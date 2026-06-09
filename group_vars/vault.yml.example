@@ -1,3 +1,4 @@
 tailscale_auth_key: ""
 tailscale_molecule_auth_key: ""
+github_token: ""
 CLOUDFLARE_TOKEN: ""
