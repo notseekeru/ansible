@@ -1,0 +1,4 @@
+dynamic inventory for DigitalOcean droplets, using terraform.
+
+[droplets]
+${droplet_ip} ansible_user=root
