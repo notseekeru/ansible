@@ -9,7 +9,7 @@ None.
 ## Role Variables
 
 ```yaml
-neovim_packages:
+linux_neovim_packages:
   - curl
   - git
   - unzip
@@ -21,14 +21,15 @@ neovim_packages:
   - tree-sitter-cli
   - zsh
   - tmux
-neovim_version: "0.11.2"
-neovim_install_bob: true
-neovim_install_dotfiles: true
+linux_neovim_version: "0.11.2"
+linux_neovim_install_bob: true
+linux_neovim_install_dotfiles: true
 
-dev_user: "{{ ansible_user_id | default(ansible_user) }}"
-dev_set_shell: true
-dev_shell_aliases:
-  - "alias ll='ls -alF'"
+linux_neovim_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
+linux_neovim_dev_set_shell: true
+linux_neovim_dev_shell_alias_files:
+  - .bash_aliases
+  - .zsh_aliases
 ```
 
 ## Example Playbook

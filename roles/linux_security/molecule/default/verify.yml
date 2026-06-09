@@ -44,6 +44,7 @@
         name: falco
       register: linux_security_falco_status
       failed_when: linux_security_falco_status.status.ActiveState != 'active'
+      when: ansible_facts['virtualization_type'] not in ['docker', 'container']
 
     - name: Verify Fail2Ban service is running
       ansible.builtin.service:

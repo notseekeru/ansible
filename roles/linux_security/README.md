@@ -36,12 +36,12 @@ linux_security_enable_falco: true
 linux_security_disable_cloud_init_ssh_override: true
 linux_security_disable_avahi: true
 
-linux_security_authorized_key_user: "{{ ansible_user_id | default(ansible_user) }}"
+linux_security_authorized_key_user: "seeker"
 linux_security_authorized_key_file: authorized_keys.pub
 
 linux_security_sshd_listen_address: "0.0.0.0"
 linux_security_sshd_allow_users:
-  - "{{ ansible_user_id | default(ansible_user) }}"
+  - "seeker"
 linux_security_sshd_permit_root_login: "no"
 linux_security_sshd_password_authentication: "no"
 linux_security_sshd_pubkey_authentication: "yes"
@@ -53,10 +53,25 @@ linux_security_ufw_allow_interfaces:
 linux_security_ufw_deny_interfaces:
   - eth0
   - wlan0
+linux_security_ufw_default_incoming_policy: deny
 
+# Fail2Ban
+linux_security_enable_fail2ban: true
+linux_security_fail2ban_ignore_ip:
+  - 127.0.0.1/8
+linux_security_fail2ban_bantime: 3600
+linux_security_fail2ban_findtime: 600
+linux_security_fail2ban_maxretry: 3
+
+# Falco
+linux_security_enable_falco: true
 linux_security_falco_key_url: https://falco.org/repo/falcosecurity-packages.asc
 linux_security_falco_package_name: falco
 linux_security_falco_service_name: falco
+
+# Goss
+linux_security_enable_goss: true
+linux_security_goss_version: "v0.4.9"
 ```
 
 ## Example Playbook

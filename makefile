@@ -31,10 +31,7 @@ ping-droplet:
 	ansible -i inventories/droplet.ini webservers -m ping
 
 checkboot:
-	ansible-playbook playbooks/deb_bootstrap.yml -i inventories/ --check --diff
-
-checkharden:
-	ansible-playbook playbooks/deb_hardening.yml -i inventories/ --check --diff
+	ansible-playbook playbooks/site.yml -i inventories/ --check --diff
 
 strap-droplet:
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \

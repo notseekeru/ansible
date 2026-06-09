@@ -20,9 +20,10 @@
 │   └── home_tailscale.ini
 ├── makefile
 ├── playbooks
-│   ├── deb-bootstrap.yml
-│   ├── deb-hardening.yml
-│   └── linux_neovim.yml
+│   ├── droplet-bootstrap.yml
+│   ├── linux_docker.yml
+│   ├── linux_neovim.yml
+│   └── site.yml
 ├── roles
 │   ├── geerlingguy.docker
 │   │   ├── LICENSE
