@@ -9,15 +9,6 @@ role:
 	@if [ -z "$(ROLE_NAME)" ]; then echo "❌ Error: Specify a role name (e.g., make role my_role)"; exit 1; fi
 	ansible-galaxy init ./roles/$(ROLE_NAME)
 
-ping-droplet:
-	ansible -i inventories/droplet.ini webservers -m ping
-
-checkboot:
-	ansible-playbook playbooks/deb_bootstrap.yml -i inventories/ --check --diff
-
-checkharden:
-	ansible-playbook playbooks/deb_hardening.yml -i inventories/ --check --diff
-
 lint:
 	@echo "🔍 Running Ansible Lint with auto-fix..."
 	python3 -m venv .venv
@@ -35,6 +26,24 @@ molecule:
 		echo "=========================================="; \
 		(cd "$$role" && $(CURDIR)/.venv/bin/molecule test -s default) || exit 1; \
 	done
+
+ping-droplet:
+	ansible -i inventories/droplet.ini webservers -m ping
+
+checkboot:
+	ansible-playbook playbooks/deb_bootstrap.yml -i inventories/ --check --diff
+
+checkharden:
+	ansible-playbook playbooks/deb_hardening.yml -i inventories/ --check --diff
+
+strap-droplet:
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+	-i inventories/droplet.ini \
+	playbooks/droplet-bootstrap.yml \
+	--private-key=~/.ssh/id_ed25519 \
+	--diff \
+	-v \
+	--ask-vault-pass \
 
 strap-pi:
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
