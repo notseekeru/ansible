@@ -4,6 +4,10 @@
   ansible.builtin.import_tasks: baseline.yml
   when: linux_security_enable_baseline | bool
 
+- name: Include local user creation tasks
+  ansible.builtin.import_tasks: users.yml
+  when: linux_security_enable_user_creation | bool
+
 - name: Include authorized keys tasks
   ansible.builtin.import_tasks: authorized_keys.yml
   when: linux_security_enable_authorized_keys | bool

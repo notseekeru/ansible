@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Create the local user account for non-root access
+  ansible.builtin.user:
+    name: "{{ linux_security_user_name }}"
+    comment: "{{ linux_security_user_comment }}"
+    shell: "{{ linux_security_user_shell }}"
+    groups: "{{ linux_security_user_groups | join(',') }}"
+    append: true
+    create_home: true
+    home: "/home/{{ linux_security_user_name }}"
+    mode: "0750"
+    state: present
+  become: true
+
+- name: Set up .ssh directory for the user
+  ansible.builtin.file:
+    path: "/home/{{ linux_security_user_name }}/.ssh"
+    owner: "{{ linux_security_user_name }}"
+    group: "{{ linux_security_user_name }}"
+    mode: "0700"
+    state: directory
+  become: true
+
+- name: Configure passwordless sudo for the user
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ linux_security_user_name }}"
+    owner: root
+    group: root
+    mode: "0440"
+    content: "{{ linux_security_user_name }} ALL=(ALL) NOPASSWD:ALL\n"
+    validate: /usr/sbin/visudo -cf %s
+  become: true

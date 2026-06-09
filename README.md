@@ -56,6 +56,7 @@ CIS Level 1 hardening. All components toggleable via role defaults.
 
 | Component          | What it does                                                             |
 | ------------------ | ------------------------------------------------------------------------ |
+| User creation      | Creates local non-root user with sudo, home dir, .ssh dir                |
 | SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding                |
 | UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi        |
 | Automatic updates  | unattended-upgrades installed and enabled                                |
@@ -96,6 +97,8 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 | `site.yml`         | Bootstrap: Tailscale install -> security lockdown | `home_static.ini`    |
 | `linux_neovim.yml` | Dev environment                                   | `home_tailscale.ini` |
 | `linux_docker.yml` | Docker CE                                         | `home_tailscale.ini` |
+
+> **Note:** `linux_security` also manages a `users.yml` task for creating the local non-root account. See the role's `defaults/main.yml` for configurable variables.
 
 ## Security
 

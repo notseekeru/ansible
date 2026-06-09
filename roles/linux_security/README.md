@@ -3,10 +3,13 @@
 Baseline security hardening for Debian/Ubuntu nodes. Includes:
 
 - Unattended upgrades and baseline packages
+- Local user creation (non-root, sudo, home dir, .ssh dir)
 - Authorized keys management
 - SSH hardening
 - UFW rules (Tailscale-first SSH)
+- Fail2Ban intrusion prevention
 - Falco host intrusion detection
+- Goss system validation
 
 ## Requirements
 
@@ -16,35 +19,44 @@ Baseline security hardening for Debian/Ubuntu nodes. Includes:
 ## Role Variables
 
 ```yaml
-security_enable_baseline: true
-security_enable_authorized_keys: true
-security_enable_sshd_hardening: true
-security_enable_ufw: true
-security_enable_falco: true
-security_disable_cloud_init_ssh_override: true
-security_disable_avahi: true
+# User creation
+linux_security_enable_user_creation: true
+linux_security_user_name: "seeker"
+linux_security_user_comment: "System Administrator"
+linux_security_user_shell: /bin/zsh
+linux_security_user_groups:
+  - sudo
 
-security_authorized_key_user: "{{ ansible_user_id | default(ansible_user) }}"
-security_authorized_key_file: authorized_keys.pub
+# Baseline
+linux_security_enable_baseline: true
+linux_security_enable_authorized_keys: true
+linux_security_enable_sshd_hardening: true
+linux_security_enable_ufw: true
+linux_security_enable_falco: true
+linux_security_disable_cloud_init_ssh_override: true
+linux_security_disable_avahi: true
 
-security_sshd_listen_address: "0.0.0.0"
-security_sshd_allow_users:
+linux_security_authorized_key_user: "{{ ansible_user_id | default(ansible_user) }}"
+linux_security_authorized_key_file: authorized_keys.pub
+
+linux_security_sshd_listen_address: "0.0.0.0"
+linux_security_sshd_allow_users:
   - "{{ ansible_user_id | default(ansible_user) }}"
-security_sshd_permit_root_login: "no"
-security_sshd_password_authentication: "no"
-security_sshd_pubkey_authentication: "yes"
-security_sshd_max_auth_tries: 3
+linux_security_sshd_permit_root_login: "no"
+linux_security_sshd_password_authentication: "no"
+linux_security_sshd_pubkey_authentication: "yes"
+linux_security_sshd_max_auth_tries: 3
 
-security_ufw_ssh_port: "{{ ansible_port | default(22) }}"
-security_ufw_allow_interfaces:
+linux_security_ufw_ssh_port: "{{ ansible_port | default(22) }}"
+linux_security_ufw_allow_interfaces:
   - tailscale0
-security_ufw_deny_interfaces:
+linux_security_ufw_deny_interfaces:
   - eth0
   - wlan0
 
-security_falco_key_url: https://falco.org/repo/falcosecurity-packages.asc
-security_falco_package_name: falco
-security_falco_service_name: falco
+linux_security_falco_key_url: https://falco.org/repo/falcosecurity-packages.asc
+linux_security_falco_package_name: falco
+linux_security_falco_service_name: falco
 ```
 
 ## Example Playbook

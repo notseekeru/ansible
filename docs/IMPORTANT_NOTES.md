@@ -4,6 +4,24 @@
   - local_ip:22 blocked
   - tailscale_ip:22 success
 
+## User Creation (`roles/linux_security/tasks/users.yml`)
+
+On a fresh VPS, `users.yml` creates a local non-root user before any other security tasks:
+
+| Variable                              | Default                | Purpose              |
+| ------------------------------------- | ---------------------- | -------------------- |
+| `linux_security_user_name`            | `seeker`               | Username             |
+| `linux_security_user_comment`         | `System Administrator` | GECOS field          |
+| `linux_security_user_shell`           | `/bin/zsh`             | Login shell          |
+| `linux_security_user_groups`          | `[sudo]`               | Supplementary groups |
+| `linux_security_enable_user_creation` | `true`                 | Toggle               |
+
+Sets up:
+
+- Home directory `0750`
+- `.ssh` directory `0700`
+- Passwordless sudo via `/etc/sudoers.d/{{ linux_security_user_name }}`
+
 ## Checklist for Post-Hardening Validation
 
 ```bash
@@ -18,6 +36,9 @@ sudo ufw status verbose
 sudo cat /etc/ssh/sshd_config
 # Check SSHD override directory
 ls -l /etc/ssh/sshd_config.d/
+# Verify local user
+id seeker
+sudo cat /etc/sudoers.d/seeker
 ```
 
 ## Falco Validation
