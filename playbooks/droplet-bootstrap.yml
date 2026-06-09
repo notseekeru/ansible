@@ -1,6 +1,6 @@
 ---
 - name: Bootstrap a Fresh Droplet — User, Keys, and Harden
-  hosts:
+  hosts: droplets
   become: true
   gather_facts: false
 
