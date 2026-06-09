@@ -79,7 +79,7 @@ Delivers a complete terminal dev environment on any target:
 - Neovim 0.11.2 via [bob](https://github.com/MordechaiHadad/bob) version manager
 - LazyVim dotfiles pulled from GitHub
 - zsh shell with aliases, custom .zshrc
-- tmux, lazygit, ripgrep, fzf, fd-find, tree-sitter, nodejs
+- tmux, lazygit, ripgrep, fzf, fd-find, tree-sitter
 - Git config + GitHub CLI with vault-stored token
 
 ### tailscale
