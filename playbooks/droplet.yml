@@ -1,5 +1,5 @@
 ---
-- name: Bootstrap a Fresh Droplet — User, Keys, and Harden
+- name: Bootstrap a Fresh Droplet — Tailscale, User, Keys, and Harden
   hosts: droplets
   become: true
   gather_facts: false
@@ -9,8 +9,8 @@
 
   vars:
     tailscale_run_up: true
+    tailscale_up_args: ["--advertise-tags=tag:server-public"]
     linux_security_default_shell: /bin/bash
-
     linux_security_enable_user_creation: true
     linux_security_enable_authorized_keys: true
     linux_security_enable_baseline: true
@@ -42,9 +42,9 @@
       ansible.builtin.set_fact:
         ansible_host: "{{ ts_ip_output.stdout | trim }}"
 
-    # Fix: Prevents Step 4 from freezing on the old connection socket
-    - name: Reset connection cache for IP migration
-      ansible.builtin.meta: clear_host_errors
+    # Fix: Dynamically reset the SSH connection to drop the old socket and force Ansible to reconnect
+    - name: Drop old SSH socket to force route migration
+      ansible.builtin.meta: reset_connection
 
     # Step 4: Refresh system facts over the new secure network path
     - name: Regather facts over Tailscale tunnel
