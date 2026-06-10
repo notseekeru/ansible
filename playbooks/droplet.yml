@@ -8,16 +8,17 @@
     - ../group_vars/vault.yml
 
   vars:
-    tailscale_run_up: false
+    tailscale_run_up: true
+    linux_security_default_shell: /bin/bash
 
     linux_security_enable_user_creation: true
     linux_security_enable_authorized_keys: true
-    linux_security_enable_baseline: false
-    linux_security_enable_sshd_hardening: false
-    linux_security_enable_ufw: false
-    linux_security_enable_falco: false
-    linux_security_enable_fail2ban: false
-    linux_security_enable_goss: false
+    linux_security_enable_baseline: true
+    linux_security_enable_sshd_hardening: true
+    linux_security_enable_ufw: true
+    linux_security_enable_falco: true
+    linux_security_enable_fail2ban: true
+    linux_security_enable_goss: true
 
   tasks:
     - name: Gather facts on local network
