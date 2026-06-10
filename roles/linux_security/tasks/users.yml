@@ -3,14 +3,14 @@
 - name: Check if Zsh is installed on the target server
   ansible.builtin.stat:
     path: /bin/zsh
-  register: zsh_check
+  register: linux_security_zsh_check
 
 - name: Create the local user account
   ansible.builtin.user:
     name: "{{ linux_security_user_name }}"
     comment: "{{ linux_security_user_comment }}"
     # Dynamically use Zsh if it exists, otherwise fall back to Bash
-    shell: "{{ '/bin/zsh' if zsh_check.stat.exists else '/bin/bash' }}"
+    shell: "{{ '/bin/zsh' if linux_security_zsh_check.stat.exists else '/bin/bash' }}"
     groups: "{{ linux_security_user_groups | join(',') }}"
     append: true
     create_home: true
