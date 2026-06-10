@@ -15,7 +15,6 @@
     linux_security_user_groups:
       - sudo
 
-    linux_security_enable_falco: false
     linux_security_enable_goss: false
 
   tasks:
