@@ -123,9 +123,10 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 
 ```yaml
 # group_vars/vault.yml
-tailscale_auth_key: "tskey-auth-..."
-tailscale_molecule_auth_key: "..."
-github_token: "ghp_..."
+tailscale_auth_key: tskey-auth-...
+tailscale_auth_key_droplet: tskey-auth-...-drople"
+tailscale_molecule_auth_key: ...
+github_token: ghp_...
 ```
 
 ## Getting Started
@@ -137,8 +138,10 @@ git clone <repo> && cd ansible
 python3 -m venv .venv && source .venv/bin/activate
 pip install ansible-core molecule "molecule-plugins[docker]" ansible-lint
 ansible-galaxy collection install community.general ansible.posix community.crypto community.docker
+
 cp group_vars/vault.yml.example group_vars/vault.yml && ansible-vault edit group_vars/vault.yml
-echo "your-vault-pass" > ~/.vault_pass && chmod 600 ~/.vault_pass
+
+echo "${your-vault-pass}" > ~/.vault_pass && chmod 600 ~/.vault_pass
 
 # Straight setup of a `tailscale` and `linux_security` dynamic switching. (Recommended for first run)
 ansible-playbook -i inventories/home_static.ini playbooks/site.yml --ask-vault-pass
