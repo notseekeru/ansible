@@ -8,6 +8,7 @@
     - ../group_vars/vault.yml
 
   vars:
+    tailscale_auth_key: "{{ tailscale_auth_key_droplet }}"
     tailscale_run_up: true
     tailscale_up_args: ["--advertise-tags=tag:server-public"]
     linux_security_default_shell: /bin/bash
