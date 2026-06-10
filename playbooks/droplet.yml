@@ -9,17 +9,14 @@
 
   vars:
     tailscale_auth_key: "{{ tailscale_auth_key_droplet }}"
-    tailscale_run_up: true
     tailscale_up_args: ["--advertise-tags=tag:server-public"]
-    linux_security_default_shell: /bin/bash
-    linux_security_enable_user_creation: true
-    linux_security_enable_authorized_keys: true
-    linux_security_enable_baseline: true
-    linux_security_enable_sshd_hardening: true
-    linux_security_enable_ufw: true
-    linux_security_enable_falco: true
-    linux_security_enable_fail2ban: true
-    linux_security_enable_goss: true
+    linux_security_user_name: "seeker"
+    linux_security_user_comment: "System Administrator"
+    linux_security_user_groups:
+      - sudo
+
+    linux_security_enable_falco: false
+    linux_security_enable_goss: false
 
   tasks:
     - name: Gather facts on local network
@@ -29,8 +26,6 @@
     - name: Initialize Tailscale network
       ansible.builtin.include_role:
         name: tailscale
-      vars:
-        tailscale_run_up: true
 
     # Step 2: Grab the newly generated Tailscale IP address from the server
     - name: Get Tailscale IP

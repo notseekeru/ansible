@@ -28,19 +28,16 @@ molecule:
 	done
 
 ping-droplet:
-	ansible -i inventories/droplet.ini webservers -m ping
-
-checkboot:
-	ansible-playbook playbooks/site.yml -i inventories/ --check --diff
+	ansible -i inventories/droplets.ini droplets -m ping
 
 strap-droplet:
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/droplet.ini \
-	playbooks/droplet-bootstrap.yml \
+	-i inventories/droplets.ini \
+	playbooks/droplet.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
-	-v \
 	--ask-vault-pass \
+	-e "tailscale_force_reauth=true"
 
 strap-pi:
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
