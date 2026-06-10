@@ -11,6 +11,7 @@
     comment: "{{ linux_security_user_comment }}"
     # Dynamically use Zsh if it exists, otherwise fall back to Bash
     shell: "{{ '/bin/zsh' if linux_security_zsh_check.stat.exists else '/bin/bash' }}"
+    password: "*"
     groups: "{{ linux_security_user_groups | join(',') }}"
     append: true
     create_home: true
