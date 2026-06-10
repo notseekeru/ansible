@@ -12,7 +12,6 @@ On a fresh VPS, `users.yml` creates a local non-root user before any other secur
 | ------------------------------------- | ---------------------- | -------------------- |
 | `linux_security_user_name`            | `seeker`               | Username             |
 | `linux_security_user_comment`         | `System Administrator` | GECOS field          |
-| `linux_security_user_shell`           | `/bin/zsh`             | Login shell          |
 | `linux_security_user_groups`          | `[sudo]`               | Supplementary groups |
 | `linux_security_enable_user_creation` | `true`                 | Toggle               |
 

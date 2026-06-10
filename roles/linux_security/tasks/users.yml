@@ -1,10 +1,16 @@
 # SPDX-License-Identifier: MIT-0
 ---
-- name: Create the local user account for non-root access
+- name: Check if Zsh is installed on the target server
+  ansible.builtin.stat:
+    path: /bin/zsh
+  register: zsh_check
+
+- name: Create the local user account
   ansible.builtin.user:
     name: "{{ linux_security_user_name }}"
     comment: "{{ linux_security_user_comment }}"
-    shell: "{{ linux_security_user_shell }}"
+    # Dynamically use Zsh if it exists, otherwise fall back to Bash
+    shell: "{{ '/bin/zsh' if zsh_check.stat.exists else '/bin/bash' }}"
     groups: "{{ linux_security_user_groups | join(',') }}"
     append: true
     create_home: true
@@ -36,6 +42,7 @@
     owner: root
     group: root
     mode: "0440"
-    content: "{{ linux_security_user_name }} ALL=(ALL) NOPASSWD:ALL\n"
+    content: |
+      {{ linux_security_user_name }} ALL=(ALL) NOPASSWD:ALL
     validate: /usr/sbin/visudo -cf %s
   become: true

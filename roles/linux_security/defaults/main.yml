@@ -6,7 +6,6 @@ linux_security_enable_authorized_keys: true
 
 linux_security_user_name: "seeker"
 linux_security_user_comment: "System Administrator"
-linux_security_user_shell: /bin/zsh
 linux_security_user_groups:
   - sudo
 

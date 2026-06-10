@@ -23,7 +23,6 @@ Baseline security hardening for Debian/Ubuntu nodes. Includes:
 linux_security_enable_user_creation: true
 linux_security_user_name: "seeker"
 linux_security_user_comment: "System Administrator"
-linux_security_user_shell: /bin/zsh
 linux_security_user_groups:
   - sudo
 
