@@ -25,15 +25,21 @@
   become: false
   when: linux_neovim_dev_vimrc_enable | bool
 
-- name: Configure shell aliases
+- name: Configure shell aliases for Bash
   ansible.builtin.template:
     src: aliases.j2
-    dest: "{{ linux_neovim_dev_user_home }}/{{ item }}"
+    dest: "{{ linux_neovim_dev_user_home }}/.bash_aliases"
     mode: "0644"
     newline_sequence: "\n"
-  loop: "{{ linux_neovim_dev_shell_alias_files }}"
   become: false
-  when: linux_neovim_dev_shell_alias_files | length > 0
+
+- name: Install Oh My Zsh framework
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: "{{ linux_neovim_dev_user_home }}/.oh-my-zsh"
+    depth: 1
+    version: master
+  become: false
 
 - name: Deploy managed .zshrc
   ansible.builtin.template:

@@ -39,4 +39,3 @@ linux_neovim_dev_vimrc_enable: true
 
 linux_neovim_dev_shell_alias_files:
   - .bash_aliases
-  - .zsh_aliases
