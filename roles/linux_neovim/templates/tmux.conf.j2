@@ -7,17 +7,7 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @plugin 'tmux-plugins/tmux-cpu'
 
 set -g @continuum-restore 'on'
 
-# Status bar general styling
-set -g status-style bg=black,fg=white
-set -g status-left "#[fg=#89b4fa,bold] #S "
-set -g status-right "#[fg=#89b4fa,bold]CPU: #{cpu_percentage} #[fg=white]| #[fg=#f9e2af]%a %b %d #[fg=#89b4fa]%H:%M"
-
-set -g window-status-current-style fg=black,bg=#89b4fa,bold
-set -g window-status-style fg=#a6adc8,bg=#313244
-
-# Keep this at the bottom
 run '~/.tmux/plugins/tpm/tpm'
