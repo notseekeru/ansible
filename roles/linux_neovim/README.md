@@ -27,9 +27,6 @@ linux_neovim_install_dotfiles: true
 
 linux_neovim_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
 linux_neovim_dev_set_shell: true
-linux_neovim_dev_shell_alias_files:
-  - .bash_aliases
-  - .zsh_aliases
 ```
 
 ## Example Playbook

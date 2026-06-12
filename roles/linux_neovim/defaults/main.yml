@@ -36,6 +36,3 @@ linux_neovim_dev_git_configure: true
 
 linux_neovim_dev_inputrc_ignore_case: true
 linux_neovim_dev_vimrc_enable: true
-
-linux_neovim_dev_shell_alias_files:
-  - .bash_aliases

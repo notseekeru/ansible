@@ -25,14 +25,6 @@
   become: false
   when: linux_neovim_dev_vimrc_enable | bool
 
-- name: Configure shell aliases for Bash
-  ansible.builtin.template:
-    src: aliases.j2
-    dest: "{{ linux_neovim_dev_user_home }}/.bash_aliases"
-    mode: "0644"
-    newline_sequence: "\n"
-  become: false
-
 - name: Install Oh My Zsh framework
   ansible.builtin.git:
     repo: https://github.com/ohmyzsh/ohmyzsh.git
