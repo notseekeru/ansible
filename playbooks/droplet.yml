@@ -8,6 +8,8 @@
     - ../group_vars/vault.yml
 
   vars:
+    # Set to false to skip Tailscale setup and use open SSH firewall rules
+    bootstrap_tailscale_enabled: true
     tailscale_auth_key: "{{ tailscale_auth_key_droplet }}"
     tailscale_up_args: ["--advertise-tags=tag:server-public"]
     linux_security_user_name: "seeker"
@@ -21,31 +23,38 @@
     - name: Gather facts on local network
       ansible.builtin.setup:
 
-    # Step 1: Run Tailscale while connected via local IP
+    # Step 1: Optionally run Tailscale while connected via local IP
     - name: Initialize Tailscale network
       ansible.builtin.include_role:
         name: tailscale
+      when: bootstrap_tailscale_enabled | bool
 
     # Step 2: Grab the newly generated Tailscale IP address from the server
     - name: Get Tailscale IP
       ansible.builtin.command: tailscale ip -4
       register: ts_ip_output
       changed_when: false
+      when: bootstrap_tailscale_enabled | bool
 
     # Step 3: Tell Ansible to dynamically switch its target connection route
     - name: Route future tasks through Tailscale interface
       ansible.builtin.set_fact:
         ansible_host: "{{ ts_ip_output.stdout | trim }}"
+      when: bootstrap_tailscale_enabled | bool
 
     # Fix: Dynamically reset the SSH connection to drop the old socket and force Ansible to reconnect
     - name: Drop old SSH socket to force route migration
       ansible.builtin.meta: reset_connection
+      when: bootstrap_tailscale_enabled | bool
 
     # Step 4: Refresh system facts over the new secure network path
     - name: Regather facts over Tailscale tunnel
       ansible.builtin.setup:
+      when: bootstrap_tailscale_enabled | bool
 
-    # Step 5: Secure the machine safely now that we are inside the tunnel
+    # Step 5: Secure the machine — UFW adapts rules based on Tailscale state
     - name: Apply security baseline and firewall rules
       ansible.builtin.include_role:
         name: linux_security
+      vars:
+        linux_security_ufw_tailscale_enabled: "{{ bootstrap_tailscale_enabled }}"

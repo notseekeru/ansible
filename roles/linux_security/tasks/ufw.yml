@@ -8,6 +8,7 @@
     interface_in: "{{ item }}"
   loop: "{{ linux_security_ufw_allow_interfaces }}"
   become: true
+  when: linux_security_ufw_tailscale_enabled | bool
 
 - name: Deny SSH on port over disallowed interfaces {{ linux_security_ufw_ssh_port }}
   community.general.ufw:
@@ -17,6 +18,15 @@
     interface_in: "{{ item }}"
   loop: "{{ linux_security_ufw_deny_interfaces }}"
   become: true
+  when: linux_security_ufw_tailscale_enabled | bool
+
+- name: Rate-limit SSH connections (Tailscale OFF mode)
+  community.general.ufw:
+    rule: limit
+    port: "{{ linux_security_ufw_ssh_port }}"
+    proto: tcp
+  become: true
+  when: not linux_security_ufw_tailscale_enabled | bool
 
 - name: Enable UFW with default deny
   community.general.ufw:
@@ -40,7 +50,6 @@
   when:
     - linux_security_disable_avahi | bool
     - item in ansible_facts['services']
-
   become: true
 
 - name: Ensure UFW is enabled and running
