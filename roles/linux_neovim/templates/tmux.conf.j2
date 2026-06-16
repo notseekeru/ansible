@@ -1,5 +1,11 @@
 set -g mouse on
 
+set -g extended-keys-format csi-u
+set -g extended-keys on
+
+set -g base-index 1
+setw -g pane-base-index 1
+
 unbind C-o
 bind-key m select-pane -t :.+
 
