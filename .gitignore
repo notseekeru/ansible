@@ -21,7 +21,7 @@ vault_password.yml
 *.bak
 *.swp
 
-# Ignore Python cache (if using Python modules)
+# Ignore Python / venv garbage
 __pycache__/
 *.pyc
 .venv*
@@ -37,3 +37,10 @@ __pycache__/
 
 # Ignore backup files
 *~
+
+# Nix / direnv garbage
+.direnv/
+
+# Locally installed Ansible collections
+collections/
+.collections-installed

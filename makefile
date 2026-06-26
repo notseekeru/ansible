@@ -3,28 +3,50 @@ ROLES     := $(shell find roles -maxdepth 3 -name molecule -exec dirname {} \;)
 
 $(eval $(ROLE_NAME):;@:)
 
-.PHONY: role ping-droplet checkboot checkharden lint molecule strap-pi tailscale-pi tailscale-pi-neovim tailscale-pi-docker find
+.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-neovim tailscale-pi-docker find
+
+VENV_BIN := .venv/bin
+
+venv:
+	@echo "📦 Creating Python venv with Ansible, Molecule, and linting tools..."
+	python3 -m venv .venv
+	$(VENV_BIN)/pip install --quiet --upgrade pip
+	$(VENV_BIN)/pip install --quiet \
+		ansible-core \
+		ansible-lint \
+		molecule \
+		"molecule-plugins[docker]"
+	$(VENV_BIN)/ansible-galaxy collection install \
+		community.general \
+		ansible.posix \
+		community.crypto \
+		community.docker \
+		--collections-path collections \
+		--force
+	@rm -f .collections-installed 2>/dev/null; true
+	@echo "✅ venv ready at .venv/"
 
 role:
 	@if [ -z "$(ROLE_NAME)" ]; then echo "❌ Error: Specify a role name (e.g., make role my_role)"; exit 1; fi
 	ansible-galaxy init ./roles/$(ROLE_NAME)
 
 lint:
-	@echo "🔍 Running Ansible Lint with auto-fix..."
-	python3 -m venv .venv
-	.venv/bin/pip install --upgrade pip ansible-lint
-	.venv/bin/ansible-lint --fix all
+	@echo "🔍 Running ansible-lint..."
+	@if [ ! -f "$(VENV_BIN)/ansible-lint" ]; then echo "❌ Run 'make venv' first"; exit 1; fi
+	PATH="$(CURDIR)/$(VENV_BIN):$$PATH" $(VENV_BIN)/ansible-lint
 
 molecule:
-	@echo "📦 Creating python venv and installing Molecule..."
-	python3 -m venv .venv
-	.venv/bin/pip install --upgrade pip molecule "molecule-plugins[docker]"
+	@echo "📦 Running Molecule tests..."
+	@if [ ! -f "$(VENV_BIN)/molecule" ]; then echo "❌ Run 'make venv' first"; exit 1; fi
 	@echo "Found roles to test: $(ROLES)"
 	@for role in $(ROLES); do \
 		echo "=========================================="; \
 		echo "🚀 Running Molecule test for: $$role"; \
 		echo "=========================================="; \
-		(cd "$$role" && $(CURDIR)/.venv/bin/molecule test -s default) || exit 1; \
+		cd "$$role" && \
+		PATH="$(CURDIR)/$(VENV_BIN):$$PATH" \
+		ANSIBLE_COLLECTIONS_PATH="$(CURDIR)/collections" \
+		$(CURDIR)/$(VENV_BIN)/molecule test -s default || exit 1; \
 	done
 
 ping-droplet:
