@@ -37,7 +37,7 @@ molecule:
 	@echo "Found roles to test: $(ROLES)"
 	@for role in $(ROLES); do \
 		echo "🚀 Running Molecule test for: $$role"; \
-		cd "$$role" && \
+		cd "$(CURDIR)/$$role" && \
 		PATH="$(CURDIR)/$(VENV_BIN):$$PATH" \
 		ANSIBLE_COLLECTIONS_PATH="$(CURDIR)/collections" \
 		$(CURDIR)/$(VENV_BIN)/molecule test -s default || exit 1; \
@@ -95,6 +95,3 @@ tailscale-pi-docker:
 	-K \
 	-v \
 	--ask-vault-pass \
-
-find:
-	find . -type f -exec cat {} +
