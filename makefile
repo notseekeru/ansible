@@ -8,7 +8,6 @@ $(eval $(ROLE_NAME):;@:)
 VENV_BIN := .venv/bin
 
 venv:
-	@echo "📦 Creating Python venv with Ansible, Molecule, and linting tools..."
 	python3 -m venv .venv
 	$(VENV_BIN)/pip install --quiet --upgrade pip
 	$(VENV_BIN)/pip install --quiet \
@@ -24,25 +23,20 @@ venv:
 		--collections-path collections \
 		--force
 	@rm -f .collections-installed 2>/dev/null; true
-	@echo "✅ venv ready at .venv/"
 
 role:
 	@if [ -z "$(ROLE_NAME)" ]; then echo "❌ Error: Specify a role name (e.g., make role my_role)"; exit 1; fi
 	ansible-galaxy init ./roles/$(ROLE_NAME)
 
 lint:
-	@echo "🔍 Running ansible-lint..."
 	@if [ ! -f "$(VENV_BIN)/ansible-lint" ]; then echo "❌ Run 'make venv' first"; exit 1; fi
 	PATH="$(CURDIR)/$(VENV_BIN):$$PATH" $(VENV_BIN)/ansible-lint
 
 molecule:
-	@echo "📦 Running Molecule tests..."
 	@if [ ! -f "$(VENV_BIN)/molecule" ]; then echo "❌ Run 'make venv' first"; exit 1; fi
 	@echo "Found roles to test: $(ROLES)"
 	@for role in $(ROLES); do \
-		echo "=========================================="; \
 		echo "🚀 Running Molecule test for: $$role"; \
-		echo "=========================================="; \
 		cd "$$role" && \
 		PATH="$(CURDIR)/$(VENV_BIN):$$PATH" \
 		ANSIBLE_COLLECTIONS_PATH="$(CURDIR)/collections" \
