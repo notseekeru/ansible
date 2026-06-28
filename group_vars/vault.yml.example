@@ -3,3 +3,4 @@ tailscale_auth_key_droplet:
 tailscale_molecule_auth_key: 
 github_token: 
 CLOUDFLARE_TOKEN: 
+slack_webhook:
