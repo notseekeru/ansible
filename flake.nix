@@ -35,6 +35,7 @@
             yq
             jq
             tree
+            infisical
           ];
 
           shellHook = ''
