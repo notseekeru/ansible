@@ -20,6 +20,7 @@ Before writing any code, stop at the first rung that holds:
 4. Does an already-installed dependency solve it? Use it.
 5. Can this be one line? Make it one line.
 6. Only then: write the minimum code that works.
+7. No Comments or Print Text unless it's something important.
 
 Rules:
 
@@ -51,5 +52,10 @@ Not lazy about: input validation at trust boundaries, error handling that preven
 8. External Information: Use search engine to stay up to date up to date documentation. Provide Citations and why and Audit and give recommendations.
 9. Gotcha: Identify common pitfall guide on how to avoid it.
 10. Verification and Audit: Verify your own work, double check if you must and do not be lazy.
+
+## Hard Rules
+
+1. **NO EDITS WITHOUT EXPLICIT PERMISSION.** Unless the user says "edit this file" or "fix this", you are read-only. Every question, comment, or error report is assumed to be an investigation request until the user says otherwise.
+2. **If you are about to destroy data, STOP.** Uncommitted work, unstaged changes, anything not in git — ask before any operation that touches it.
 
 ---
