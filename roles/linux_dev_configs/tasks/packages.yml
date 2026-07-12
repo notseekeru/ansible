@@ -2,7 +2,7 @@
 ---
 - name: Install base packages for Neovim and shell tooling
   ansible.builtin.package:
-    name: "{{ linux_neovim_packages }}"
+    name: "{{ linux_dev_configs_packages }}"
     state: present
     update_cache: true
   become: true
@@ -13,5 +13,5 @@
     state: absent
   become: true
   when:
-    - linux_neovim_remove_apt | bool
+    - linux_dev_configs_remove_apt | bool
     - ansible_facts.os_family == 'Debian'

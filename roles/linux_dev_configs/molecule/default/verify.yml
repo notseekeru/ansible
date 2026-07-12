@@ -1,59 +1,59 @@
 ---
-- name: Verify linux_neovim role — Zsh & Oh My Zsh
+- name: Verify linux_dev_configs role — Zsh & Oh My Zsh
   hosts: all
   vars:
     test_user_home: "{{ ansible_facts['env']['HOME'] }}"
   tasks:
     - name: Verify zsh binary is installed
       ansible.builtin.command: zsh --version
-      register: linux_neovim_zsh_version
+      register: linux_dev_configs_zsh_version
       changed_when: false
-      failed_when: linux_neovim_zsh_version.rc != 0
+      failed_when: linux_dev_configs_zsh_version.rc != 0
 
     - name: Verify zsh is the default shell for the test user
       ansible.builtin.user:
         name: "{{ ansible_facts['user_id'] }}"
-      register: linux_neovim_user_info
+      register: linux_dev_configs_user_info
       become: true
 
     - name: Assert default shell is zsh
       ansible.builtin.assert:
         that:
-          - linux_neovim_user_info.shell is search('zsh')
+          - linux_dev_configs_user_info.shell is search('zsh')
 
     - name: Stat .zshrc
       ansible.builtin.stat:
         path: "{{ test_user_home }}/.zshrc"
-      register: linux_neovim_zshrc_stat
+      register: linux_dev_configs_zshrc_stat
 
     - name: Assert .zshrc exists
       ansible.builtin.assert:
         that:
-          - linux_neovim_zshrc_stat.stat.exists
+          - linux_dev_configs_zshrc_stat.stat.exists
 
     - name: Read .zshrc content
       ansible.builtin.slurp:
         src: "{{ test_user_home }}/.zshrc"
-      register: linux_neovim_zshrc_content
+      register: linux_dev_configs_zshrc_content
 
     - name: Assert Oh My Zsh framework is sourced in .zshrc
       ansible.builtin.assert:
         that:
-          - linux_neovim_zshrc_content['content'] | b64decode is search('oh-my-zsh.sh')
+          - linux_dev_configs_zshrc_content['content'] | b64decode is search('oh-my-zsh.sh')
 
     - name: Stat Oh My Zsh installation
       ansible.builtin.stat:
         path: "{{ test_user_home }}/.oh-my-zsh"
-      register: linux_neovim_omz_stat
+      register: linux_dev_configs_omz_stat
 
     - name: Assert Oh My Zsh directory exists
       ansible.builtin.assert:
         that:
-          - linux_neovim_omz_stat.stat.exists
-          - linux_neovim_omz_stat.stat.isdir
+          - linux_dev_configs_omz_stat.stat.exists
+          - linux_dev_configs_omz_stat.stat.isdir
 
     - name: Run zsh in non-interactive mode to verify no syntax errors
       ansible.builtin.command: zsh -n "{{ test_user_home }}/.zshrc"
-      register: linux_neovim_zsh_syntax_check
+      register: linux_dev_configs_zsh_syntax_check
       changed_when: false
-      failed_when: linux_neovim_zsh_syntax_check.rc != 0
+      failed_when: linux_dev_configs_zsh_syntax_check.rc != 0

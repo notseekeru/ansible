@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    linux_dev_configs_install_bob: true
+    linux_dev_configs_install_dotfiles: true
+    linux_dev_configs_github_token: "{{ github_token | default('') }}"
+    linux_dev_configs_packages:
+      - curl
+      - git
+      - unzip
+      - build-essential
+      - zsh
+  roles:
+    - role: linux_dev_configs

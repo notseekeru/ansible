@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Ensure bob install directory exists
+  ansible.builtin.file:
+    path: "{{ linux_dev_configs_dev_user_home }}/.cache"
+    state: directory
+    mode: "0755"
+  become: false
+
+- name: Download bob install script
+  ansible.builtin.get_url:
+    url: "{{ linux_dev_configs_bob_install_url }}"
+    dest: "{{ linux_dev_configs_dev_user_home }}/.cache/bob-install.sh"
+    mode: "0755"
+  become: false
+
+- name: Install bob
+  ansible.builtin.command:
+    cmd: "{{ linux_dev_configs_dev_user_home }}/.cache/bob-install.sh"
+  args:
+    creates: "{{ linux_dev_configs_dev_user_home }}/.local/bin/bob"
+  become: false
+
+- name: Install Neovim version {{ linux_dev_configs_version }}
+  ansible.builtin.command:
+    cmd: "{{ linux_dev_configs_dev_user_home }}/.local/bin/bob install {{ linux_dev_configs_version }}"
+  environment:
+    PATH: "{{ linux_dev_configs_dev_user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
+  args:
+    creates: "{{ linux_dev_configs_dev_user_home }}/.local/share/bob/v{{ linux_dev_configs_version }}"
+  become: false
+
+- name: Stat the currently active bob Neovim symlink
+  ansible.builtin.stat:
+    path: "{{ linux_dev_configs_dev_user_home }}/.local/share/bob/current"
+  register: linux_dev_configs_bob_current_symlink
+  become: false
+
+- name: Select Neovim version {{ linux_dev_configs_version }}
+  ansible.builtin.command:
+    cmd: "{{ linux_dev_configs_dev_user_home }}/.local/bin/bob use {{ linux_dev_configs_version }}"
+  environment:
+    PATH: "{{ linux_dev_configs_dev_user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
+  register: linux_dev_configs_bob_use_output
+  when: >
+    not linux_dev_configs_bob_current_symlink.stat.exists or  not (linux_dev_configs_bob_current_symlink.stat.lnk_target | default('') is search(linux_dev_configs_version))
+  changed_when: >
+    "already" not in linux_dev_configs_bob_use_output.stdout and
+    "current" not in linux_dev_configs_bob_use_output.stdout
+  become: false
+
+- name: Pull Neovim dotfiles
+  ansible.builtin.git:
+    repo: "{{ linux_dev_configs_dotfiles_repo }}"
+    dest: "{{ linux_dev_configs_dotfiles_dest }}"
+    version: "{{ linux_dev_configs_dotfiles_version }}"
+    update: "{{ linux_dev_configs_dotfiles_update }}"
+    force: true
+  become: false
+  environment:
+    GITHUB_TOKEN: "{{ linux_dev_configs_github_token }}"
+  when: linux_dev_configs_install_dotfiles | bool
+
+- name: Pull Tmux Plugin Manager (TPM)
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "{{ linux_dev_configs_dev_user_home }}/.tmux/plugins/tpm"
+    version: master
+    depth: 1
+    update: false
+  become: false

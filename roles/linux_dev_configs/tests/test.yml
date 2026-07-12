@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT-0
 ---
-- name: Test linux_neovim Role
+- name: Test linux_dev_configs Role
   hosts: localhost
   remote_user: root
   roles:
-    - linux_neovim
+    - linux_dev_configs

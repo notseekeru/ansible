@@ -1,4 +1,4 @@
-# Linux Neovim
+# Linux Dev Configs
 
 Installs Neovim via bob and applies developer shell configuration.
 
@@ -9,7 +9,7 @@ None.
 ## Role Variables
 
 ```yaml
-linux_neovim_packages:
+linux_dev_configs_packages:
   - curl
   - git
   - unzip
@@ -21,12 +21,12 @@ linux_neovim_packages:
   - tree-sitter-cli
   - zsh
   - tmux
-linux_neovim_version: "0.11.2"
-linux_neovim_install_bob: true
-linux_neovim_install_dotfiles: true
+linux_dev_configs_version: "0.11.2"
+linux_dev_configs_install_bob: true
+linux_dev_configs_install_dotfiles: true
 
-linux_neovim_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
-linux_neovim_dev_set_shell: true
+linux_dev_configs_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
+linux_dev_configs_dev_set_shell: true
 ```
 
 ## Example Playbook
@@ -36,7 +36,7 @@ linux_neovim_dev_set_shell: true
   hosts: tailscale_pi_nodes
   gather_facts: true
   roles:
-    - role: linux_neovim
+    - role: linux_dev_configs
 ```
 
 ## Templates

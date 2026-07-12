@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: MIT-0
+---
+linux_dev_configs_packages:
+  - curl
+  - git
+  - unzip
+  - build-essential
+  - fd-find
+  - ripgrep
+  - lazygit
+  - fzf
+  - tree-sitter-cli
+  - zsh
+  - tmux
+
+linux_dev_configs_remove_apt: true
+
+linux_dev_configs_install_bob: true
+linux_dev_configs_install_dotfiles: true
+
+linux_dev_configs_github_token: "{{ github_token | default('') }}"
+
+linux_dev_configs_bob_install_url: "https://raw.githubusercontent.com/MordechaiHadad/bob/master/scripts/install.sh"
+linux_dev_configs_version: "0.12.3"
+linux_dev_configs_configure_path: true
+
+linux_dev_configs_dotfiles_repo: "https://github.com/notseekeru/nvim.git"
+linux_dev_configs_dotfiles_version: "main"
+linux_dev_configs_dotfiles_update: true
+linux_dev_configs_dotfiles_dest: "{{ linux_dev_configs_dev_user_home }}/.config/nvim"
+
+linux_dev_configs_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
+linux_dev_configs_dev_user_home: "{{ ansible_facts['user_dir'] }}"
+linux_dev_configs_dev_set_shell: true
+linux_dev_configs_dev_shell_path: /bin/zsh
+
+linux_dev_configs_dev_git_configure: true
+
+linux_dev_configs_dev_inputrc_ignore_case: true
+linux_dev_configs_dev_vimrc_enable: true
