@@ -47,15 +47,16 @@ ping-droplet:
 	ansible -i inventories/droplets.ini droplets -m ping
 
 strap-droplet:
+	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/droplets.ini \
 	playbooks/droplet.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
-	--ask-vault-pass \
 	-e "tailscale_force_reauth=true"
 
 strap-pi:
+	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home_static.ini \
 	playbooks/site.yml \
@@ -63,10 +64,10 @@ strap-pi:
 	--diff \
 	-K \
 	-v \
-	--ask-vault-pass \
 	-e "tailscale_force_reauth=true"
 
 tailscale-pi:
+	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home_tailscale.ini \
 	playbooks/site.yml \
@@ -74,9 +75,9 @@ tailscale-pi:
 	--diff \
 	-K \
 	-v \
-	--ask-vault-pass \
 
 tailscale-pi-neovim:
+	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home_tailscale.ini \
 	playbooks/linux_neovim.yml \
@@ -84,9 +85,9 @@ tailscale-pi-neovim:
 	--diff \
 	-K \
 	-v \
-	--ask-vault-pass \
 
 tailscale-pi-docker:
+	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home_tailscale.ini \
 	playbooks/linux_docker.yml \
@@ -94,4 +95,3 @@ tailscale-pi-docker:
 	--diff \
 	-K \
 	-v \
-	--ask-vault-pass \
