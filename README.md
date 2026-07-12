@@ -58,22 +58,22 @@ After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable thro
 
 CIS Level 1 hardening. All components toggleable via role defaults.
 
-| Component          | What it does                                                             |
-| ------------------ | ------------------------------------------------------------------------ |
-| User creation      | Creates local non-root user with sudo, home dir, .ssh dir                |
-| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding                |
-| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi        |
-| Automatic updates  | unattended-upgrades installed and enabled                                |
-| Authorized keys    | Deploys from `files/authorized_keys.pub`                                 |
-| Cloud-init cleanup | Removes SSH override configs                                             |
-| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry    |
-| Falco              | Host intrusion detection from the upstream signed Debian/Ubuntu apt repo |
-| Goss               | System validation binary (goss + dgoss) for ad-hoc and CI health checks  |
+| Component          | What it does                                                                                   |
+| ------------------ | ---------------------------------------------------------------------------------------------- |
+| User creation      | Creates local non-root user with sudo, home dir, .ssh dir                                      |
+| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding                                      |
+| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi                              |
+| Automatic updates  | unattended-upgrades installed and enabled                                                      |
+| Authorized keys    | Deploys from `files/authorized_keys.pub`                                                       |
+| Cloud-init cleanup | Removes SSH override configs                                                                   |
+| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry                          |
+| Falco              | Host intrusion detection (disabled by default — overkill for tailscale-only single-user nodes) |
+| Goss               | System validation binary (goss + dgoss) for ad-hoc and CI health checks                        |
 
 ```yaml
 # example overrides
 linux_security_enable_ufw: false
-linux_security_ufw_tailscale_enabled: true   # opens SSH only on tailscale0
+linux_security_ufw_tailscale_enabled: true # opens SSH only on tailscale0
 linux_security_sshd_max_auth_tries: 3
 ```
 
@@ -97,12 +97,12 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 
 ## Playbooks
 
-| Playbook           | What it does                                      | Run against          |
-| ------------------ | ------------------------------------------------- | -------------------- |
-| `site.yml`         | Bootstrap: Tailscale install → security lockdown  | `home_static.ini`    |
-| `droplet.yml`      | Bootstrap: same pattern, tuned for DigitalOcean   | `droplets.ini`       |
-| `linux_neovim.yml` | Dev environment                                   | Tailscale inventory  |
-| `linux_docker.yml` | Docker CE                                         | Tailscale inventory  |
+| Playbook           | What it does                                     | Run against         |
+| ------------------ | ------------------------------------------------ | ------------------- |
+| `site.yml`         | Bootstrap: Tailscale install → security lockdown | `home_static.ini`   |
+| `droplet.yml`      | Bootstrap: same pattern, tuned for DigitalOcean  | `droplets.ini`      |
+| `linux_neovim.yml` | Dev environment                                  | Tailscale inventory |
+| `linux_docker.yml` | Docker CE                                        | Tailscale inventory |
 
 Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip mesh setup and use open SSH firewall rules instead.
 
@@ -112,7 +112,6 @@ Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip me
 
 - No password auth, no root login, no X11 forwarding
 - Default-deny firewall on public interfaces
-- Falco on supported Debian/Ubuntu hosts through the official signed repo
 - All secrets in Ansible Vault, never committed
 
 ### CIS Level 1 controls
@@ -123,7 +122,6 @@ Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip me
 - UFW default incoming policy: deny
 - Automatic updates: enabled
 - Fail2Ban sshd jail: enabled (UFW ban action)
-- Falco service: enabled on host
 
 ### Secrets template
 
