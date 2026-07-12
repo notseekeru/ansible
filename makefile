@@ -3,7 +3,7 @@ ROLES     := $(shell find roles -maxdepth 3 -name molecule -exec dirname {} \;)
 
 $(eval $(ROLE_NAME):;@:)
 
-.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-neovim tailscale-pi-docker find
+.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker find
 
 VENV_BIN := .venv/bin
 
@@ -76,11 +76,11 @@ tailscale-pi:
 	-K \
 	-v \
 
-tailscale-pi-neovim:
+tailscale-pi-dev:
 	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home_tailscale.ini \
-	playbooks/linux_neovim.yml \
+	playbooks/linux_dev_configs.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \

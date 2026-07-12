@@ -28,7 +28,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 ├── playbooks/
 │   ├── site.yml                # Bootstrap homelab: Tailscale → linux_security
 │   ├── droplet.yml             # Bootstrap droplet: same pattern, droplet-optimized
-│   ├── linux_neovim.yml        # Dev environment
+│   ├── linux_dev_configs.yml   # Dev environment
 │   └── linux_docker.yml        # Docker CE
 ├── docs/
 │   ├── IMPORTANT_NOTES.md
@@ -36,7 +36,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 ├── collections/                # Locally installed Galaxy collections (gitignored)
 └── roles/
     ├── linux_security/         # CIS Level 1 hardening
-    ├── linux_neovim/           # Neovim + dev tooling
+    ├── linux_dev_configs/       # Neovim + dev tooling
     ├── tailscale/              # Tailscale mesh agent
     └── geerlingguy.docker/     # Docker CE (external)
 ```
@@ -77,7 +77,7 @@ linux_security_ufw_tailscale_enabled: true # opens SSH only on tailscale0
 linux_security_sshd_max_auth_tries: 3
 ```
 
-### linux_neovim
+### linux_dev_configs
 
 Delivers a complete terminal dev environment on any target:
 
@@ -87,7 +87,7 @@ Delivers a complete terminal dev environment on any target:
 - tmux, lazygit, ripgrep, fzf, fd-find, tree-sitter
 - Git config + GitHub CLI with vault-stored token
 
-### tailscale
+### linux_tailscale
 
 Installs and authenticates Tailscale. Supports `tailscale_force_reauth` for re-auth flows. Auth key comes from Ansible Vault.
 
@@ -101,7 +101,7 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 | ------------------ | ------------------------------------------------ | ------------------- |
 | `site.yml`         | Bootstrap: Tailscale install → security lockdown | `home_static.ini`   |
 | `droplet.yml`      | Bootstrap: same pattern, tuned for DigitalOcean  | `droplets.ini`      |
-| `linux_neovim.yml` | Dev environment                                  | Tailscale inventory |
+| `linux_dev_configs.yml` | Dev environment                                  | Tailscale inventory |
 | `linux_docker.yml` | Docker CE                                        | Tailscale inventory |
 
 Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip mesh setup and use open SSH firewall rules instead.

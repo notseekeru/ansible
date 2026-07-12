@@ -18,7 +18,7 @@
     # Step 1: Optionally run Tailscale while connected via local IP
     - name: Initialize Tailscale network
       ansible.builtin.include_role:
-        name: tailscale
+        name: linux_tailscale
       vars:
         tailscale_run_up: true
       when: bootstrap_tailscale_enabled | bool
