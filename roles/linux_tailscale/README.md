@@ -23,5 +23,5 @@ tailscale_up_args: []
   hosts: local_pi_nodes
   gather_facts: true
   roles:
-    - role: tailscale
+    - role: linux_tailscale
 ```

@@ -4,4 +4,4 @@
   hosts: localhost
   remote_user: root
   roles:
-    - tailscale
+    - linux_tailscale

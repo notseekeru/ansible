@@ -5,4 +5,4 @@
   vars:
     tailscale_run_up: false
   roles:
-    - role: tailscale
+    - role: linux_tailscale
