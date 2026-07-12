@@ -11,7 +11,7 @@ linux_security_user_groups:
 
 linux_security_enable_sshd_hardening: true
 linux_security_enable_ufw: true
-linux_security_enable_falco: true
+linux_security_enable_falco: false
 linux_security_disable_cloud_init_ssh_override: true
 linux_security_disable_avahi: true
 
