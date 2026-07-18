@@ -97,12 +97,12 @@ Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
 
 ## Playbooks
 
-| Playbook           | What it does                                     | Run against         |
-| ------------------ | ------------------------------------------------ | ------------------- |
-| `site.yml`         | Bootstrap: Tailscale install → security lockdown | `home_static.ini`   |
-| `droplet.yml`      | Bootstrap: same pattern, tuned for DigitalOcean  | `droplets.ini`      |
+| Playbook                | What it does                                     | Run against         |
+| ----------------------- | ------------------------------------------------ | ------------------- |
+| `site.yml`              | Bootstrap: Tailscale install → security lockdown | `home_static.ini`   |
+| `droplet.yml`           | Bootstrap: same pattern, tuned for DigitalOcean  | `droplets.ini`      |
 | `linux_dev_configs.yml` | Dev environment                                  | Tailscale inventory |
-| `linux_docker.yml` | Docker CE                                        | Tailscale inventory |
+| `linux_docker.yml`      | Docker CE                                        | Tailscale inventory |
 
 Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip mesh setup and use open SSH firewall rules instead.
 
