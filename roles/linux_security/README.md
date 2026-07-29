@@ -8,8 +8,6 @@ Baseline security hardening for Debian/Ubuntu nodes. Includes:
 - SSH hardening
 - UFW rules (Tailscale-first SSH)
 - Fail2Ban intrusion prevention
-- Falco host intrusion detection (disabled by default, overkill for tailscale-only nodes)
-- Goss system validation
 
 ## Requirements
 
@@ -31,7 +29,6 @@ linux_security_enable_baseline: true
 linux_security_enable_authorized_keys: true
 linux_security_enable_sshd_hardening: true
 linux_security_enable_ufw: true
-linux_security_enable_falco: false  # overkill for tailscale-only nodes
 linux_security_disable_cloud_init_ssh_override: true
 linux_security_disable_avahi: true
 
@@ -62,15 +59,6 @@ linux_security_fail2ban_bantime: 3600
 linux_security_fail2ban_findtime: 600
 linux_security_fail2ban_maxretry: 3
 
-# Falco — disabled by default (overkill for tailscale-only single-user nodes)
-# linux_security_enable_falco: false
-# linux_security_falco_key_url: https://falco.org/repo/falcosecurity-packages.asc
-# linux_security_falco_package_name: falco
-# linux_security_falco_service_name: falco
-
-# Goss
-linux_security_enable_goss: true
-linux_security_goss_version: "v0.4.9"
 ```
 
 ## Example Playbook
