@@ -1,0 +1,81 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Ensure OS family is supported by this role
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == 'Debian'
+    fail_msg: "infisical role supports Debian-family systems only."
+
+- name: Check if Infisical CLI is already installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/infisical
+  register: infisical_bin_installed
+
+# Infisical CLI is published as release assets on the `Infisical/cli` repo:
+#   cli_<version>_linux_amd64.tar.gz | cli_<version>_linux_arm64.tar.gz
+- name: Resolve latest CLI release tag
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/Infisical/cli/releases/latest
+    headers:
+      Accept: application/vnd.github.v3+json
+  register: infisical_gh
+  when:
+    - not infisical_bin_installed.stat.exists
+    - infisical_version == 'latest'
+
+- name: Normalize release and architecture
+  ansible.builtin.set_fact:
+    infisical_arch: "{{ 'arm64' if (ansible_facts['architecture'] | lower == 'aarch64') else 'amd64' }}"
+    infisical_release: "{{ (infisical_gh.json.tag_name | default('v' + infisical_version)) | regex_replace('^v', '') }}"
+  when: not infisical_bin_installed.stat.exists
+
+- name: Download Infisical CLI tarball
+  ansible.builtin.get_url:
+    url: "https://github.com/Infisical/cli/releases/download/v{{ infisical_release }}/cli_{{ infisical_release }}_linux_{{ infisical_arch }}.tar.gz"
+    dest: /tmp/infisical.tar.gz
+    mode: "0644"
+    timeout: 60
+  become: false
+  when: not infisical_bin_installed.stat.exists
+
+- name: Create extraction directory
+  ansible.builtin.file:
+    path: /tmp/infisical-bin
+    state: directory
+    mode: "0755"
+  become: false
+  when: not infisical_bin_installed.stat.exists
+
+- name: Extract Infisical CLI tarball
+  ansible.builtin.unarchive:
+    src: /tmp/infisical.tar.gz
+    dest: /tmp/infisical-bin
+    remote_src: true
+    creates: /tmp/infisical-bin/infisical
+  become: false
+  when: not infisical_bin_installed.stat.exists
+
+- name: Install infisical binary
+  ansible.builtin.copy:
+    src: /tmp/infisical-bin/infisical
+    dest: /usr/local/bin/infisical
+    mode: "0755"
+    remote_src: true
+  become: true
+  when: not infisical_bin_installed.stat.exists
+
+- name: Verify Infisical CLI
+  ansible.builtin.command: infisical --version
+  register: infisical_version_raw
+  changed_when: false
+  failed_when: false
+
+- name: Clean up temporary files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: false
+  loop:
+    - /tmp/infisical.tar.gz
+    - /tmp/infisical-bin
+  when: not infisical_bin_installed.stat.exists

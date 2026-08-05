@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Logout Infisical CLI
+  ansible.builtin.command: infisical logout
+  become: true
+  register: infisical_logout
+  changed_when: false
+  failed_when: false
+  ignore_errors: true   # no active session is fine
+
+- name: Remove installed Infisical CLI binary
+  ansible.builtin.file:
+    path: /usr/local/bin/infisical
+    state: absent
+  become: true

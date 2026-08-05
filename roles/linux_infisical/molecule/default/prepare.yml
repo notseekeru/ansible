@@ -1,0 +1,11 @@
+---
+- name: Prepare instance
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install prerequisite packages for binary download
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - wget
+        state: present

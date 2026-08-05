@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Include OS prerequisites tasks
+  ansible.builtin.include_tasks: install.yml
+  when: not infisical_remove | bool
+
+- name: Include identity setup tasks
+  ansible.builtin.include_tasks: setup.yml
+  when:
+    - not infisical_remove | bool
+    - infisical_client_id | length > 0
+    - infisical_client_secret | length > 0
+
+- name: Include removal tasks
+  ansible.builtin.include_tasks: uninstall.yml
+  when: infisical_remove | bool

@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    infisical_version: latest
+  roles:
+    - linux_infisical
