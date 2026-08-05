@@ -3,7 +3,7 @@ ROLES     := $(filter-out roles/geerlingguy.docker,$(shell find roles -maxdepth 
 
 $(eval $(ROLE_NAME):;@:)
 
-.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker
+.PHONY: role venv lint molecule ping-droplet strap-pi strap-infisical tailscale-pi tailscale-pi-dev tailscale-pi-docker
 
 VENV_BIN := .venv/bin
 
@@ -65,6 +65,16 @@ strap-pi:
 	-K \
 	-v \
 	-e "tailscale_force_reauth=true"
+
+strap-infisical:
+	infisical run --env=dev -- \
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+	-i inventories/home.ini \
+	playbooks/linux_infisical.yml \
+	--private-key=~/.ssh/id_ed25519 \
+	--diff \
+	-K \
+	-v
 
 tailscale-pi:
 	infisical run --env=dev -- \
