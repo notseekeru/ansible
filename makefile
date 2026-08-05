@@ -1,9 +1,9 @@
 ROLE_NAME := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-ROLES     := $(shell find roles -maxdepth 3 -name molecule -exec dirname {} \;)
+ROLES     := $(filter-out roles/geerlingguy.docker,$(shell find roles -maxdepth 3 -name molecule -exec dirname {} \;))
 
 $(eval $(ROLE_NAME):;@:)
 
-.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker find
+.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker
 
 VENV_BIN := .venv/bin
 
@@ -58,7 +58,7 @@ strap-droplet:
 strap-pi:
 	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/home_static.ini \
+	-i inventories/home.ini \
 	playbooks/site.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
@@ -69,29 +69,29 @@ strap-pi:
 tailscale-pi:
 	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/home_tailscale.ini \
+	-i inventories/home.ini \
 	playbooks/site.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \
-	-v \
+	-v
 
 tailscale-pi-dev:
 	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/home_tailscale.ini \
+	-i inventories/home.ini \
 	playbooks/linux_dev_configs.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \
-	-v \
+	-v
 
 tailscale-pi-docker:
 	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/home_tailscale.ini \
+	-i inventories/home.ini \
 	playbooks/linux_docker.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \
 	-K \
-	-v \
+	-v
