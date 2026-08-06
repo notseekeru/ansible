@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT-0
 ---
-# SPDX-License-Identifier: MIT-0
 galaxy_info:
   author: seeker
   description: Developer tooling — Neovim, shell configs, git, tmux.
@@ -21,4 +20,4 @@ galaxy_info:
     - dotfiles
 
 dependencies: []
-  # min_ansible_container_version:
+
