@@ -43,9 +43,6 @@ molecule:
 		$(CURDIR)/$(VENV_BIN)/molecule test -s default || exit 1; \
 	done
 
-ping-droplet:
-	ansible -i inventories/droplets.ini droplets -m ping
-
 strap-droplet:
 	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
@@ -65,16 +62,6 @@ strap-pi:
 	-K \
 	-v \
 	-e "tailscale_force_reauth=true"
-
-strap-infisical:
-	infisical run --env=dev -- \
-	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/home.ini \
-	playbooks/linux_infisical.yml \
-	--private-key=~/.ssh/id_ed25519 \
-	--diff \
-	-K \
-	-v
 
 tailscale-pi:
 	infisical run --env=dev -- \
