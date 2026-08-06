@@ -7,23 +7,23 @@
   tasks:
     - name: Ensure Infisical CLI is in PATH
       ansible.builtin.command: which infisical
-      register: infisical_which
+      register: linux_infisical_which
       changed_when: false
-      failed_when: infisical_which.rc != 0
+      failed_when: linux_infisical_which.rc != 0
 
     - name: Ensure Infisical CLI binary is executable
       ansible.builtin.stat:
         path: /usr/local/bin/infisical
-      register: infisical_bin
+      register: linux_infisical_bin
 
     - name: Assert Infisical binary present and executable
       ansible.builtin.assert:
         that:
-          - infisical_bin.stat.exists
-          - infisical_bin.stat.mode == '0755'
+          - linux_infisical_bin.stat.exists
+          - linux_infisical_bin.stat.mode == '0755'
 
     - name: Ensure Infisical CLI runs
       ansible.builtin.command: infisical --version
-      register: infisical_version_out
+      register: linux_infisical_version_out
       changed_when: false
-      failed_when: infisical_version_out.rc != 0
+      failed_when: linux_infisical_version_out.rc != 0

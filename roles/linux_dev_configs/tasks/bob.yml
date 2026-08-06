@@ -42,8 +42,9 @@
   environment:
     PATH: "{{ linux_dev_configs_dev_user_home }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
   register: linux_dev_configs_bob_use_output
-  when: >
-    not linux_dev_configs_bob_current_symlink.stat.exists or  not (linux_dev_configs_bob_current_symlink.stat.lnk_target | default('') is search(linux_dev_configs_version))
+  when: >-
+    not linux_dev_configs_bob_current_symlink.stat.exists or
+    not (linux_dev_configs_bob_current_symlink.stat.lnk_target | default('') is search(linux_dev_configs_version))
   changed_when: >
     "already" not in linux_dev_configs_bob_use_output.stdout and
     "current" not in linux_dev_configs_bob_use_output.stdout

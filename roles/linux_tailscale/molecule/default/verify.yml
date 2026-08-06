@@ -4,6 +4,6 @@
   tasks:
     - name: Verify tailscale binary is available
       ansible.builtin.command: tailscale version
-      register: tailscale_version
+      register: linux_tailscale_version
       changed_when: false
-      failed_when: tailscale_version.rc != 0
+      failed_when: linux_tailscale_version.rc != 0

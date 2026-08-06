@@ -6,7 +6,7 @@
 bootstrap_tailscale_enabled: true
 
 tailscale_auth_key: "{{ tailscale_auth_key_droplet }}"
-tailscale_up_args: ["--advertise-tags=tag:server-public"]
+linux_tailscale_up_args: ["--advertise-tags=tag:server-public"]
 
 linux_security_user_name: "seeker"
 linux_security_user_comment: "System Administrator"

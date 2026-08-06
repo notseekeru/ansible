@@ -1,4 +1,5 @@
 ---
-
 exclude_paths:
   - roles/geerlingguy.docker/
+  # Encrypted + gitignored; env-style token names don't fit Ansible var rules.
+  - group_vars/

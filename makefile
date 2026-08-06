@@ -54,7 +54,7 @@ strap-pi:
 	--diff \
 	-K \
 	-v \
-	-e "tailscale_force_reauth=true"
+	-e "linux_tailscale_force_reauth=true"
 
 tailscale-pi:
 	infisical run --env=dev -- \

@@ -20,7 +20,7 @@
       ansible.builtin.include_role:
         name: linux_tailscale
       vars:
-        tailscale_run_up: true
+        linux_tailscale_run_up: true
       when: bootstrap_tailscale_enabled | bool
 
     # Step 2: Grab the newly generated Tailscale IP address from the server

@@ -9,7 +9,7 @@
 - name: Check if Infisical CLI is already installed
   ansible.builtin.stat:
     path: /usr/local/bin/infisical
-  register: infisical_bin_installed
+  register: linux_infisical_bin_installed
 
 # Infisical CLI is published as release assets on the `Infisical/cli` repo:
 #   cli_<version>_linux_amd64.tar.gz | cli_<version>_linux_arm64.tar.gz
@@ -18,25 +18,39 @@
     url: https://api.github.com/repos/Infisical/cli/releases/latest
     headers:
       Accept: application/vnd.github.v3+json
-  register: infisical_gh
+  register: linux_infisical_gh
   when:
-    - not infisical_bin_installed.stat.exists
-    - infisical_version == 'latest'
+    - not linux_infisical_bin_installed.stat.exists
+    - linux_infisical_version == 'latest'
 
-- name: Normalize release and architecture
+- name: Normalize architecture
   ansible.builtin.set_fact:
-    infisical_arch: "{{ 'arm64' if (ansible_facts['architecture'] | lower == 'aarch64') else 'amd64' }}"
-    infisical_release: "{{ (infisical_gh.json.tag_name | default('v' + infisical_version)) | regex_replace('^v', '') }}"
-  when: not infisical_bin_installed.stat.exists
+    linux_infisical_arch: "{{ 'arm64' if (ansible_facts['architecture'] | lower == 'aarch64') else 'amd64' }}"
+  when: not linux_infisical_bin_installed.stat.exists
+
+- name: Normalize release version
+  ansible.builtin.set_fact:
+    linux_infisical_release: "{{ (linux_infisical_gh.json.tag_name | default('v' + linux_infisical_version)) | regex_replace('^v', '') }}"
+  when: not linux_infisical_bin_installed.stat.exists
+
+- name: Build download URL tail
+  ansible.builtin.set_fact:
+    linux_infisical_dl_tail: "v{{ linux_infisical_release }}/cli_{{ linux_infisical_release }}_linux_{{ linux_infisical_arch }}.tar.gz"
+  when: not linux_infisical_bin_installed.stat.exists
+
+- name: Build download URL
+  ansible.builtin.set_fact:
+    linux_infisical_download_url: "https://github.com/Infisical/cli/releases/download/{{ linux_infisical_dl_tail }}"
+  when: not linux_infisical_bin_installed.stat.exists
 
 - name: Download Infisical CLI tarball
   ansible.builtin.get_url:
-    url: "https://github.com/Infisical/cli/releases/download/v{{ infisical_release }}/cli_{{ infisical_release }}_linux_{{ infisical_arch }}.tar.gz"
+    url: "{{ linux_infisical_download_url }}"
     dest: /tmp/infisical.tar.gz
     mode: "0644"
     timeout: 60
   become: false
-  when: not infisical_bin_installed.stat.exists
+  when: not linux_infisical_bin_installed.stat.exists
 
 - name: Create extraction directory
   ansible.builtin.file:
@@ -44,7 +58,7 @@
     state: directory
     mode: "0755"
   become: false
-  when: not infisical_bin_installed.stat.exists
+  when: not linux_infisical_bin_installed.stat.exists
 
 - name: Extract Infisical CLI tarball
   ansible.builtin.unarchive:
@@ -53,7 +67,7 @@
     remote_src: true
     creates: /tmp/infisical-bin/infisical
   become: false
-  when: not infisical_bin_installed.stat.exists
+  when: not linux_infisical_bin_installed.stat.exists
 
 - name: Install infisical binary
   ansible.builtin.copy:
@@ -62,11 +76,11 @@
     mode: "0755"
     remote_src: true
   become: true
-  when: not infisical_bin_installed.stat.exists
+  when: not linux_infisical_bin_installed.stat.exists
 
 - name: Verify Infisical CLI
   ansible.builtin.command: infisical --version
-  register: infisical_version_raw
+  register: linux_infisical_version_raw
   changed_when: false
   failed_when: false
 
@@ -78,4 +92,4 @@
   loop:
     - /tmp/infisical.tar.gz
     - /tmp/infisical-bin
-  when: not infisical_bin_installed.stat.exists
+  when: not linux_infisical_bin_installed.stat.exists

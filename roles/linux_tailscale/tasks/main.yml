@@ -8,12 +8,12 @@
 
 - name: Determine Tailscale repository family and codename from facts
   ansible.builtin.set_fact:
-    tailscale_repo_family: "{{ 'ubuntu' if (ansible_facts['distribution'] | lower == 'ubuntu') else 'debian' }}"
-    tailscale_repo_codename: "{{ ansible_facts['distribution_release'] | lower }}"
+    linux_tailscale_repo_family: "{{ 'ubuntu' if (ansible_facts['distribution'] | lower == 'ubuntu') else 'debian' }}"
+    linux_tailscale_repo_codename: "{{ ansible_facts['distribution_release'] | lower }}"
 
 - name: Download Tailscale GPG key
   ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }}/{{ tailscale_repo_codename }}.noarmor.gpg"
+    url: "https://pkgs.tailscale.com/stable/{{ linux_tailscale_repo_family }}/{{ linux_tailscale_repo_codename }}.noarmor.gpg"
     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
     mode: "0644"
   become: true
@@ -29,8 +29,8 @@
   ansible.builtin.deb822_repository:
     name: tailscale
     types: [deb]
-    uris: "https://pkgs.tailscale.com/stable/{{ tailscale_repo_family }}"
-    suites: "{{ tailscale_repo_codename }}"
+    uris: "https://pkgs.tailscale.com/stable/{{ linux_tailscale_repo_family }}"
+    suites: "{{ linux_tailscale_repo_codename }}"
     components: [main]
     signed_by: /usr/share/keyrings/tailscale-archive-keyring.gpg
     state: present
@@ -52,8 +52,8 @@
 
 - name: Check for existing Tailscale state
   ansible.builtin.stat:
-    path: "{{ tailscale_state_file }}"
-  register: tailscale_state_stat
+    path: "{{ linux_tailscale_state_file }}"
+  register: linux_tailscale_state_stat
   become: true
 
 - name: Ensure Tailscale auth key is available when needed
@@ -65,28 +65,28 @@
       tailscale_auth_key is missing. Define it in group_vars/vault.yml
       and run with vault decryption (for example --ask-vault-pass).
   when:
-    - tailscale_run_up | bool
-    - not tailscale_state_stat.stat.exists or tailscale_force_reauth | bool
+    - linux_tailscale_run_up | bool
+    - not linux_tailscale_state_stat.stat.exists or linux_tailscale_force_reauth | bool
 
 - name: Set up Tailscale auth # noqa no-changed-when
   ansible.builtin.command:
-    argv: "{{ ['tailscale', 'up', '--authkey=' + tailscale_auth_key] + tailscale_up_args }}"
-  register: tailscale_up
+    argv: "{{ ['tailscale', 'up', '--authkey=' + tailscale_auth_key] + linux_tailscale_up_args }}"
+  register: linux_tailscale_up
   changed_when: true
   no_log: true
   become: true
   when:
-    - tailscale_run_up | bool
+    - linux_tailscale_run_up | bool
     - tailscale_auth_key is defined
     - tailscale_auth_key | length > 0
-    - not tailscale_state_stat.stat.exists or tailscale_force_reauth | bool
+    - not linux_tailscale_state_stat.stat.exists or linux_tailscale_force_reauth | bool
 
 - name: Wait for Tailscale IP after up
   ansible.builtin.command: tailscale ip -4
-  register: tailscale_ip_after
+  register: linux_tailscale_ip_after
   changed_when: false
   failed_when: false
   retries: 6
   delay: 2
-  until: tailscale_ip_after.stdout != ''
-  when: tailscale_run_up | bool
+  until: linux_tailscale_ip_after.stdout != ''
+  when: linux_tailscale_run_up | bool

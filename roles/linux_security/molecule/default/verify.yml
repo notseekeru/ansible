@@ -42,5 +42,3 @@
       failed_when: linux_security_fail2ban_sshd_status.rc != 0
       # Bypasses socket connectivity verification inside Docker containers
       when: ansible_facts['virtualization_type'] != 'docker'
-
-

@@ -89,7 +89,7 @@ Delivers a complete terminal dev environment on any target:
 
 ### linux_tailscale
 
-Installs and authenticates Tailscale. Supports `tailscale_force_reauth` for re-auth flows. Auth key comes from Ansible Vault.
+Installs and authenticates Tailscale. Supports `linux_tailscale_force_reauth` for re-auth flows. Auth key comes from Ansible Vault.
 
 ### geerlingguy.docker
 
@@ -101,7 +101,7 @@ Deploys the [Infisical](https://infisical.com) CLI from the pinned release tarba
 
 ```yaml
 # example override
-infisical_version: latest # or pinned like 0.43.118
+linux_infisical_version: latest # or pinned like 0.43.118
 ```
 
 ## Playbooks

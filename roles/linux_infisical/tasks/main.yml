@@ -2,8 +2,8 @@
 ---
 - name: Include OS prerequisites tasks
   ansible.builtin.include_tasks: install.yml
-  when: not infisical_remove | bool
+  when: not linux_infisical_remove | bool
 
 - name: Include removal tasks
   ansible.builtin.include_tasks: uninstall.yml
-  when: infisical_remove | bool
+  when: linux_infisical_remove | bool

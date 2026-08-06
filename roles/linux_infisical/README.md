@@ -9,8 +9,8 @@
 
 | Variable | Default | Description |
 |---|---|---|
-| `infisical_version` | `latest` | CLI release tag without leading `v`, resolved via GitHub API when `latest`. |
-| `infisical_remove` | `false` | `true` to uninstall the CLI. |
+| `linux_infisical_version` | `latest` | CLI release tag without leading `v`, resolved via GitHub API when `latest`. |
+| `linux_infisical_remove` | `false` | `true` to uninstall the CLI. |
 
 The CLI is installed from the pinned `Infisical/cli` GitHub release asset
 (`cli_<version>_linux_amd64.tar.gz` | `linux_arm64`) — reproducible and
@@ -26,5 +26,5 @@ and side-effect-free.
   roles:
     - role: linux_infisical
       vars:
-        infisical_version: 0.43.118
+        linux_infisical_version: 0.43.118
 ```
