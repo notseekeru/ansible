@@ -160,6 +160,10 @@ make venv                            # installs ansible-core, molecule, collecti
 cp group_vars/vault.yml.example group_vars/vault.yml
 echo "${your-vault-pass}" > ~/.vault_pass && chmod 600 ~/.vault_pass
 
+# Vault optional: only needed to decrypt group_vars/vault.yml. direnv/flake
+# skip setting ANSIBLE_VAULT_PASSWORD_FILE when ~/.vault_pass is absent, so
+# lint/molecule work without it.
+
 # Bootstrap a Pi
 make strap-pi
 # Bootstrap a DigitalOcean droplet
@@ -176,6 +180,7 @@ pip install ansible-core molecule "molecule-plugins[docker]" ansible-lint
 ansible-galaxy collection install community.general ansible.posix community.crypto community.docker
 cp group_vars/vault.yml.example group_vars/vault.yml
 echo "${your-vault-pass}" > ~/.vault_pass && chmod 600 ~/.vault_pass
+# (Vault optional — see note above.)
 ```
 
 ### Make targets
