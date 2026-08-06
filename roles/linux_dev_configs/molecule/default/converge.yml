@@ -5,7 +5,7 @@
   vars:
     linux_dev_configs_install_bob: true
     linux_dev_configs_install_dotfiles: true
-    linux_dev_configs_github_token: "{{ github_token | default('') }}"
+    linux_dev_configs_github_token: "{{ lookup('env', 'GITHUB_TOKEN') | default('') }}"
     linux_dev_configs_packages:
       - curl
       - git

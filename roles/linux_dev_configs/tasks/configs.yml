@@ -81,4 +81,4 @@
     mode: "0600"
     newline_sequence: "\n"
   become: false
-  when: linux_dev_configs_dev_git_configure | bool and github_token is defined and github_token | length > 0
+  when: linux_dev_configs_dev_git_configure | bool and linux_dev_configs_github_token is defined and linux_dev_configs_github_token | length > 0

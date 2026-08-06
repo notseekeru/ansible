@@ -59,10 +59,10 @@
 - name: Ensure Tailscale auth key is available when needed
   ansible.builtin.assert:
     that:
-      - tailscale_auth_key is defined
-      - tailscale_auth_key | length > 0
+      - linux_tailscale_auth_key is defined
+      - linux_tailscale_auth_key | length > 0
     fail_msg: >-
-      tailscale_auth_key is missing. Define it in group_vars/vault.yml
+      linux_tailscale_auth_key is missing. Define it in group_vars/vault.yml
       and run with vault decryption (for example --ask-vault-pass).
   when:
     - linux_tailscale_run_up | bool
@@ -70,15 +70,15 @@
 
 - name: Set up Tailscale auth # noqa no-changed-when
   ansible.builtin.command:
-    argv: "{{ ['tailscale', 'up', '--authkey=' + tailscale_auth_key] + linux_tailscale_up_args }}"
+    argv: "{{ ['tailscale', 'up', '--authkey=' + linux_tailscale_auth_key] + linux_tailscale_up_args }}"
   register: linux_tailscale_up
   changed_when: true
   no_log: true
   become: true
   when:
     - linux_tailscale_run_up | bool
-    - tailscale_auth_key is defined
-    - tailscale_auth_key | length > 0
+    - linux_tailscale_auth_key is defined
+    - linux_tailscale_auth_key | length > 0
     - not linux_tailscale_state_stat.stat.exists or linux_tailscale_force_reauth | bool
 
 - name: Wait for Tailscale IP after up

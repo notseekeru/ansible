@@ -9,7 +9,7 @@ Installs and configures Tailscale on Debian/Ubuntu.
 ## Role Variables
 
 ```yaml
-tailscale_auth_key: "<vault>"  # unprefixed: defined in group_vars/vault.yml
+linux_tailscale_auth_key: "<vault>"  # unprefixed: defined in group_vars/vault.yml
 linux_tailscale_run_up: true
 linux_tailscale_force_reauth: false
 linux_tailscale_state_file: /var/lib/tailscale/tailscaled.state
