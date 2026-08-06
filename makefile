@@ -3,7 +3,7 @@ ROLES     := $(filter-out roles/geerlingguy.docker,$(shell find roles -maxdepth 
 
 $(eval $(ROLE_NAME):;@:)
 
-.PHONY: role venv lint molecule ping-droplet strap-pi strap-infisical tailscale-pi tailscale-pi-dev tailscale-pi-docker
+.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker
 
 VENV_BIN := .venv/bin
 
@@ -43,19 +43,12 @@ molecule:
 		$(CURDIR)/$(VENV_BIN)/molecule test -s default || exit 1; \
 	done
 
-strap-droplet:
-	infisical run --env=dev -- \
-	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/droplets.ini \
-	playbooks/droplet.yml \
-	--private-key=~/.ssh/id_ed25519 \
-	--diff \
-	-e "tailscale_force_reauth=true"
+INVENTORY ?= inventories/home.ini
 
 strap-pi:
 	infisical run --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-	-i inventories/home.ini \
+	-i $(INVENTORY) \
 	playbooks/site.yml \
 	--private-key=~/.ssh/id_ed25519 \
 	--diff \

@@ -27,7 +27,6 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 │   └── droplets.ini.example    # Template
 ├── playbooks/
 │   ├── site.yml                # Bootstrap homelab: Tailscale → linux_security
-│   ├── droplet.yml             # Bootstrap droplet: same pattern, droplet-optimized
 │   ├── linux_dev_configs.yml   # Dev environment
 │   └── linux_docker.yml        # Docker CE (Infisical CLI runs via site.yml)
 ├── docs/
@@ -44,7 +43,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 
 ## How It Works
 
-The bootstrap playbook (`site.yml` / `droplet.yml`) solves the chicken-and-egg problem of securing a machine before you can safely expose it:
+The bootstrap playbook (`site.yml`) solves the chicken-and-egg problem of securing a machine before you can safely expose it:
 
 1. Connect via local IP / root SSH, install Tailscale, authenticate with pre-shared key
 2. Capture the new Tailscale IPv4, switch `ansible_host` mid-run
@@ -110,7 +109,6 @@ infisical_version: latest # or pinned like 0.43.118
 | Playbook                | What it does                                     | Run against         |
 | ----------------------- | ------------------------------------------------ | ------------------- |
 | `site.yml`              | Bootstrap: Tailscale install → security lockdown | `home_static.ini`   |
-| `droplet.yml`           | Bootstrap: same pattern, tuned for DigitalOcean  | `droplets.ini`      |
 | `linux_dev_configs.yml` | Dev environment                                  | Tailscale inventory |
 | `linux_docker.yml`      | Docker CE                                        | Tailscale inventory |
 
@@ -162,9 +160,8 @@ echo "${your-vault-pass}" > ~/.vault_pass && chmod 600 ~/.vault_pass
 
 # Bootstrap a Pi
 make strap-pi
-# Bootstrap a DigitalOcean droplet
-make ping-droplet                    # test connectivity first
-make strap-droplet
+# Bootstrap a DigitalOcean droplet (same playbook, droplets inventory)
+make strap-pi INVENTORY=inventories/droplets.ini
 ```
 
 ### Option B — Manual (no Nix)
@@ -189,9 +186,8 @@ make strap-pi         # Bootstrap Pi: local IP → Tailscale → harden
 make tailscale-pi     # Post-bootstrap: security audit via Tailscale
 make tailscale-pi-neovim  # Dev environment
 make tailscale-pi-docker  # Docker
-make strap-infisical      # Install Infisical CLI
 make ping-droplet     # Connectivity check for droplets
-make strap-droplet    # Bootstrap droplet via root SSH
+make strap-pi INVENTORY=inventories/droplets.ini  # Bootstrap droplet via site.yml
 ```
 
 > **Inventory note:** `home_static.ini` and `home_tailscale.ini` are gitignored (`*.ini`). Use the example in `inventories/home.ini.example` to create them locally.

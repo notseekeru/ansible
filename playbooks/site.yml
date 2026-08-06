@@ -36,9 +36,9 @@
         ansible_host: "{{ ts_ip_output.stdout | trim }}"
       when: bootstrap_tailscale_enabled | bool
 
-    # Fix: Prevents Step 4 from freezing on the old connection socket
-    - name: Reset connection cache for IP migration
-      ansible.builtin.meta: clear_host_errors
+    # Fix: Drop old SSH socket and force reconnection over the new route
+    - name: Drop old SSH socket to force route migration
+      ansible.builtin.meta: reset_connection
       when: bootstrap_tailscale_enabled | bool
 
     # Step 4: Refresh system facts over the new secure network path

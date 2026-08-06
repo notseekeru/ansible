@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT-0
+---
+# Droplet-specific bootstrap overrides (applied when targeting droplets.ini).
+# Secrets (tailscale_auth_key_droplet etc.) live in vault.yml.
+
+bootstrap_tailscale_enabled: true
+
+tailscale_auth_key: "{{ tailscale_auth_key_droplet }}"
+tailscale_up_args: ["--advertise-tags=tag:server-public"]
+
+linux_security_user_name: "seeker"
+linux_security_user_comment: "System Administrator"
+linux_security_user_groups:
+  - sudo
+
+linux_security_enable_goss: false
