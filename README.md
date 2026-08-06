@@ -29,8 +29,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 │   ├── site.yml                # Bootstrap homelab: Tailscale → linux_security
 │   ├── droplet.yml             # Bootstrap droplet: same pattern, droplet-optimized
 │   ├── linux_dev_configs.yml   # Dev environment
-│   ├── linux_docker.yml        # Docker CE
-│   └── linux_infisical.yml     # Infisical CLI + machine identity
+│   └── linux_docker.yml        # Docker CE (Infisical CLI runs via site.yml)
 ├── docs/
 │   ├── IMPORTANT_NOTES.md
 │   └── linux_security_falco.md
@@ -39,7 +38,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
     ├── linux_security/         # CIS Level 1 hardening
     ├── linux_dev_configs/       # Neovim + dev tooling
     ├── tailscale/              # Tailscale mesh agent
-    ├── linux_infisical/        # Infisical CLI + universal-auth
+    ├── linux_infisical/        # Infisical CLI (install-only)
     └── geerlingguy.docker/     # Docker CE (external)
 ```
 
@@ -106,7 +105,6 @@ Deploys the [Infisical](https://infisical.com) CLI from the pinned release tarba
 infisical_version: latest # or pinned like 0.43.118
 ```
 
-
 ## Playbooks
 
 | Playbook                | What it does                                     | Run against         |
@@ -115,7 +113,6 @@ infisical_version: latest # or pinned like 0.43.118
 | `droplet.yml`           | Bootstrap: same pattern, tuned for DigitalOcean  | `droplets.ini`      |
 | `linux_dev_configs.yml` | Dev environment                                  | Tailscale inventory |
 | `linux_docker.yml`      | Docker CE                                        | Tailscale inventory |
-| `linux_infisical.yml`   | Infisical CLI only                    | Tailscale inventory |
 
 Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip mesh setup and use open SSH firewall rules instead.
 
@@ -146,7 +143,6 @@ tailscale_molecule_auth_key: ...
 github_token: ghp_...
 CLOUDFLARE_TOKEN: ...
 slack_webhook: ...
-
 ```
 
 ## Getting Started

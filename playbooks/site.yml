@@ -52,3 +52,8 @@
         name: linux_security
       vars:
         linux_security_ufw_tailscale_enabled: "{{ bootstrap_tailscale_enabled }}"
+
+    # Step 6: Install the Infisical CLI
+    - name: Install Infisical CLI
+      ansible.builtin.include_role:
+        name: linux_infisical
