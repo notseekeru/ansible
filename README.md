@@ -36,7 +36,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 └── roles/
     ├── linux_security/         # CIS Level 1 hardening
     ├── linux_dev_configs/       # Neovim + dev tooling
-    ├── tailscale/              # Tailscale mesh agent
+    ├── linux_tailscale/       # Tailscale mesh agent
     ├── linux_infisical/        # Infisical CLI (install-only)
     └── geerlingguy.docker/     # Docker CE (external)
 ```
@@ -108,7 +108,7 @@ linux_infisical_version: latest # or pinned like 0.43.118
 
 | Playbook                | What it does                                     | Run against         |
 | ----------------------- | ------------------------------------------------ | ------------------- |
-| `site.yml`              | Bootstrap: Tailscale install → security lockdown | `home_static.ini`   |
+| `site.yml`              | Bootstrap: Tailscale install → security lockdown | `home.ini`          |
 | `linux_dev_configs.yml` | Dev environment                                  | Tailscale inventory |
 | `linux_docker.yml`      | Docker CE                                        | Tailscale inventory |
 
@@ -182,13 +182,13 @@ make lint             # ansible-lint
 make molecule         # Molecule test all roles (requires Docker)
 make strap-pi         # Bootstrap Pi: local IP → Tailscale → harden
 make tailscale-pi     # Post-bootstrap: security audit via Tailscale
-make tailscale-pi-neovim  # Dev environment
+make tailscale-pi-dev    # Dev environment
 make tailscale-pi-docker  # Docker
-make ping-droplet     # Connectivity check for droplets
 make strap-pi INVENTORY=inventories/droplets.ini  # Bootstrap droplet via site.yml
 ```
 
-> **Inventory note:** `home_static.ini` and `home_tailscale.ini` are gitignored (`*.ini`). Use the example in `inventories/home.ini.example` to create them locally.
+> **Inventory note:** `home.ini` is the bootstrap inventory. Use the example
+> in `inventories/home.ini.example` to create it locally.
 
 ## Engineering Decisions
 
