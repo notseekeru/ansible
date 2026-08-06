@@ -4,11 +4,5 @@
   hosts: all
   gather_facts: true
 
-  vars_files:
-    - ../group_vars/vault.yml
-
   roles:
     - role: linux_infisical
-      vars:
-        infisical_client_id: "{{ vault_infisical_client_id | default('') }}"
-        infisical_client_secret: "{{ vault_infisical_client_secret | default('') }}"

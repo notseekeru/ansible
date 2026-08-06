@@ -2,9 +2,5 @@
 ---
 infisical_version: latest   # exact release tag without leading 'v', or 'latest'
 
-# -- machine identity credentials (vault-backed) for universal-auth login --
-infisical_client_id: ""
-infisical_client_secret: ""
-
 # -- CLI variable state management --
 infisical_remove: false
