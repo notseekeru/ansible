@@ -27,6 +27,7 @@ alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
 alias compose='docker compose'
 alias lg='lazygit'
+alias gcm='git add -A && git commit -m "$(echo "Generate a conventional commit subject with scope, 60 chars or less: $(git diff --cached | tr \"\n\" \" \")" | pi --provider deepseek --model deepseek-v4-flash 2>/dev/null)"'
 
 aga() {
     cd ~/agents/arciero-agent
@@ -35,3 +36,6 @@ aga() {
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Added by Antigravity CLI installer
+export PATH="/home/seeker/.local/bin:$PATH"
