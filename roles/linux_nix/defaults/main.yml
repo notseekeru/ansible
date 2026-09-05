@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT-0
+---
+linux_nix_remove: false
+
+# Enable flakes + nix-command in /etc/nix/nix.conf (system-wide).
+linux_nix_enable_flakes: true
+
+# Official install script (https://nixos.org/nix/install).
+linux_nix_install_url: https://nixos.org/nix/install
+
+# true = multi-user (daemon), false = single-user (--no-daemon).
+linux_nix_daemon: true
+
+# Only honored on uninstall (linux_nix_remove: true): setting true also removes
+# the /nix store. Default false keeps a full uninstall conservative.
+linux_nix_remove_store: false

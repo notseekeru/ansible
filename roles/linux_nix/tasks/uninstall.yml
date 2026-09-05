@@ -1,0 +1,79 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Ensure OS family is supported by this role
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == 'Debian'
+    fail_msg: "linux_nix role supports Debian-family systems only."
+
+- name: Stop the Nix daemon service
+  ansible.builtin.systemd:
+    name: nix-daemon.service
+    state: stopped
+  become: true
+  register: linux_nix_stop_daemon
+  ignore_errors: true   # service absent on a fresh box is fine
+  when: linux_nix_daemon | bool
+
+- name: Disable the Nix daemon socket and service
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  become: true
+  register: linux_nix_disable_units
+  ignore_errors: true   # service/socket may be absent
+  loop:
+    - nix-daemon.socket
+    - nix-daemon.service
+  when: linux_nix_daemon | bool
+
+- name: Reload systemd manager configuration
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+  register: linux_nix_daemon_reload
+  ignore_errors: true   # no manager running is fine
+
+# Remove system files/layout created by the multi-user installer, plus the
+# flake config the role may have written to /etc/nix/nix.conf.
+- name: Remove Nix system files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+    force: true
+  become: true
+  loop:
+    - /etc/nix
+    - /etc/profile.d/nix.sh
+    - /etc/tmpfiles.d/nix-daemon.conf
+    - /etc/systemd/system/nix-daemon.service
+    - /etc/systemd/system/nix-daemon.socket
+
+# Removing /nix on a live box while nix processes may run is intentionally
+# destructive; gate behind linux_nix_remove_store so callers opt in.
+- name: Remove the Nix store
+  ansible.builtin.file:
+    path: /nix
+    state: absent
+    force: true
+  become: true
+  when: linux_nix_remove_store | bool
+
+- name: Remove Nix daemon build user accounts
+  ansible.builtin.user:
+    name: "nixbld{{ item }}"
+    state: absent
+    remove: true
+  become: true
+  register: linux_nix_del_build_users
+  ignore_errors: true   # users may already be gone
+  loop: "{{ range(1, 33) | list }}"
+
+- name: Remove Nix build user group
+  ansible.builtin.group:
+    name: nixbld
+    state: absent
+  become: true
+  register: linux_nix_del_build_group
+  ignore_errors: true   # group may already be gone

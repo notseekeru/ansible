@@ -1,0 +1,36 @@
+---
+- name: Verify linux_nix role
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure Nix binary is installed
+      ansible.builtin.stat:
+        path: /nix/var/nix/profiles/default/bin/nix
+      register: linux_nix_bin
+
+    - name: Assert Nix binary present
+      ansible.builtin.assert:
+        that:
+          - linux_nix_bin.stat.exists
+
+    - name: Ensure Nix runs
+      ansible.builtin.command: /nix/var/nix/profiles/default/bin/nix --version
+      register: linux_nix_version_out
+      changed_when: false
+      failed_when: linux_nix_version_out.rc != 0
+
+    - name: Read /etc/nix/nix.conf
+      ansible.builtin.slurp:
+        src: /etc/nix/nix.conf
+      register: linux_nix_conf
+
+    - name: Assert flakes + nix-command enabled system-wide
+      ansible.builtin.assert:
+        that:
+          - linux_nix_conf['content'] | b64decode is search('nix-command flakes')
+
+    - name: Ensure nixbld group exists (multi-user install)
+      ansible.builtin.command: getent group nixbld
+      register: linux_nix_nixbld_group
+      changed_when: false
+      failed_when: linux_nix_nixbld_group.rc != 0

@@ -1,0 +1,14 @@
+---
+- name: Prepare instance
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install prerequisite packages for the Nix installer
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - xz-utils
+        state: present
+        update_cache: true

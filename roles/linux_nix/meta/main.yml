@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: MIT-0
+---
+galaxy_info:
+  author: seeker
+  description: Installs and configures the Nix package manager on Debian/Ubuntu.
+  license: MIT
+  min_ansible_version: "2.12"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - trixie
+    - name: Ubuntu
+      versions:
+        - noble
+  galaxy_tags:
+    - nix
+    - nixpkgs
+    - packagemanager
+    - dev
+
+dependencies: []

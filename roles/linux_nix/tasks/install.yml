@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Ensure OS family is supported by this role
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == 'Debian'
+    fail_msg: "linux_nix role supports Debian-family systems only."
+
+- name: Check if Nix is already installed
+  ansible.builtin.stat:
+    path: /nix/var/nix/profiles/default/bin/nix
+  register: linux_nix_bin_installed
+
+# Official install script: https://nixos.org/nix/install
+# Multi-user (daemon) mode creates build users (nixbld1..32), nixbld group and
+# a systemd nix-daemon service. --no-daemon does a single-user install.
+- name: Download Nix install script
+  ansible.builtin.get_url:
+    url: "{{ linux_nix_install_url }}"
+    dest: /tmp/nix-install.sh
+    mode: "0755"
+    timeout: 120
+  become: false
+  when: not linux_nix_bin_installed.stat.exists
+
+- name: Install Nix via official script
+  ansible.builtin.command: >-
+    /tmp/nix-install.sh
+    {{ '--daemon' if linux_nix_daemon | bool else '--no-daemon' }}
+  args:
+    creates: /nix/var/nix/profiles/default/bin/nix
+  become: false
+  when: not linux_nix_bin_installed.stat.exists
+
+- name: Enable Flakes and nix-command system-wide
+  ansible.builtin.lineinfile:
+    path: /etc/nix/nix.conf
+    line: "experimental-features = nix-command flakes"
+    create: true
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  when:
+    - linux_nix_enable_flakes | bool
+    - not linux_nix_remove | bool
+
+- name: Verify Nix installation
+  ansible.builtin.command: /nix/var/nix/profiles/default/bin/nix --version
+  register: linux_nix_version_out
+  changed_when: false
+  failed_when: linux_nix_version_out.rc != 0
+  when: not linux_nix_remove | bool
+
+- name: Clean up install script
+  ansible.builtin.file:
+    path: /tmp/nix-install.sh
+    state: absent
+  become: false
+  when: not linux_nix_bin_installed.stat.exists

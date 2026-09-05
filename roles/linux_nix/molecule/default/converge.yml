@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    linux_nix_enable_flakes: true
+    linux_nix_daemon: true
+  roles:
+    - linux_nix

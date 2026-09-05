@@ -38,6 +38,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
     ├── linux_dev_configs/       # Neovim + dev tooling
     ├── linux_tailscale/       # Tailscale mesh agent
     ├── linux_infisical/        # Infisical CLI (install-only)
+    ├── linux_nix/              # Nix package manager + flakes
     └── geerlingguy.docker/     # Docker CE (external)
 ```
 
@@ -103,6 +104,12 @@ Deploys the [Infisical](https://infisical.com) CLI from the pinned release tarba
 # example override
 linux_infisical_version: latest # or pinned like 0.43.118
 ```
+
+### linux_nix
+
+Installs [Nix](https://nixos.org) via the official multi-user (daemon) installer and
+enables Flakes + `nix-command` system-wide at `/etc/nix/nix.conf`. System-only — no
+per-user group or profile setup. Supports uninstall (`linux_nix_remove`).
 
 ## Playbooks
 

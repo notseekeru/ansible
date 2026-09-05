@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Include Nix install tasks
+  ansible.builtin.include_tasks: install.yml
+  when: not linux_nix_remove | bool
+
+- name: Include Nix removal tasks
+  ansible.builtin.include_tasks: uninstall.yml
+  when: linux_nix_remove | bool
