@@ -19,7 +19,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 ├── flake.nix                   # Nix dev shell (optional)
 ├── .envrc                      # direnv — auto-sources venv + Nix
 ├── group_vars/
-│   ├── vault.yml               # Encrypted (gitignored)
+│   ├── vault.yml               # Infisical-managed secret vars (gitignored)
 │   └── vault.yml.example
 ├── inventories/
 │   ├── home.ini.example        # Template for local/Tailscale nodes
@@ -85,11 +85,11 @@ Delivers a complete terminal dev environment on any target:
 - LazyVim dotfiles pulled from GitHub
 - zsh shell with aliases, custom .zshrc
 - tmux, lazygit, ripgrep, fzf, fd-find, tree-sitter
-- Git config + GitHub CLI with vault-stored token
+- Git config + github token from Infisical env (`GITHUB_TOKEN`)
 
 ### linux_tailscale
 
-Installs and authenticates Tailscale. Supports `linux_tailscale_force_reauth` for re-auth flows. Auth key comes from Ansible Vault.
+Installs and authenticates Tailscale. Supports `linux_tailscale_force_reauth` for re-auth flows. Auth key comes from Infisical (secret vars).
 
 ### geerlingguy.docker
 
@@ -120,7 +120,7 @@ Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip me
 
 - No password auth, no root login, no X11 forwarding
 - Default-deny firewall on public interfaces
-- All secrets in Ansible Vault, never committed
+- No secrets committed — values live in Infisical, injected at deploy
 
 ### CIS Level 1 controls
 
@@ -131,14 +131,27 @@ Both bootstrap playbooks support `bootstrap_tailscale_enabled: false` to skip me
 - Automatic updates: enabled
 - Fail2Ban sshd jail: enabled (UFW ban action)
 
-### Secrets template
+### Secret variables
+
+`group_vars/*.yml` hold plain (non-encrypted) Ansible variables. The secret
+_values_ are never committed — Infisical exports them as environment variables at
+deploy time (`infisical run --env=dev`), and vars files/role defaults read them
+via `lookup('env', ...)`.
+
+The gitignored `group_vars/vault.yml` is a vars-file that binds secret values
+into Ansible variables used across playbooks. (Name is historical — it is not
+Ansible Vault.)
+Per-host-group grouping lives in tracked vars, e.g. `group_vars/droplets.yml`
+composes the droplet-specific key var-of-var:
 
 ```yaml
-# group_vars/vault.yml
-linux_tailscale_auth_key: tskey-auth-...
-linux_tailscale_auth_key_droplet: tskey-auth-...-droplet
-tailscale_molecule_auth_key: ...
-linux_dev_configs_github_token: ghp_...
+linux_tailscale_auth_key: "{{ linux_tailscale_auth_key_droplet }}"
+```
+
+Role defaults source secret values from the environment at runtime, e.g.:
+
+```yaml
+linux_dev_configs_github_token: "{{ lookup('env', 'GITHUB_TOKEN') | default('') }}"
 ```
 
 ## Getting Started
@@ -149,12 +162,8 @@ linux_dev_configs_github_token: ghp_...
 git clone <repo> && cd ansible
 direnv allow                         # drops into Nix dev shell + .venv
 make venv                            # installs ansible-core, molecule, collections
-cp group_vars/vault.yml.example group_vars/vault.yml
-echo "${your-vault-pass}" > ~/.vault_pass && chmod 600 ~/.vault_pass
-
-# Vault optional: only needed to decrypt group_vars/vault.yml. direnv/flake
-# skip setting ANSIBLE_VAULT_PASSWORD_FILE when ~/.vault_pass is absent, so
-# lint/molecule work without it.
+# Point direnv/ansible at Infisical for secret env vars (no ansible-vault used)
+# infisical login && infisical init  # one-time, per project
 
 # Bootstrap a Pi
 make strap-pi
@@ -169,9 +178,7 @@ git clone <repo> && cd ansible
 python3 -m venv .venv && source .venv/bin/activate
 pip install ansible-core molecule "molecule-plugins[docker]" ansible-lint
 ansible-galaxy collection install community.general ansible.posix community.crypto community.docker
-cp group_vars/vault.yml.example group_vars/vault.yml
-echo "${your-vault-pass}" > ~/.vault_pass && chmod 600 ~/.vault_pass
-# (Vault optional — see note above.)
+# infisical login && infisical init   # one-time; secrets come from Infisical env
 ```
 
 ### Make targets
