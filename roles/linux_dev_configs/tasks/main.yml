@@ -7,5 +7,9 @@
   ansible.builtin.import_tasks: bob.yml
   when: linux_dev_configs_install_bob | bool
 
+- name: Include dotfile repository pull tasks
+  ansible.builtin.import_tasks: dotfiles.yml
+  when: linux_dev_configs_install_dotfiles | bool
+
 - name: Include user configuration tasks
   ansible.builtin.import_tasks: configs.yml

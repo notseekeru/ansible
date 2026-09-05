@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Pull Neovim dotfiles
+  ansible.builtin.git:
+    repo: "{{ linux_dev_configs_dotfiles_repo }}"
+    dest: "{{ linux_dev_configs_dotfiles_dest }}"
+    version: "{{ linux_dev_configs_dotfiles_version }}"
+    update: "{{ linux_dev_configs_dotfiles_update }}"
+    force: true
+  become: false
+  environment:
+    GITHUB_TOKEN: "{{ linux_dev_configs_github_token }}"
+
+- name: Pull Tmux Plugin Manager (TPM)
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "{{ linux_dev_configs_dev_user_home }}/.tmux/plugins/tpm"
+    version: master
+    depth: 1
+    update: false
+  become: false
