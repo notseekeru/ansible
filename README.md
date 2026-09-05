@@ -204,19 +204,16 @@ make strap-pi INVENTORY=inventories/droplets.ini  # Bootstrap droplet via site.y
 
 ### Creating a new role
 
-Roles are scaffolded from a committed template so every role matches house
-conventions (SPDX headers, install/uninstall or gated-feature task split, empty
-`vars/` stub, molecule trio) without hand-retyping the boilerplate:
+Scaffold a role from the committed house template (excluded from lint/molecule):
 
 ```bash
-make new-role NAME=linux_topgrade             # install/uninstall form
-make new-role NAME=linux_mymod FORM=features  # multi-feature (hardening) form
+make new-role NAME=linux_topgrade             # install/uninstall split
+make new-role NAME=linux_mymod FORM=features  # multi-feature / hardening split
 ```
 
-Then fill `tasks/`, tighten `defaults/main.yml`, and update `meta`/`README`
-and `molecule/default/{converge,verify}.yml`. The source of truth lives under
-`_role_templates/` (excluded from lint + molecule discovery); edit a template
-there when the convention itself changes so future scaffolds stay current.
+Then fill `tasks/`, tighten `defaults/`, update `meta` tags + this README, and
+make `molecule/verify.yml` assert the role's real effect. For scaffold tweaks,
+edit `_role_templates/` so future roles stay current.
 
 > **Inventory note:** `home.ini` is the bootstrap inventory. Use the example
 > in `inventories/home.ini.example` to create it locally.
