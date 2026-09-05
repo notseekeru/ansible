@@ -34,12 +34,12 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 │   └── linux_security_falco.md
 ├── collections/                # Locally installed Galaxy collections (gitignored)
 └── roles/
-    ├── linux_security/         # CIS Level 1 hardening
-    ├── linux_dev_configs/       # Neovim + dev tooling
-    ├── linux_tailscale/       # Tailscale mesh agent
-    ├── linux_infisical/        # Infisical CLI (install-only)
-    ├── linux_nix/              # Nix package manager + flakes
-    └── geerlingguy.docker/     # Docker CE (external)
+    ├── linux_security/
+    ├── linux_dev_configs/
+    ├── linux_tailscale/
+    ├── linux_infisical/
+    ├── linux_nix/
+    └── geerlingguy.docker/
 ```
 
 ## How It Works
@@ -55,61 +55,16 @@ After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable thro
 
 ## Roles
 
-### linux_security
+See each role's own README for defaults / variables / example playbook.
 
-CIS Level 1 hardening. All components toggleable via role defaults.
-
-| Component          | What it does                                                                                   |
-| ------------------ | ---------------------------------------------------------------------------------------------- |
-| User creation      | Creates local non-root user with sudo, home dir, .ssh dir                                      |
-| SSH hardening      | Key-only auth, no root, MaxAuthTries=3, no X11/forwarding                                      |
-| UFW firewall       | Default deny, allow on tailscale0, deny on eth0/wlan0, mask avahi                              |
-| Automatic updates  | unattended-upgrades installed and enabled                                                      |
-| Authorized keys    | Deploys from `files/authorized_keys.pub`                                                       |
-| Cloud-init cleanup | Removes SSH override configs                                                                   |
-| Fail2Ban           | sshd jail with UFW ban action, configurable bantime/findtime/maxretry                          |
-| Falco              | Host intrusion detection (disabled by default — overkill for tailscale-only single-user nodes) |
-| Goss               | System validation binary (goss + dgoss) for ad-hoc and CI health checks                        |
-
-```yaml
-# example overrides
-linux_security_enable_ufw: false
-linux_security_ufw_tailscale_enabled: true # opens SSH only on tailscale0
-linux_security_sshd_max_auth_tries: 3
-```
-
-### linux_dev_configs
-
-Delivers a complete terminal dev environment on any target:
-
-- Neovim 0.12.3 via [bob](https://github.com/MordechaiHadad/bob) version manager
-- LazyVim dotfiles pulled from GitHub
-- zsh shell with aliases, custom .zshrc
-- tmux, lazygit, ripgrep, fzf, fd-find, tree-sitter
-- Git config + github token from Infisical env (`GITHUB_TOKEN`)
-
-### linux_tailscale
-
-Installs and authenticates Tailscale. Supports `linux_tailscale_force_reauth` for re-auth flows. Auth key comes from Infisical (secret vars).
-
-### geerlingguy.docker
-
-Community-standard Docker role. CE + CLI + containerd + Buildx + compose plugin.
-
-### linux_infisical
-
-Deploys the [Infisical](https://infisical.com) CLI from the pinned release tarball (`Infisical/cli` GitHub assets). Idempotent install-only — no login, no persistent session, no credentials deployed to the node.
-
-```yaml
-# example override
-linux_infisical_version: latest # or pinned like 0.43.118
-```
-
-### linux_nix
-
-Installs [Nix](https://nixos.org) via the official multi-user (daemon) installer and
-enables Flakes + `nix-command` system-wide at `/etc/nix/nix.conf`. System-only — no
-per-user group or profile setup. Supports uninstall (`linux_nix_remove`).
+| Role | Purpose |
+|---|---|
+| [`linux_security`](roles/linux_security/README.md) | CIS Level 1 hardening; toggled via `linux_security_enable_*` |
+| [`linux_dev_configs`](roles/linux_dev_configs/README.md) | Terminal dev env: Neovim (bob), zsh/oh-my-zsh, tmux, git config |
+| [`linux_tailscale`](roles/linux_tailscale/README.md) | Tailscale mesh agent (auth key from Infisical vars) |
+| [`linux_infisical`](roles/linux_infisical/README.md) | Infisical CLI, pinned release, install-only |
+| [`linux_nix`](roles/linux_nix/README.md) | Nix package manager + system-wide flakes |
+| `geerlingguy.docker` | Community Docker CE role (external, [upstream docs](https://github.com/geerlingguy/ansible-role-docker)) |
 
 ## Playbooks
 
@@ -172,10 +127,8 @@ make venv                            # installs ansible-core, molecule, collecti
 # Point direnv/ansible at Infisical for secret env vars (no ansible-vault used)
 # infisical login && infisical init  # one-time, per project
 
-# Bootstrap a Pi
+# Bootstrap a Pi (droplet variant uses INVENTORY=... — see Make targets)
 make strap-pi
-# Bootstrap a DigitalOcean droplet (same playbook, droplets inventory)
-make strap-pi INVENTORY=inventories/droplets.ini
 ```
 
 ### Option B — Manual (no Nix)

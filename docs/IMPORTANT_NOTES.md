@@ -50,20 +50,3 @@ systemctl is-active falco
 
 In Docker-based Molecule runs, use this as a smoke-test target. Falco startup may be skipped when the kernel driver path is not suitable.
 
-## Molecule (Local)
-
-- cd roles/<role_name>
-- molecule test -s default
-
-## System Requirements
-
-- Venv:
-
-python3 -m venv .venv
-source .venv/bin/activate
-
-- Dependencies:
-
-sudo apt install -y python3-pip python3-venv git-core
-pip install ansible-core molecule "molecule-plugins[docker]" ansible-lint
-ansible-galaxy collection install community.general ansible.posix community.crypto community.docker
