@@ -5,7 +5,7 @@ ROLES := $(filter-out roles/geerlingguy.docker,$(shell find roles -maxdepth 3 -n
 NAME  ?=
 FORM  ?= install
 
-.PHONY: new-role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker
+.PHONY: new-role venv lint molecule strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker
 
 VENV_BIN := .venv/bin
 

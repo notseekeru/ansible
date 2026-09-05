@@ -22,9 +22,7 @@ Ansible automation for Debian-based homelab and VPS servers. Provisions bare-met
 │   ├── vault.yml               # Infisical-managed secret vars (gitignored)
 │   └── vault.yml.example
 ├── inventories/
-│   ├── home.ini.example        # Template for local/Tailscale nodes
-│   ├── droplets.ini            # DigitalOcean droplet IPs (gitignored)
-│   └── droplets.ini.example    # Template
+│   └── home.ini.example        # Template for local/Tailscale nodes
 ├── playbooks/
 │   ├── site.yml                # Bootstrap homelab: Tailscale → linux_security
 │   ├── linux_dev_configs.yml   # Dev environment
@@ -51,7 +49,7 @@ The bootstrap playbook (`site.yml`) solves the chicken-and-egg problem of securi
 3. Run `meta: clear_host_errors` + fresh `setup` to flush the connection cache
 4. Apply `linux_security` — now safely inside the WireGuard tunnel
 
-After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable through `tailscale0`. Droplet flow is identical but connects via root on the public IP and supports `bootstrap_tailscale_enabled: false` for nodes that don't need the mesh.
+After this run, SSH port 22 is blocked on `eth0`/`wlan0` and only reachable through `tailscale0`. For nodes that don't join the mesh, a baremetal/public-IP restart flow is supported by `bootstrap_tailscale_enabled: false` (reachable over open SSH rules) — see `strap-pi`.
 
 ## Roles
 
@@ -103,12 +101,6 @@ via `lookup('env', ...)`.
 The gitignored `group_vars/vault.yml` is a vars-file that binds secret values
 into Ansible variables used across playbooks. (Name is historical — it is not
 Ansible Vault.)
-Per-host-group grouping lives in tracked vars, e.g. `group_vars/droplets.yml`
-composes the droplet-specific key var-of-var:
-
-```yaml
-linux_tailscale_auth_key: "{{ linux_tailscale_auth_key_droplet }}"
-```
 
 Role defaults source secret values from the environment at runtime, e.g.:
 
@@ -127,7 +119,7 @@ make venv                            # installs ansible-core, molecule, collecti
 # Point direnv/ansible at Infisical for secret env vars (no ansible-vault used)
 # infisical login && infisical init  # one-time, per project
 
-# Bootstrap a Pi (droplet variant uses INVENTORY=... — see Make targets)
+# Bootstrap a fresh Pi
 make strap-pi
 ```
 
@@ -152,7 +144,6 @@ make strap-pi         # Bootstrap Pi: local IP → Tailscale → harden
 make tailscale-pi     # Post-bootstrap: security audit via Tailscale
 make tailscale-pi-dev    # Dev environment
 make tailscale-pi-docker  # Docker
-make strap-pi INVENTORY=inventories/droplets.ini  # Bootstrap droplet via site.yml
 ```
 
 ### Creating a new role

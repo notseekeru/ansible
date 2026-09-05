@@ -1,5 +1,5 @@
 # Template of secret vars expected by playbooks. Values are sourced from the
 # Infisical environment at deploy time (gitignored group_vars/vault.yml).
-linux_tailscale_auth_key_droplet:
+linux_tailscale_auth_key:
 tailscale_molecule_auth_key:
 linux_dev_configs_github_token:
