@@ -1,5 +1,5 @@
 ---
-- name: Deploy Neovim for debian based systems
+- name: Deploy linux developer environment
   hosts: all
   gather_facts: true
   roles:
