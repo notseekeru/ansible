@@ -5,9 +5,8 @@
 # Ignore inventory files with sensitive data
 *.ini
 
-# Ignore secrets and vault files
+# Secret values come from Infisical; group_vars/secrets.yml is generated at deploy
 secrets.yml
-vault.yml
 vault_password.yml
 .vault
 .vault_pass

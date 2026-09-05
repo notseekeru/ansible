@@ -62,8 +62,8 @@
       - linux_tailscale_auth_key is defined
       - linux_tailscale_auth_key | length > 0
     fail_msg: >-
-      linux_tailscale_auth_key is missing. Define it in group_vars/vault.yml
-      and run with vault decryption (for example --ask-vault-pass).
+      linux_tailscale_auth_key is missing. Provide it via Infisical in
+      group_vars/secrets.yml at deploy time.
   when:
     - linux_tailscale_run_up | bool
     - not linux_tailscale_state_stat.stat.exists or linux_tailscale_force_reauth | bool

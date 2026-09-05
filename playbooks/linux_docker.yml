@@ -5,7 +5,7 @@
   gather_facts: true
 
   vars_files:
-    - ../group_vars/vault.yml
+    - ../group_vars/secrets.yml
 
   roles:
     - role: geerlingguy.docker
