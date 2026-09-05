@@ -73,12 +73,3 @@
     newline_sequence: "\n"
   become: false
   when: linux_dev_configs_dev_git_configure | bool
-
-- name: Deploy managed .git-credentials
-  ansible.builtin.template:
-    src: git-credentials.j2
-    dest: "{{ linux_dev_configs_dev_user_home }}/.git-credentials"
-    mode: "0600"
-    newline_sequence: "\n"
-  become: false
-  when: linux_dev_configs_dev_git_configure | bool and linux_dev_configs_github_token is defined and linux_dev_configs_github_token | length > 0
