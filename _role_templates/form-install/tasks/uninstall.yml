@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT-0
+# uninstall.yml — __role_name__ removal sequence (only runs when
+# __role_name___remove: true).
+#
+# Mirror the real-role uninstalls:
+#   roles/linux_nix/tasks/uninstall.yml      (stop/disable daemon, rm files/users)
+#   roles/linux_infisical/tasks/uninstall.yml
+#
+# Shape:
+#   1. Remove what install.yml added (binaries, systemd units, config dirs)
+#   2. For removals that may already be absent, register + ignore_errors and
+#      explain why (lint's ignore-errors rule requires a `register:`).
+#   3. Keep destructive paths (e.g. a data/store dir) behind an opt-in var.

@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT-0
+---
+# One toggle per included feature file, mirroring linux_security:
+# tasks/main.yml includes <feature>.yml only when its enable_* var is true.
+# Defaults are real so an unmodified scaffold is runnable; rename keys/files.
+__role_name___enable_feature_one: true
+__role_name___enable_feature_two: false

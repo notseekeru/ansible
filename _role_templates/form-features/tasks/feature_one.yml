@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT-0
+---
+# feature_one.yml — __role_name__ feature one tasks.
+# Guarded from tasks/main.yml by: when: __role_name___enable_feature_one | bool

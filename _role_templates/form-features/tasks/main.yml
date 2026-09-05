@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT-0
+---
+# Multi-feature form (actions + hardening splits), mirroring linux_security:
+# main.yml stays a thin dispatcher; each concern lives in its own <feature>.yml
+# and is gated on a single __role_name___enable_* toggle.
+
+- name: Include feature one tasks
+  ansible.builtin.include_tasks: feature_one.yml
+  when: __role_name___enable_feature_one | bool
+
+- name: Include feature two tasks
+  ansible.builtin.include_tasks: feature_two.yml
+  when: __role_name___enable_feature_two | bool

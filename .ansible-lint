@@ -1,3 +1,4 @@
 ---
 exclude_paths:
   - roles/geerlingguy.docker/
+  - _role_templates/       # scaffold sources contain __role_name__ placeholders

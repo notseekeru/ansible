@@ -1,0 +1,5 @@
+---
+- name: Verify __role_name__
+  hosts: all
+  become: true
+  tasks: []

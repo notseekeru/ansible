@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT-0
+# install.yml — __role_name__ install sequence.
+#
+# Model this on a real, molecule-tested role rather than inventing a shape:
+#   roles/linux_nix/tasks/install.yml        (official installer, --daemon)
+#   roles/linux_infisical/tasks/install.yml  (pinned GitHub release tarball)
+#
+# Reproduce this shape:
+#   1. Ensure OS family is supported        (ansible.builtin.assert on os_family)
+#   2. Stat a sentinel the tool leaves      (binary path / dir / marker file)
+#   3. Download + run install, guarded by the sentinel so it is idempotent
+#   4. become: true only where elevation is required
+#   5. Verify with <tool> --version         (changed_when: false)
+#   6. Clean up any /tmp staging created

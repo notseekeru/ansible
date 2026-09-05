@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT-0
+---
+# Clone of __role_name__ install/uninstall form. main.yml self-describes the
+# shape: gate install vs uninstall on the __role_name___remove toggle.
+
+- name: Include install tasks
+  ansible.builtin.include_tasks: install.yml
+  when: not __role_name___remove | bool
+
+- name: Include uninstall tasks
+  ansible.builtin.include_tasks: uninstall.yml
+  when: __role_name___remove | bool

@@ -1,9 +1,11 @@
-ROLE_NAME := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-ROLES     := $(filter-out roles/geerlingguy.docker,$(shell find roles -maxdepth 3 -name molecule -exec dirname {} \;))
+# -- args / helpers ---------------------------------------------------
+ROLES := $(filter-out roles/geerlingguy.docker,$(shell find roles -maxdepth 3 -name molecule -exec dirname {} \;))
 
-$(eval $(ROLE_NAME):;@:)
+# new-role accepts NAME= and optional FORM=install|features via the command line.
+NAME  ?=
+FORM  ?= install
 
-.PHONY: role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker
+.PHONY: new-role venv lint molecule ping-droplet strap-pi tailscale-pi tailscale-pi-dev tailscale-pi-docker
 
 VENV_BIN := .venv/bin
 
@@ -24,9 +26,9 @@ venv:
 		--force
 	@rm -f .collections-installed 2>/dev/null; true
 
-role:
-	@if [ -z "$(ROLE_NAME)" ]; then echo "❌ Error: Specify a role name (e.g., make role my_role)"; exit 1; fi
-	ansible-galaxy init ./roles/$(ROLE_NAME)
+new-role:
+	@if [ -z "$(NAME)" ]; then echo "❌ Usage: make new-role NAME=linux_foo [FORM=install|features]"; exit 1; fi
+	@./scripts/new-role.sh "$(NAME)" "form=$(FORM)"
 
 lint:
 	@if [ ! -f "$(VENV_BIN)/ansible-lint" ]; then echo "❌ Run 'make venv' first"; exit 1; fi

@@ -192,6 +192,7 @@ ansible-galaxy collection install community.general ansible.posix community.cryp
 
 ```bash
 make venv             # Create venv + install deps + collections
+make new-role NAME=linux_foo [FORM=install|features]  # scaffold a role
 make lint             # ansible-lint
 make molecule         # Molecule test all roles (requires Docker)
 make strap-pi         # Bootstrap Pi: local IP → Tailscale → harden
@@ -200,6 +201,22 @@ make tailscale-pi-dev    # Dev environment
 make tailscale-pi-docker  # Docker
 make strap-pi INVENTORY=inventories/droplets.ini  # Bootstrap droplet via site.yml
 ```
+
+### Creating a new role
+
+Roles are scaffolded from a committed template so every role matches house
+conventions (SPDX headers, install/uninstall or gated-feature task split, empty
+`vars/` stub, molecule trio) without hand-retyping the boilerplate:
+
+```bash
+make new-role NAME=linux_topgrade             # install/uninstall form
+make new-role NAME=linux_mymod FORM=features  # multi-feature (hardening) form
+```
+
+Then fill `tasks/`, tighten `defaults/main.yml`, and update `meta`/`README`
+and `molecule/default/{converge,verify}.yml`. The source of truth lives under
+`_role_templates/` (excluded from lint + molecule discovery); edit a template
+there when the convention itself changes so future scaffolds stay current.
 
 > **Inventory note:** `home.ini` is the bootstrap inventory. Use the example
 > in `inventories/home.ini.example` to create it locally.
