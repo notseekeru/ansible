@@ -41,10 +41,7 @@
           shellHook = ''
             PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")"
             export ANSIBLE_CONFIG="$PROJECT_ROOT/ansible.cfg"
-            # Only point ansible at the vault password file if it exists, so that
-            # lint/molecule/tooling don't hard-fail on machines without a vault.
-            unset ANSIBLE_VAULT_PASSWORD_FILE
-            [ -r "$HOME/.vault_pass" ] && export ANSIBLE_VAULT_PASSWORD_FILE="$HOME/.vault_pass"
+            # Secrets are provided by Infisical at deploy (infisical run).
           '';
         };
 
