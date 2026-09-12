@@ -48,7 +48,7 @@ molecule:
 INVENTORY ?= inventories/home.ini
 
 strap-pi:
-	infisical run --env=dev -- \
+	infisical run --path /consumers/ansible --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i $(INVENTORY) \
 	playbooks/site.yml \
@@ -59,7 +59,7 @@ strap-pi:
 	-e "linux_tailscale_force_reauth=true"
 
 tailscale-pi:
-	infisical run --env=dev -- \
+	infisical run --path /consumers/ansible --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home.ini \
 	playbooks/site.yml \
@@ -69,7 +69,7 @@ tailscale-pi:
 	-v
 
 tailscale-pi-dev:
-	infisical run --env=dev -- \
+	infisical run --path /consumers/ansible --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home.ini \
 	playbooks/linux_dev_configs.yml \
@@ -79,7 +79,7 @@ tailscale-pi-dev:
 	-v
 
 tailscale-pi-docker:
-	infisical run --env=dev -- \
+	infisical run --path /consumers/ansible --env=dev -- \
 	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
 	-i inventories/home.ini \
 	playbooks/linux_docker.yml \
