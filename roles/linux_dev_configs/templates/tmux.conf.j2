@@ -1,19 +1,38 @@
-set -g mouse on
+set -g default-terminal "tmux-256color"
+set -ga terminal-overrides ",*256col*:Tc"
 
+# tmux-sensible, inlined (TPM and its plugins are no longer used)
+set -s escape-time 0
+set -g history-limit 50000
+set -g display-time 4000
+set -g status-interval 5
+set -g status-keys emacs
+set -g focus-events on
+setw -g aggressive-resize on
+bind-key C-p previous-window
+bind-key C-n next-window
+bind-key R source-file ~/.tmux.conf \; display-message "Sourced ~/.tmux.conf"
+
+set -g mouse on
 set -g extended-keys-format csi-u
 set -g extended-keys on
 
 set -g base-index 1
 setw -g pane-base-index 1
+set -g renumber-windows on
 
 unbind C-o
 bind-key m select-pane -t :.+
 
-set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-resurrect'
-set -g @plugin 'tmux-plugins/tmux-continuum'
+unbind-key -T copy-mode-vi MouseDragEnd1Pane
+set -s set-clipboard on
 
-set -g @continuum-restore 'on'
+bind-key -T copy-mode-vi v send -X begin-selection
+bind-key -T copy-mode-vi V send -X select-line
+bind-key -T copy-mode-vi y send -X copy-selection-and-cancel
+bind-key -T copy-mode-vi Enter send -X copy-selection-and-cancel
+bind-key ] paste-buffer
+bind-key b list-buffers
+setw -g mode-keys vi
 
-run '~/.tmux/plugins/tpm/tpm'
+# Reproducible layout handled by tmux-init-sessions

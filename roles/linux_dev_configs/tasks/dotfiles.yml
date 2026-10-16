@@ -10,12 +10,3 @@
   become: false
   environment:
     GITHUB_TOKEN: "{{ linux_dev_configs_github_token }}"
-
-- name: Pull Tmux Plugin Manager (TPM)
-  ansible.builtin.git:
-    repo: "https://github.com/tmux-plugins/tpm"
-    dest: "{{ linux_dev_configs_dev_user_home }}/.tmux/plugins/tpm"
-    version: master
-    depth: 1
-    update: false
-  become: false

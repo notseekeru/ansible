@@ -57,6 +57,21 @@
     newline_sequence: "\n"
   become: false
 
+- name: Ensure ~/.local/bin exists
+  ansible.builtin.file:
+    path: "{{ linux_dev_configs_dev_user_home }}/.local/bin"
+    state: directory
+    mode: "0755"
+  become: false
+
+- name: Deploy tmux session initializer
+  ansible.builtin.template:
+    src: tmux-init-sessions.j2
+    dest: "{{ linux_dev_configs_dev_user_home }}/.local/bin/tmux-init-sessions"
+    mode: "0755"
+    newline_sequence: "\n"
+  become: false
+
 - name: Deploy managed .tmux.conf
   ansible.builtin.template:
     src: tmux.conf.j2

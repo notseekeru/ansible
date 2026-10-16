@@ -36,6 +36,16 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
+# BEGIN ANSIBLE MANAGED BLOCK: tmux_init
+if [[ -z "$TMUX" && -z "$TMUX_INIT" ]]; then
+    export TMUX_INIT=1
+    if command -v tmux &>/dev/null; then
+        [ -x "$HOME/.local/bin/tmux-init-sessions" ] && "$HOME/.local/bin/tmux-init-sessions"
+        tmux new-session -A -s {{ linux_dev_configs_tmux_sessions[0].name }}
+    fi
+fi
+# END ANSIBLE MANAGED BLOCK: tmux_init
+
 # Added by Antigravity CLI installer
 export PATH="/home/seeker/.local/bin:$PATH"
 
