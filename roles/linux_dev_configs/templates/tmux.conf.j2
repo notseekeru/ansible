@@ -25,6 +25,7 @@ bind-key m select-pane -t :.+
 
 unbind-key -T copy-mode-vi MouseDragEnd1Pane
 set -s set-clipboard on
+set -as terminal-features '*:clipboard'
 
 bind-key -T copy-mode-vi v send -X begin-selection
 bind-key -T copy-mode-vi V send -X select-line
