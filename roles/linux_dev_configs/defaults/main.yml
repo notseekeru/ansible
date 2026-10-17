@@ -32,22 +32,22 @@ linux_dev_configs_dotfiles_dest: "{{ linux_dev_configs_dev_user_home }}/.config/
 linux_dev_configs_tmux_sessions:
   - name: agents
     dir: "{{ linux_dev_configs_dev_user_home }}/agents/arciero-agent"
-    windows: [commands, pi]
+    windows: [agents, commands, pi]
   - name: terraform
     dir: "{{ linux_dev_configs_dev_user_home }}/terraform"
-    windows: [commands, pi]
+    windows: [terraform, commands, pi]
   - name: gitops
     dir: "{{ linux_dev_configs_dev_user_home }}/gitops"
-    windows: [commands, pi]
+    windows: [gitops, commands, pi]
   - name: portfolio_website
     dir: "{{ linux_dev_configs_dev_user_home }}/portfolio_website"
-    windows: [commands, pi]
+    windows: [portfolio_website, commands, pi]
   - name: docker_configs
     dir: "{{ linux_dev_configs_dev_user_home }}/docker_configs"
-    windows: [commands, pi]
+    windows: [docker_configs, commands, pi]
   - name: ansible
     dir: "{{ linux_dev_configs_dev_user_home }}/ansible"
-    windows: [commands, pi]
+    windows: [ansible, commands, pi]
 
 linux_dev_configs_dev_user: "{{ ansible_facts['user_id'] | default(ansible_facts['user']) }}"
 linux_dev_configs_dev_user_home: "{{ ansible_facts['user_dir'] }}"
